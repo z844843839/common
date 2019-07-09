@@ -26,4 +26,20 @@
         </dependency>
     </dependencies>
 
+    <distributionManagement>
+        <!--snapshot包使用snapshotRepository-->
+        <snapshotRepository>
+            <id>crt-snapshots</id>
+            <name>crt release maven</name>
+            <url>http://nexus.zttl.com:23456/repository/crt-snapshots/</url>
+        </snapshotRepository>
+        <!--release包使用repository-->
+        <repository>
+            <id>crt-releases</id>
+            <name>crt release maven</name>
+            <url>http://nexus.zttl.com:23456/repository/crt-releases/</url>
+        </repository>
+    </distributionManagement>
+
+
 </project>
