@@ -51,13 +51,6 @@ public class RpcRequestFilter implements Filter {
     static String contentType = "application/json;charset=UTF-8";
 
     static {
-//        typeFunctionMap.put(String.class,(value)->{return value;});
-//        typeFunctionMap.put(Integer.class,(value)->{return Integer.parseInt(value);});
-//        typeFunctionMap.put(Float.class,(value)->{return Float.parseFloat(value);});
-//        typeFunctionMap.put(Double.class,(value)->{return Double.parseDouble(value);});
-//        typeFunctionMap.put(Long.class,(value)->{return Long.parseLong(value);});
-//        typeFunctionMap.put(Boolean.class,(value)->{return Boolean.parseBoolean(value);});
-
         typeFunctionMap.put(String.class, (value) -> {
             return value;
         });
@@ -92,18 +85,9 @@ public class RpcRequestFilter implements Filter {
         logger.info("request.url={}", url);
         if (!url.startsWith("/rpc")) {
             filterChain.doFilter(servletRequest, servletResponse);
-            /*try {
-                filterChain.doFilter(servletRequest, servletResponse);
-            } catch (Exception e) {
-                HttpServletResponse httpServletResponse = (HttpServletResponse)servletResponse;
-                httpServletResponse.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
-                printWriter.write(JSON.toJSONString(E6WrapperUtil.error("server error")));
-            }finally {
-                printWriter.flush();
-                printWriter.close();
-            }*/
             return;
         }
+        //内部rpc调用，任何情况下，都要返回一个E6Wrapper
         String[] serviceNameAndMethod = url.replace(RPC_URL_PRE, StringUtils.EMPTY).split("/");
         logger.info("serviceNameAndMethod={}.{}", serviceNameAndMethod[0], serviceNameAndMethod[1]);
         PrintWriter printWriter = servletResponse.getWriter();

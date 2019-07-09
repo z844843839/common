@@ -8,7 +8,6 @@ import java.io.Serializable;
 
 /**
  * RPC接口返回包装类
- * TODO: 内部rpc调用，任何情况下，都要返回一个E6Wrapper
  * 错误码问题：
  * 1. 优先用HttpStatus内的,如 正常200，无识别信息用203，没有权限用403，没有路径用404，内部错误用500
  * 2.
