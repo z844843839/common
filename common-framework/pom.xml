@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>common</artifactId>
+        <groupId>com.crt</groupId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <packaging>pom</packaging>
+
+    <!-- 公共包各自定义版本，不继承父pom版本，但是common-framework下四个包版本保持一致,统一在这里定义，
+    注意：这里修改后，四个pom里的parent也要修改 -->
+    <groupId>com.crt</groupId>
+    <artifactId>common-framework</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+
+    <modules>
+        <module>common-framework-pojo</module>
+        <module>common-framework-rpc</module>
+        <module>common-framework-service</module>
+        <module>common-framework-web</module>
+    </modules>
+
+
+</project>

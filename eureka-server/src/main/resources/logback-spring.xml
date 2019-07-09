@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="600 seconds" debug="true">
+    <!-- 取配置文件中的logging.appender的值，Console或者File,大小写不敏感，如果没有配置这个值，那么windows下是控制台打印，linux下是文件记录 -->
+    <springProperty name="appender-ref"  source="logging.appender"/>
+    <!-- Windows系统下，或者 appender-ref的值小写是console，则输出到控制台 -->
+    <if condition='(!"file".equals(p("appender-ref").toLowerCase()) &amp;&amp; p("os.name").contains("Windows"))
+                    || "console".equals(p("appender-ref").toLowerCase())'>
+        <then>
+            <!-- 控制台输出 -->
+            <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
+                <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+                    <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符-->
+                    <!-- pattern 格式说明 http://aub.iteye.com/blog/1103685 -->
+                    <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>
+                </encoder>
+            </appender>
+            <!-- 具体包的日志级别在application.properties中配置，不在这里指定 -->
+            <root>
+                <appender-ref ref="Console" />
+            </root>
+        </then>
+        <!-- =================================以下是服务器上用的配置 =================================  -->
+        <else>
+            <!-- 取springboot环境变量中logging.path的值，如果没有，默认在当前工程目录的log下输出日志 -->
+            <springProperty name="logPath"  source="logging.path" defaultValue="${user.dir}/log"/>
+            <springProperty name="rootLevel"  source="logging.level.root" defaultValue="INFO"/>
+            <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+                <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+                    <FileNamePattern>${logPath}/%d{yyyy-MM-dd}.%i.log</FileNamePattern>
+                    <maxFileSize>100MB</maxFileSize>
+                    <maxHistory>10</maxHistory>
+                    <totalSizeCap>30GB</totalSizeCap>
+                </rollingPolicy>
+                <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+                    <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger{10} - %msg%n</pattern>
+                </encoder>
+            </appender>
+            <!-- 具体包的日志级别在application.properties中配置，不在这里指定 -->
+            <root>
+                <appender-ref ref="FILE" />
+            </root>
+        </else>
+    </if>
+</configuration>

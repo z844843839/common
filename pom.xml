@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.crt</groupId>
+    <artifactId>common</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0.0-SNAPSHOT</version>
+
+    <modules>
+        <module>eureka-server</module>
+        <module>common-base</module>
+        <module>common-i18n</module>
+        <module>common-loadbalance</module>
+        <module>common-dev-tools</module>
+        <module>common-apollo-client</module>
+        <module>common-framework</module>
+    </modules>
+
+    <properties>
+        <!-- 编译打包配置参数 -->
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <java.version>1.8</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- MAVEN插件版本 -->
+        <maven-compiler-plugin.version>2.3.2</maven-compiler-plugin.version>
+        <maven-surefire-plugin.version>2.4.2</maven-surefire-plugin.version>
+        <!-- 本模块子module版本 -->
+        <common-apollo-client.version>1.0.0-SNAPSHOT</common-apollo-client.version>
+        <common-base.version>1.0.0-SNAPSHOT</common-base.version>
+        <common-dev-tools.version>1.0.0-SNAPSHOT</common-dev-tools.version>
+        <common-framework.version>1.0.0-SNAPSHOT</common-framework.version>
+        <common-i18n.version>1.0.0-SNAPSHOT</common-i18n.version>
+        <common-loadbalance.version>1.0.0-SNAPSHOT</common-loadbalance.version>
+        <!-- 基础依赖版本 -->
+        <spring-boot.version>2.0.3.RELEASE</spring-boot.version>
+        <spring-cloud.version>2.0.1.RELEASE</spring-cloud.version>
+        <eureka-server.version>1.4.7.RELEASE</eureka-server.version>
+        <feign-okhttp.version>9.5.1</feign-okhttp.version>
+        <commons-lang3.version>3.9</commons-lang3.version>
+        <commons-beanutils.version>1.9.3</commons-beanutils.version>
+        <fastjson.version>1.2.58</fastjson.version>
+        <guava.version>27.0.1-jre</guava.version>
+        <spring-data-commons.version>2.0.8.RELEASE</spring-data-commons.version>
+        <commons-codec.version>1.10</commons-codec.version>
+        <slf4j.version>1.7.25</slf4j.version>
+        <swagger.version>2.6.1</swagger.version>
+        <caffeine.version>2.6.2</caffeine.version>
+        <hibernate-jpa.version>1.0.0.Final</hibernate-jpa.version>
+        <hibernate-core.version>5.2.14.Final</hibernate-core.version>
+        <jackson-annotations.version>2.9.5</jackson-annotations.version>
+        <apollo-client.version>0.11.0</apollo-client.version>
+        <common-db-springboot2.version>2.0.0-SNAPSHOT</common-db-springboot2.version>
+    </properties>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.0.3.RELEASE</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+
+    <dependencyManagement>
+
+        <dependencies>
+            <!-- 本模块子module -->
+            <dependency>
+                <groupId>com.crt</groupId>
+                <artifactId>common-apollo-client</artifactId>
+                <version>${common-apollo-client.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.crt</groupId>
+                <artifactId>common-base</artifactId>
+                <version>${common-base.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.crt</groupId>
+                <artifactId>common-dev-tools</artifactId>
+                <version>${common-dev-tools.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.crt</groupId>
+                <artifactId>common-framework</artifactId>
+                <version>${common-framework.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.crt</groupId>
+                <artifactId>common-i18n</artifactId>
+                <version>${common-i18n.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.crt</groupId>
+                <artifactId>common-loadbalance</artifactId>
+                <version>${common-loadbalance.version}</version>
+            </dependency>
+
+
+            <!-- spring Boot-->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter</artifactId>
+                <version>${spring-boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-data-jpa</artifactId>
+                <version>${spring-boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-web</artifactId>
+                <version>${spring-boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-actuator</artifactId>
+                <version>${spring-boot.version}</version>
+            </dependency>
+
+            <!-- 公共包 -->
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${commons-lang3.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-beanutils</groupId>
+                <artifactId>commons-beanutils</artifactId>
+                <version>${commons-beanutils.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>${fastjson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${guava.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.openfeign</groupId>
+                <artifactId>feign-okhttp</artifactId>
+                <version>${feign-okhttp.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.data</groupId>
+                <artifactId>spring-data-commons</artifactId>
+                <version>${spring-data-commons.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-codec</groupId>
+                <artifactId>commons-codec</artifactId>
+                <version>${commons-codec.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+            <!-- swagger -->
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-swagger2</artifactId>
+                <version>${swagger.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-swagger-ui</artifactId>
+                <version>${swagger.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.github.ben-manes.caffeine</groupId>
+                <artifactId>caffeine</artifactId>
+                <version>${caffeine.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.hibernate.javax.persistence</groupId>
+                <artifactId>hibernate-jpa-2.1-api</artifactId>
+                <version>${hibernate-jpa.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.hibernate</groupId>
+                <artifactId>hibernate-core</artifactId>
+                <version>${hibernate-core.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-annotations</artifactId>
+                <version>${jackson-annotations.version}</version>
+            </dependency>
+
+
+            <!-- spring Cloud-->
+           <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-eureka-server</artifactId>
+                <version>${eureka-server.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-netflix-ribbon</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-openfeign</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-sleuth-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-gateway-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+            </dependency>
+            <dependency>
+                <groupId>com.ctrip.framework.apollo</groupId>
+                <artifactId>apollo-client</artifactId>
+                <version>${apollo-client.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.e6yun.project</groupId>
+                <artifactId>common-db-springboot2</artifactId>
+                <version>${common-db-springboot2.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler-plugin.version}</version>
+                <configuration>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven-surefire-plugin.version}</version>
+                <configuration>
+                    <skipTests>true</skipTests>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
