@@ -52,7 +52,7 @@
         <hibernate-jpa.version>1.0.0.Final</hibernate-jpa.version>
         <hibernate-core.version>5.2.14.Final</hibernate-core.version>
         <jackson-annotations.version>2.9.5</jackson-annotations.version>
-        <apollo-client.version>0.11.0</apollo-client.version>
+        <apollo-client.version>1.4.0</apollo-client.version>
         <common-db-springboot2.version>2.0.0-SNAPSHOT</common-db-springboot2.version>
     </properties>
 
