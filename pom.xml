@@ -38,6 +38,8 @@
         <!-- 基础依赖版本 -->
         <spring-boot.version>2.0.3.RELEASE</spring-boot.version>
         <spring-cloud.version>2.0.1.RELEASE</spring-cloud.version>
+        <mybatis.version>1.3.2</mybatis.version>
+        <mybatis.pagehelper.version>1.2.10</mybatis.pagehelper.version>
         <eureka-server.version>1.4.7.RELEASE</eureka-server.version>
         <feign-okhttp.version>9.5.1</feign-okhttp.version>
         <commons-lang3.version>3.9</commons-lang3.version>
@@ -119,6 +121,16 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-actuator</artifactId>
                 <version>${spring-boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mybatis.spring.boot</groupId>
+                <artifactId>mybatis-spring-boot-starter</artifactId>
+                <version>${mybatis.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.pagehelper</groupId>
+                <artifactId>pagehelper-spring-boot-starter</artifactId>
+                <version>${mybatis.pagehelper.version}</version>
             </dependency>
 
             <!-- 公共包 -->
