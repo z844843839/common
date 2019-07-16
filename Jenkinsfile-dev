@@ -89,7 +89,7 @@ node(label) {
     image = "${dockerRegistryUrl}/${imageEndpoint}"
 //    
 if ("${gitBranch}" == "${chbranch}") {
-    Check()
+//    Check()
     Maven()
     Build()
     Deploy()
