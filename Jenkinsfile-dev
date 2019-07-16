@@ -43,7 +43,6 @@ void Deploy() {
           sed -i "s#<OBJ_NAME>#${name_obj}#g" k8s
           sed -i "s#<NAME_SPACE>#${spacename}#g" k8s
           cat k8s
-          cat /root/.
           kubectl apply -f k8s
           kubectl get pod -n "${spacename}"
         """
