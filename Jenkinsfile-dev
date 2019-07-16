@@ -74,7 +74,7 @@ podTemplate(label: label, containers: [
   containerTemplate(name: 'docker', image: 'docker', command: 'cat', ttyEnabled: true),
   containerTemplate(name: 'kubectl', image: 'cnych/kubectl', command: 'cat', ttyEnabled: true)
 ], volumes: [
-  persistentVolumeClaim(claimName: 'jenkins-kube', mountPath: '/root/.kube'),
+  hostPathVolume(mountPath: '/home/jenkins/.kube', hostPath: '/root/.kube'),
   persistentVolumeClaim(claimName: 'jenkins-mvn', mountPath: '/root/.m2'),
   hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock')
 ]){
