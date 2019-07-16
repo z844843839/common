@@ -1,0 +1,33 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: <OBJ_NAME>
+  namespace: <NAME_SPACE>
+spec:
+  replicas: 10
+  template:
+    metadata:
+      labels:
+        app: <OBJ_NAME>
+    spec:
+      imagePullSecrets:
+      - name: k8s-aliyun-image
+      containers:
+      - image: <IMAGE>:<IMAGE_TAG>
+        imagePullPolicy: Always
+        name: <OBJ_NAME>
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: <NAME_SPACE>
+  name: <OBJ_NAME>
+  labels:
+    app: <OBJ_NAME>
+spec:
+  ports:
+  - port: 8080
+    protocol: TCP
+    name: <OBJ_NAME>
+  selector:
+    app: <OBJ_NAME>
