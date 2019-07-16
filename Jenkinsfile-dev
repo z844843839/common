@@ -1,7 +1,7 @@
 //分支选择,仅选定的分支会进行相关操作
-chbranch = 'master' 
+chbranch = 'develop' 
 //组件名称, exp: weblogic,若是前端则关乎三级域名
-name_obj = 'zttl-uat'
+name_obj = 'eureka'
 //apollo配置,如果未使用请忽略
 apollo_env = 'UAT'
 //命名空间,此处需要与运维人员沟通
