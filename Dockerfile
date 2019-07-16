@@ -2,7 +2,7 @@
 FROM registry.cn-shenzhen.aliyuncs.com/base_repo/java_8u212_cst:v1.0.0
 
 # Add Maintainer Info
-MAINTAINER honux <maxmonkey950@gmail.com>
+MAINTAINER honux <master@e6yun.com>
 
 # 设置locale
 ENV LANG en_US.UTF-8
