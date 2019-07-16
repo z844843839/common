@@ -1,0 +1,103 @@
+//分支选择,仅选定的分支会进行相关操作
+chbranch = 'develop' 
+//组件名称, exp: weblogic,若是前端则关乎三级域名
+name_obj = 'eureka'
+//apollo配置,如果未使用请忽略
+apollo_env = 'UAT'
+//命名空间,此处需要与运维人员沟通
+spacename = 'zttl-uat'
+
+void Check() {
+    stage('Sonar代码检查') {
+        imageTag = "${imageTag}-${gitBranch}"
+        println "1. ${imageTag} 环境"
+        sh 'printenv'
+        sonarTag = "${name_obj}-${gitBranch}"
+        println "${sonarTag}"
+        def scannerHome = tool 'sonarscanner';
+          withSonarQubeEnv('sonar') {
+            sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${sonarTag}"
+        }
+    }
+}
+void Maven() {
+    stage('Maven构建') {
+      try {
+        container('maven') {
+          echo "2. 代码编译打包阶段"
+          sh "mvn clean install -Dmaven.test.skip=true"
+        }
+      } catch (exc) {
+        println "构建失败 - ${currentBuild.fullDisplayName}"
+        throw(exc)
+      }
+    }
+}
+void Deploy() {
+    stage('部署') {
+      container('kubectl') {
+        echo "3. Deploy Stage"
+        sh """
+          sed -i "s#<IMAGE>#${image}#g" k8s
+          sed -i "s#<IMAGE_TAG>#${imageTag}#g" k8s
+          sed -i "s#<OBJ_NAME>#${name_obj}#g" k8s
+          sed -i "s#<NAME_SPACE>#${spacename}#g" k8s
+          kubectl get pod --all-namespaces -o wide
+          kubectl apply -f k8s
+          kubectl get pod -n "${spacename}"
+        """
+      }
+    }
+}
+// docker build and push to repo!
+void Build() {
+  stage('Docker打包上传镜像') {
+    withCredentials([[$class: 'UsernamePasswordMultiBinding',
+    credentialsId: 'alihub',
+    usernameVariable: 'alihubUser',
+    passwordVariable: 'alihubPassword']]) {
+        container('docker') {
+          echo "3. 构建 Docker 镜像阶段"
+          sh """
+          docker login ${dockerRegistryUrl} -u ${alihubUser} -p ${alihubPassword}
+          sed -i "s#<ENV>#${apollo_env}#g" Dockerfile
+          docker build -t ${image}:${imageTag} .
+          docker push ${image}:${imageTag}
+          """
+       }
+    }
+  }
+}
+label = "slave-${UUID.randomUUID().toString()}"
+podTemplate(label: label, containers: [
+  containerTemplate(name: 'maven', image: 'maven:3.6-alpine', command: 'cat', ttyEnabled: true),
+  containerTemplate(name: 'docker', image: 'docker', command: 'cat', ttyEnabled: true),
+  containerTemplate(name: 'kubectl', image: 'cnych/kubectl', command: 'cat', ttyEnabled: true)
+], volumes: [
+  persistentVolumeClaim(claimName: 'jenkins-mvn', mountPath: '/root/.m2'),
+  hostPathVolume(mountPath: '/home/jenkins/.kube', hostPath: '/root/.kube'),
+  hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock')
+]){
+node(label) {
+    myRepo = checkout scm
+    gitCommit = myRepo.GIT_COMMIT
+    gitBranch = myRepo.GIT_BRANCH
+    imageTag1 = sh(script: "git rev-parse --short HEAD", returnStdout: true).trim()
+    imageTag = "${BUILD_TAG}-${imageTag1}"
+    dockerRegistryUrl = "registry.cn-beijing.aliyuncs.com"
+    imageEndpoint = "zttl_uat/${name_obj}"
+    image = "${dockerRegistryUrl}/${imageEndpoint}"
+//    
+if ("${gitBranch}" == "${chbranch}") {
+//    Check()
+    Maven()
+    Build()
+    Deploy()
+} else if ("${gitBranch}" == 'dev') {
+    println 'nothing to do!'
+} else {
+    println 'nothing to do!'
+}
+//  
+  } //label
+}
