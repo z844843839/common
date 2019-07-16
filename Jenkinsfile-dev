@@ -42,7 +42,7 @@ void Deploy() {
           sed -i "s#<IMAGE_TAG>#${imageTag}#g" k8s
           sed -i "s#<OBJ_NAME>#${name_obj}#g" k8s
           sed -i "s#<NAME_SPACE>#${spacename}#g" k8s
-          kubectl get pod --all-namespaces -o wide
+          cat k8s
           kubectl apply -f k8s
           kubectl get pod -n "${spacename}"
         """
