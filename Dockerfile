@@ -15,7 +15,7 @@ RUN mkdir /app \
 
 WORKDIR /app
 
-COPY target/demo-1.0-SNAPSHOT.jar /app/demo.jar
+COPY eureka-server/target/eureka-server-1.0.0-SNAPSHOT.jar /app/demo.jar
 # COPY server.properties /opt/settings/server.properties
 
 
