@@ -4,7 +4,7 @@ metadata:
   name: <OBJ_NAME>
   namespace: <NAME_SPACE>
 spec:
-  replicas: 10
+  replicas: 1
   template:
     metadata:
       labels:
