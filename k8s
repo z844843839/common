@@ -31,3 +31,21 @@ spec:
     name: <OBJ_NAME>
   selector:
     app: <OBJ_NAME>
+    
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  namespace: <NAME_SPACE>
+  name: <OBJ_NAME>
+  annotations:
+    nginx.ingress.kubernetes.io/cors-allow-methods: "PUT, GET, POST, OPTIONS"
+spec:
+  rules:
+  - host: eureka.dev.chinacrt.com
+    http:
+      paths:
+      - path: 
+        backend:
+          serviceName: <OBJ_NAME>
+          servicePort: 80
