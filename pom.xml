@@ -17,6 +17,7 @@
         <module>common-apollo-client</module>
         <module>common-framework</module>
         <module>eureka-server</module>
+        <module>common-sdk-tech-service</module>
     </modules>
 
     <properties>
