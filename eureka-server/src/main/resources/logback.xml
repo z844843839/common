@@ -7,8 +7,8 @@
                     defaultValue="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] [%X{X-B3-TraceId:-},%X{X-B3-ParentSpanId:-},%X{X-B3-SpanId:-},%X{userId}] %-5level %logger{10} - %msg%n"/>
 
     <appender name="GELF" class="de.siegmar.logbackgelf.GelfTcpAppender">
-        <graylogHost>${grayLogHost:-47.106.66.123}</graylogHost>
-        <graylogPort>${grayLogPort:-26667}</graylogPort>
+        <graylogHost>${grayLogHost:-graylog3.default.svc.cluster.local}</graylogHost>
+        <graylogPort>${grayLogPort:-12201}</graylogPort>
         <encoder class="de.siegmar.logbackgelf.GelfEncoder">
             <originHost>${ip:-localhost}</originHost>
             <includeRawMessage>false</includeRawMessage>
