@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="600 seconds" debug="true">
+    <!-- 取配置文件中的logging.appender的值，Console或者File,大小写不敏感，如果没有配置这个值，那么windows下是控制台打印，linux下是文件记录 -->
+    <springProperty name="appender-ref" source="logging.appender"/>
+    <springProperty name="syslog-ref" source="logging.syslog" defaultValue="true"/>
+    <springProperty name="logging.pattern" source="logging.pattern"
+                    defaultValue="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] [%X{X-B3-TraceId:-},%X{X-B3-ParentSpanId:-},%X{X-B3-SpanId:-},%X{userId}] %-5level %logger{10} - %msg%n"/>
+
+    <appender name="GELF" class="de.siegmar.logbackgelf.GelfTcpAppender">
+        <graylogHost>${grayLogHost:-47.106.66.123}</graylogHost>
+        <graylogPort>${grayLogPort:-26667}</graylogPort>
+        <encoder class="de.siegmar.logbackgelf.GelfEncoder">
+            <originHost>${ip:-localhost}</originHost>
+            <includeRawMessage>false</includeRawMessage>
+            <includeMarker>true</includeMarker>
+            <includeMdcData>true</includeMdcData>
+            <includeCallerData>false</includeCallerData>
+            <includeRootCauseData>false</includeRootCauseData>
+            <includeLevelName>false</includeLevelName>
+            <shortPatternLayout class="ch.qos.logback.classic.PatternLayout">
+                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] [%X{X-B3-TraceId:-},%X{X-B3-ParentSpanId:-},%X{X-B3-SpanId:-},%X{userId}] %-5level %logger{10} - %msg%n</pattern>
+            </shortPatternLayout>
+            <staticField>pod_name:${HOSTNAME}</staticField>
+<!--            <staticField>app_name:${garyLogApplicationName}</staticField>  -->
+            <staticField>os_arch:${os.arch}</staticField>
+            <staticField>os_name:${os.name}</staticField>
+            <staticField>os_version:${os.version}</staticField>
+        </encoder>
+    </appender>
+
+    <!-- Windows系统下，或者 appender-ref的值小写是console，则输出到控制台 -->
+    <if condition='(!"file".equals(p("appender-ref").toLowerCase()) &amp;&amp; p("os.name").contains("Windows"))
+                    || "console".equals(p("appender-ref").toLowerCase())'>
+        <then>
+            <!-- 控制台输出 -->
+            <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
+                <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+                    <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符-->
+                    <!-- pattern 格式说明 http://aub.iteye.com/blog/1103685 -->
+                    <pattern>${logging.pattern}</pattern>
+                </encoder>
+            </appender>
+            <!-- 具体包的日志级别在application.properties中配置，不在这里指定 -->
+            <if condition='!property("os.name").startsWith("Win")'>
+                <then>
+                    <root>
+                        <appender-ref ref="Console"/>
+                        <appender-ref ref="GELF"/>
+                    </root>
+                </then>
+                <else>
+                    <root>
+                        <appender-ref ref="Console"/>
+                    </root>
+                </else>
+            </if>
+        </then>
+        <!-- =================================以下是服务器上用的配置 =================================  -->
+        <else>
+            <!-- 取springboot环境变量中logging.path的值，如果没有，默认在当前工程目录的log下输出日志 -->
+            <springProperty name="logPath" source="logging.path" defaultValue="${user.dir}/log"/>
+            <springProperty name="rootLevel" source="logging.level.root" defaultValue="INFO"/>
+            <springProperty name="logging.file.maxFileSize" source="logging.file.maxFileSize" defaultValue="100MB"/>
+            <springProperty name="logging.file.maxHistory" source="logging.file.maxHistory" defaultValue="10"/>
+            <springProperty name="logging.file.totalSizeCap" source="logging.file.totalSizeCap" defaultValue="30GB"/>
+            <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+                <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+                    <FileNamePattern>${logPath:-${user.dir}/log}/%d{yyyy-MM-dd}.%i.log</FileNamePattern>
+                    <maxFileSize>${logging.file.maxFileSize:-100MB}</maxFileSize>
+                    <maxHistory>${logging.file.maxHistory:-10}</maxHistory>
+                    <totalSizeCap>${logging.file.totalSizeCap:-30GB}</totalSizeCap>
+                </rollingPolicy>
+                <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+                    <pattern>${logging.pattern:-%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread]
+                        [%X{X-B3-TraceId:-},%X{X-B3-ParentSpanId:-},%X{X-B3-SpanId:-},%X{userId}] %-5level %logger{10} -
+                        %msg%n}
+                    </pattern>
+                </encoder>
+            </appender>
+            <!-- 具体包的日志级别在application.properties中配置，不在这里指定 -->
+            <root>
+                <appender-ref ref="FILE"/>
+                <appender-ref ref="GELF"/>
+            </root>
+        </else>
+    </if>
+</configuration>
