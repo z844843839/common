@@ -76,13 +76,13 @@
         <snapshotRepository>
             <id>crt-snapshots</id>
             <name>crt release maven</name>
-            <url>http://nexus.zttl.com:23456/repository/crt-snapshots/</url>
+            <url>http://nexus.dev.chinacrt.com:23456/repository/crt-snapshots/</url>
         </snapshotRepository>
         <!--release包使用repository-->
         <repository>
             <id>crt-releases</id>
             <name>crt release maven</name>
-            <url>http://nexus.zttl.com:23456/repository/crt-releases/</url>
+            <url>http://nexus.dev.chinacrt.com:23456/repository/crt-releases/</url>
         </repository>
     </distributionManagement>
 
