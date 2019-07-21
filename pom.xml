@@ -45,6 +45,7 @@
         <feign-okhttp.version>9.5.1</feign-okhttp.version>
         <commons-lang3.version>3.9</commons-lang3.version>
         <commons-beanutils.version>1.9.3</commons-beanutils.version>
+        <hutool.version>4.5.16</hutool.version>
         <fastjson.version>1.2.58</fastjson.version>
         <guava.version>27.0.1-jre</guava.version>
         <spring-data-commons.version>2.0.8.RELEASE</spring-data-commons.version>
@@ -145,6 +146,11 @@
                 <groupId>commons-beanutils</groupId>
                 <artifactId>commons-beanutils</artifactId>
                 <version>${commons-beanutils.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-all</artifactId>
+                <version>${hutool.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.alibaba</groupId>
