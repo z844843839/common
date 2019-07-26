@@ -25,7 +25,6 @@ public class BaseSerivceImpl<T extends BaseEntity> implements BaseSerivce<T> {
     @Autowired
     protected JpaRepository<T, Integer> repository;
 
-
     /**
      * 根据ID查询对应的实体是否存在
      *
@@ -67,7 +66,6 @@ public class BaseSerivceImpl<T extends BaseEntity> implements BaseSerivce<T> {
         repository.saveAll(entities);
         return E6WrapperUtil.ok(entities);
     }
-
 
     /**
      * 删除
@@ -113,7 +111,6 @@ public class BaseSerivceImpl<T extends BaseEntity> implements BaseSerivce<T> {
         return E6WrapperUtil.ok();
     }
 
-
     /**
      * 修改
      *
@@ -124,6 +121,15 @@ public class BaseSerivceImpl<T extends BaseEntity> implements BaseSerivce<T> {
     @Override
     @Transactional
     public E6Wrapper modify(Integer id, T entity) {
+        if (null == entity) {
+            return E6WrapperUtil.ok();
+        }
+        E6Wrapper e6Wrapper = beforeModify(entity);
+        if (e6Wrapper.success()) {
+            entity = (T) beforeModify(entity).getResult();
+        } else {
+            return e6Wrapper;
+        }
         //根据主键ID查询实体
         Optional<T> optional = repository.findById(id);
         if (null == optional || !optional.isPresent()) {
@@ -132,7 +138,26 @@ public class BaseSerivceImpl<T extends BaseEntity> implements BaseSerivce<T> {
         T obj = optional.get();
         //用传入实体值替换原有的实体值
         Object oj = BeanUtil.cover(obj, entity);
-        return E6WrapperUtil.ok(repository.save((T) oj));
+        T newObj = repository.save((T) oj);
+        newObj = afterModify(newObj);
+        return E6WrapperUtil.ok(newObj);
+    }
+
+    /**
+     * 修改前的附加操作
+     */
+    protected E6Wrapper beforeModify(T entity) {
+        return E6WrapperUtil.ok(entity);
+    }
+
+    /**
+     * 修改后的附加操作
+     *
+     * @param e
+     * @return
+     */
+    protected T afterModify(T e) {
+        return e;
     }
 
     /**
@@ -215,6 +240,5 @@ public class BaseSerivceImpl<T extends BaseEntity> implements BaseSerivce<T> {
         List<T> list = repository.findAll();
         return E6WrapperUtil.ok(list);
     }
-
 
 }
