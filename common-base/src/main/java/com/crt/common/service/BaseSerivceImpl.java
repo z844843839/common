@@ -17,13 +17,13 @@ import java.util.Optional;
  * @Author : malin
  * @Description: 公共JPA实现
  */
-public class BaseSerivceImpl<T extends BaseEntity> implements BaseSerivce<T> {
+public class BaseSerivceImpl<D extends JpaRepository<T, Integer>, T extends BaseEntity> implements BaseSerivce<T> {
 
     /**
      * Spring Data JPA 注入
      */
     @Autowired
-    protected JpaRepository<T, Integer> repository;
+    protected D dao;
 
     /**
      * 根据ID查询对应的实体是否存在
@@ -34,7 +34,7 @@ public class BaseSerivceImpl<T extends BaseEntity> implements BaseSerivce<T> {
     @Override
     public E6Wrapper existsById(Integer id) {
         Boolean exist = true;
-        Optional<T> optional = repository.findById(id);
+        Optional<T> optional = dao.findById(id);
         if (null == optional || !optional.isPresent()) {
             exist = false;
         }
@@ -50,7 +50,7 @@ public class BaseSerivceImpl<T extends BaseEntity> implements BaseSerivce<T> {
     @Override
     @Transactional
     public E6Wrapper save(T entity) {
-        entity = repository.save(entity);
+        entity = dao.save(entity);
         return E6WrapperUtil.ok(entity);
     }
 
@@ -63,7 +63,7 @@ public class BaseSerivceImpl<T extends BaseEntity> implements BaseSerivce<T> {
     @Override
     @Transactional
     public E6Wrapper batchSave(List<T> entities) {
-        repository.saveAll(entities);
+        dao.saveAll(entities);
         return E6WrapperUtil.ok(entities);
     }
 
@@ -76,7 +76,7 @@ public class BaseSerivceImpl<T extends BaseEntity> implements BaseSerivce<T> {
     @Override
     @Transactional
     public E6Wrapper deleteById(Integer id) {
-        repository.deleteById(id);
+        dao.deleteById(id);
         return E6WrapperUtil.ok();
     }
 
@@ -89,7 +89,7 @@ public class BaseSerivceImpl<T extends BaseEntity> implements BaseSerivce<T> {
     @Override
     @Transactional
     public E6Wrapper delete(T entity) {
-        repository.delete(entity);
+        dao.delete(entity);
         return E6WrapperUtil.ok();
     }
 
@@ -104,10 +104,10 @@ public class BaseSerivceImpl<T extends BaseEntity> implements BaseSerivce<T> {
     public E6Wrapper batchDelete(List<Integer> ids) {
         List<T> list = new ArrayList<>();
         for (Integer id : ids) {
-            T entity = repository.getOne(id);
+            T entity = dao.getOne(id);
             list.add(entity);
         }
-        repository.deleteInBatch(list);
+        dao.deleteInBatch(list);
         return E6WrapperUtil.ok();
     }
 
@@ -131,14 +131,14 @@ public class BaseSerivceImpl<T extends BaseEntity> implements BaseSerivce<T> {
             return e6Wrapper;
         }
         //根据主键ID查询实体
-        Optional<T> optional = repository.findById(id);
+        Optional<T> optional = dao.findById(id);
         if (null == optional || !optional.isPresent()) {
             return E6WrapperUtil.paramError("实体不存在");
         }
         T obj = optional.get();
         //用传入实体值替换原有的实体值
         Object oj = BeanUtil.cover(obj, entity);
-        T newObj = repository.save((T) oj);
+        T newObj = dao.save((T) oj);
         newObj = afterModify(newObj);
         return E6WrapperUtil.ok(newObj);
     }
@@ -172,14 +172,14 @@ public class BaseSerivceImpl<T extends BaseEntity> implements BaseSerivce<T> {
         List<T> list = new ArrayList<>();
         for (T entity : entities) {
             //根据主键ID查询实体
-            Optional<T> optional = repository.findById(entity.getId());
+            Optional<T> optional = dao.findById(entity.getId());
             if (null != optional && optional.isPresent()) {
                 T obj = optional.get();
                 //用传入实体值替换原有的实体值
                 list.add((T) BeanUtil.cover(obj, entity));
             }
         }
-        return E6WrapperUtil.ok(repository.saveAll(list));
+        return E6WrapperUtil.ok(dao.saveAll(list));
     }
 
     /**
@@ -190,7 +190,7 @@ public class BaseSerivceImpl<T extends BaseEntity> implements BaseSerivce<T> {
      */
     @Override
     public E6Wrapper<T> findById(Integer id) {
-        Optional<T> optional = repository.findById(id);
+        Optional<T> optional = dao.findById(id);
         if (null == optional || !optional.isPresent()) {
             return E6WrapperUtil.paramError("实体不存在");
         }
@@ -206,7 +206,7 @@ public class BaseSerivceImpl<T extends BaseEntity> implements BaseSerivce<T> {
     @Override
     public E6Wrapper<T> findOne(T entity) {
         Example example = Example.of(entity);
-        Optional<T> optional = repository.findOne(example);
+        Optional<T> optional = dao.findOne(example);
         if (null == optional || !optional.isPresent()) {
             return E6WrapperUtil.paramError("实体不存在");
         }
@@ -227,7 +227,7 @@ public class BaseSerivceImpl<T extends BaseEntity> implements BaseSerivce<T> {
                 list.add(id);
             }
         }
-        return E6WrapperUtil.ok(repository.findAllById(list));
+        return E6WrapperUtil.ok(dao.findAllById(list));
     }
 
     /**
@@ -237,7 +237,7 @@ public class BaseSerivceImpl<T extends BaseEntity> implements BaseSerivce<T> {
      */
     @Override
     public E6Wrapper<List<T>> findListAll() {
-        List<T> list = repository.findAll();
+        List<T> list = dao.findAll();
         return E6WrapperUtil.ok(list);
     }
 
