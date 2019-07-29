@@ -1,11 +1,11 @@
 package com.crt.common.vo;
 
-import java.util.List;
+import org.apache.commons.lang3.StringUtils;
 
 /**
- *
+ * 分页查询实体基类
  */
-public class PageParamVO {
+public class PageParamVO<T> {
 
     /**
      * 当前页数
@@ -16,6 +16,10 @@ public class PageParamVO {
      */
     private Integer pageSize;
     /**
+     * 起始查询数
+     */
+    private Integer startPage;
+    /**
      * 排序字段
      */
     private String sortIndx;
@@ -23,14 +27,19 @@ public class PageParamVO {
      * 排序方式
      */
     private String sortDir;
-    private Long totalRecords;
-    private List<?> data;
+    /**
+     * 实体泛型
+     */
+    private T entity;
 
     public Integer getCurPage() {
         return curPage;
     }
 
     public void setCurPage(Integer curPage) {
+        if (null == curPage || curPage < 1) {
+            curPage = 1;
+        }
         this.curPage = curPage;
     }
 
@@ -39,7 +48,14 @@ public class PageParamVO {
     }
 
     public void setPageSize(Integer pageSize) {
+        if (null == pageSize || pageSize < 1) {
+            pageSize  = 10;
+        }
         this.pageSize = pageSize;
+    }
+
+    public Integer getStartPage() {
+        return (this.curPage - 1) * this.pageSize;
     }
 
     public String getSortIndx() {
@@ -47,7 +63,11 @@ public class PageParamVO {
     }
 
     public void setSortIndx(String sortIndx) {
-        this.sortIndx = sortIndx;
+        if (StringUtils.isEmpty(sortIndx)){
+            this.sortIndx = "id";
+        }else{
+            this.sortIndx = sortIndx;
+        }
     }
 
     public String getSortDir() {
@@ -55,34 +75,18 @@ public class PageParamVO {
     }
 
     public void setSortDir(String sortDir) {
-        this.sortDir = sortDir;
+        if (StringUtils.isEmpty(sortDir)){
+            this.sortDir = "DESC";
+        }else{
+            this.sortDir = sortDir;
+        }
     }
 
-    public Long getTotalRecords() {
-        return totalRecords;
+    public T getEntity() {
+        return entity;
     }
 
-    public void setTotalRecords(Long totalRecords) {
-        this.totalRecords = totalRecords;
-    }
-
-    public List<?> getData() {
-        return data;
-    }
-
-    public void setData(List<?> data) {
-        this.data = data;
-    }
-
-    @Override
-    public String toString() {
-        return "PageParamVO{" +
-                "curPage=" + curPage +
-                ", pageSize=" + pageSize +
-                ", sortIndx='" + sortIndx + '\'' +
-                ", sortDir='" + sortDir + '\'' +
-                ", totalRecords=" + totalRecords +
-                ", data=" + data +
-                '}';
+    public void setEntity(T entity) {
+        this.entity = entity;
     }
 }

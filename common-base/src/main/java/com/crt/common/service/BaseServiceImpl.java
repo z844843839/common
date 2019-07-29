@@ -50,21 +50,43 @@ public class BaseSerivceImpl<D extends JpaRepository<T, Integer>, T extends Base
     @Override
     @Transactional
     public E6Wrapper save(T entity) {
+        //新增前，若有其他操作，在 beforeSave()方法中添加
+        E6Wrapper before = beforeSave(entity);
+        if(before.success()){
+            entity = (T) before.getResult();
+        }else{
+            return before;
+        }
         entity = dao.save(entity);
+        //新增后，若有其他操作，在 afterSave()方法中添加
+        E6Wrapper after = afterSave(entity);
+        if (after.success()) {
+            return E6WrapperUtil.ok(after.getResult());
+        } else {
+            return after;
+        }
+    }
+
+    /**
+     * 新增前附加操作
+     *
+     * @param entity
+     * @return
+     */
+    @Transactional
+    public E6Wrapper beforeSave(T entity) {
         return E6WrapperUtil.ok(entity);
     }
 
     /**
-     * 批量新增
+     * 新增后附加操作
      *
-     * @param entities
+     * @param entity
      * @return
      */
-    @Override
     @Transactional
-    public E6Wrapper batchSave(List<T> entities) {
-        dao.saveAll(entities);
-        return E6WrapperUtil.ok(entities);
+    public E6Wrapper afterSave(T entity) {
+        return E6WrapperUtil.ok(entity);
     }
 
     /**
@@ -76,39 +98,32 @@ public class BaseSerivceImpl<D extends JpaRepository<T, Integer>, T extends Base
     @Override
     @Transactional
     public E6Wrapper deleteById(Integer id) {
-        dao.deleteById(id);
-        return E6WrapperUtil.ok();
+        //根据主键ID查询实体
+        Optional<T> optional = dao.findById(id);
+        if (null == optional || !optional.isPresent()) {
+            return E6WrapperUtil.paramError("实体不存在");
+        }
+        T entity = optional.get();
+        //删除前，若有其他操作，在 beforeDelete()方法中添加
+        E6Wrapper before = beforeDelete(entity);
+        if(before.success()){
+            entity = (T) before.getResult();
+            //执行删除
+            dao.deleteById(entity.getId());
+            return E6WrapperUtil.ok();
+        }else{
+            return before;
+        }
     }
 
     /**
-     * 删除对象
-     *
+     * 删除前附加操作
      * @param entity
      * @return
      */
-    @Override
     @Transactional
-    public E6Wrapper delete(T entity) {
-        dao.delete(entity);
-        return E6WrapperUtil.ok();
-    }
-
-    /**
-     * 批量删除对象
-     *
-     * @param
-     * @return
-     */
-    @Override
-    @Transactional
-    public E6Wrapper batchDelete(List<Integer> ids) {
-        List<T> list = new ArrayList<>();
-        for (Integer id : ids) {
-            T entity = dao.getOne(id);
-            list.add(entity);
-        }
-        dao.deleteInBatch(list);
-        return E6WrapperUtil.ok();
+    public E6Wrapper beforeDelete(T entity) {
+        return E6WrapperUtil.ok(entity);
     }
 
     /**
@@ -123,6 +138,9 @@ public class BaseSerivceImpl<D extends JpaRepository<T, Integer>, T extends Base
     public E6Wrapper modify(Integer id, T entity) {
         if (null == entity) {
             return E6WrapperUtil.ok();
+        }
+        if (null == id || id == 0){
+            id = entity.getId();
         }
         E6Wrapper e6Wrapper = beforeModify(entity);
         if (e6Wrapper.success()) {
@@ -145,6 +163,9 @@ public class BaseSerivceImpl<D extends JpaRepository<T, Integer>, T extends Base
 
     /**
      * 修改前的附加操作
+     *
+     * @param entity
+     * @return
      */
     protected E6Wrapper beforeModify(T entity) {
         return E6WrapperUtil.ok(entity);
@@ -153,33 +174,12 @@ public class BaseSerivceImpl<D extends JpaRepository<T, Integer>, T extends Base
     /**
      * 修改后的附加操作
      *
-     * @param e
+     * @param entity
      * @return
      */
-    protected T afterModify(T e) {
-        return e;
-    }
-
-    /**
-     * 批量修改
-     *
-     * @param entities
-     * @return
-     */
-    @Override
     @Transactional
-    public E6Wrapper batchModify(List<T> entities) {
-        List<T> list = new ArrayList<>();
-        for (T entity : entities) {
-            //根据主键ID查询实体
-            Optional<T> optional = dao.findById(entity.getId());
-            if (null != optional && optional.isPresent()) {
-                T obj = optional.get();
-                //用传入实体值替换原有的实体值
-                list.add((T) BeanUtil.cover(obj, entity));
-            }
-        }
-        return E6WrapperUtil.ok(dao.saveAll(list));
+    protected T afterModify(T entity) {
+        return entity;
     }
 
     /**
@@ -205,29 +205,39 @@ public class BaseSerivceImpl<D extends JpaRepository<T, Integer>, T extends Base
      */
     @Override
     public E6Wrapper<T> findOne(T entity) {
-        Example example = Example.of(entity);
-        Optional<T> optional = dao.findOne(example);
-        if (null == optional || !optional.isPresent()) {
-            return E6WrapperUtil.paramError("实体不存在");
+        //查询前，若有其他操作，在 beforeFind()方法中添加
+        E6Wrapper before = beforeFind(entity);
+        if (before.success()){
+            Example example = Example.of(entity);
+            Optional<T> optional = dao.findOne(example);
+            if (null == optional || !optional.isPresent()) {
+                return E6WrapperUtil.paramError("实体不存在");
+            }
+            //查询后，若有其他操作，在 afterFind()方法中添加
+            return afterFind(optional.get());
+        }else{
+            return before;
         }
-        return E6WrapperUtil.ok(optional.get());
     }
 
     /**
-     * 根据多主键ID查询实体集合
-     *
-     * @param ids
+     * 查询前附加操作
+     * @param entity
      * @return
      */
-    @Override
-    public E6Wrapper<List<T>> findAllById(List<Integer> ids) {
-        List<Integer> list = new ArrayList<>();
-        for (Integer id : ids) {
-            if (id != null && id > 0) {
-                list.add(id);
-            }
-        }
-        return E6WrapperUtil.ok(dao.findAllById(list));
+    @Transactional
+    public E6Wrapper beforeFind(T entity) {
+        return E6WrapperUtil.ok(entity);
+    }
+
+    /**
+     * 查询后附加操作
+     * @param entity
+     * @return
+     */
+    @Transactional
+    public E6Wrapper afterFind(T entity) {
+        return E6WrapperUtil.ok(entity);
     }
 
     /**
