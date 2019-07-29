@@ -1,7 +1,7 @@
 package com.crt.common.web;
 
 import com.crt.common.service.AbstractUserService;
-import com.crt.common.service.BaseSerivce;
+import com.crt.common.service.BaseService;
 import com.crt.common.vo.AbstractUser;
 import com.crt.common.vo.BaseEntity;
 import com.crt.common.vo.E6Wrapper;
@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.beans.PropertyEditorSupport;
 import java.util.Date;
@@ -22,7 +23,7 @@ import java.util.Date;
  * S 业务Serivce 需要继承BaseSerivce
  * T 业务PO 继承BaseEntity 或 BaseBizEntity
  */
-public abstract class BaseController<S extends BaseSerivce, T extends BaseEntity> {
+public abstract class BaseController<S extends BaseService, T extends BaseEntity> {
 
     protected static final Logger logger = LoggerFactory.getLogger(BaseController.class);
 
@@ -30,7 +31,7 @@ public abstract class BaseController<S extends BaseSerivce, T extends BaseEntity
     private AbstractUserService abstractUserService;
 
     @Autowired
-    protected S serivce;
+    protected S service;
 
     /**
      * 登陆用户信息
@@ -50,7 +51,7 @@ public abstract class BaseController<S extends BaseSerivce, T extends BaseEntity
     @PostMapping("/exists")
     @ApiOperation(value = "验证实体是否存在")
     protected E6Wrapper existsById(Integer id) {
-        return serivce.existsById(id);
+        return service.existsById(id);
     }
 
     /**
@@ -61,20 +62,21 @@ public abstract class BaseController<S extends BaseSerivce, T extends BaseEntity
      */
     @PostMapping("/save")
     @ApiOperation(value = "新增")
-    protected E6Wrapper save(T entity) {
-        return serivce.save(entity);
+    protected E6Wrapper save(@RequestBody T entity) {
+        return service.save(entity);
     }
 
     /**
      * 修改
      *
      * @param entity
+     * @param id (可不填，将id值赋予entity)
      * @return
      */
     @PostMapping("/modify")
     @ApiOperation(value = "编辑")
-    protected E6Wrapper modify(Integer id, T entity) {
-        return serivce.modify(id, entity);
+    protected E6Wrapper modify(Integer id,@RequestBody T entity) {
+        return service.modify(id, entity);
     }
 
     /**
@@ -86,7 +88,7 @@ public abstract class BaseController<S extends BaseSerivce, T extends BaseEntity
     @PostMapping("/delete")
     @ApiOperation(value = "删除")
     protected E6Wrapper delete(Integer id) {
-        return serivce.deleteById(id);
+        return service.deleteById(id);
     }
 
     /**
@@ -98,7 +100,7 @@ public abstract class BaseController<S extends BaseSerivce, T extends BaseEntity
     @PostMapping("/findById")
     @ApiOperation(value = "根据ID查询实体")
     protected E6Wrapper findById(Integer id) {
-        return serivce.findById(id);
+        return service.findById(id);
     }
 
     /**
@@ -109,8 +111,8 @@ public abstract class BaseController<S extends BaseSerivce, T extends BaseEntity
      */
     @PostMapping("/findOne")
     @ApiOperation(value = "查询实体")
-    protected E6Wrapper findOne(T entity) {
-        return serivce.findOne(entity);
+    protected E6Wrapper findOne(@RequestBody T entity) {
+        return service.findOne(entity);
     }
 
     /**
@@ -121,7 +123,7 @@ public abstract class BaseController<S extends BaseSerivce, T extends BaseEntity
     @PostMapping("/findListAll")
     @ApiOperation(value = "查询实体集合")
     protected E6Wrapper findList() {
-        return serivce.findListAll();
+        return service.findListAll();
     }
 
     /**

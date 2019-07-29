@@ -37,16 +37,16 @@ public class PageUtil {
         return pageRequest;
     }
 
-    /**
-     * 填充数据
-     *
-     * @param pageParam
-     * @param page
-     * @return
-     */
-    public static PageParamVO fillPageParamResult(PageParamVO pageParam, Page page) {
-        pageParam.setData(page.getContent());
-        pageParam.setTotalRecords(page.getTotalElements());
-        return pageParam;
-    }
+//    /**
+//     * 填充数据
+//     *
+//     * @param pageParam
+//     * @param page
+//     * @return
+//     */
+//    public static PageParamVO fillPageParamResult(PageParamVO pageParam, Page page) {
+//        pageParam.setData(page.getContent());
+//        pageParam.setTotalRecords(page.getTotalElements());
+//        return pageParam;
+//    }
 }
