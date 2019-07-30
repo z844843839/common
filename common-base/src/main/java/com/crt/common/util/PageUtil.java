@@ -27,13 +27,13 @@ public class PageUtil {
             page.setSortDir(Sort.Direction.DESC.name());
         }
         sort = new Sort(Sort.Direction.fromString(page.getSortDir()), page.getSortIndx());
-        if (page.getCurPage() == null||page.getCurPage() <= 0) {
-            page.setCurPage(1);
+        if (page.getPage() == null||page.getPage() <= 0) {
+            page.setPage(1);
         }
-        if (page.getPageSize() == null) {
-            page.setPageSize(10000);
+        if (page.getLimit() == null) {
+            page.setLimit(10000);
         }
-        PageRequest pageRequest = PageRequest.of(page.getCurPage() - 1, page.getPageSize(), sort);
+        PageRequest pageRequest = PageRequest.of(page.getPage() - 1, page.getLimit(), sort);
         return pageRequest;
     }
 
