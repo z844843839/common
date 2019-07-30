@@ -10,11 +10,11 @@ public class PageParamVO<T> {
     /**
      * 当前页数
      */
-    private Integer curPage;
+    private Integer page;
     /**
      * 每页数量
      */
-    private Integer pageSize;
+    private Integer limit;
     /**
      * 起始查询数
      */
@@ -32,30 +32,30 @@ public class PageParamVO<T> {
      */
     private T entity;
 
-    public Integer getCurPage() {
-        return curPage;
+    public Integer getPage() {
+        return page;
     }
 
-    public void setCurPage(Integer curPage) {
-        if (null == curPage || curPage < 1) {
-            curPage = 1;
+    public void setPage(Integer page) {
+        if (null == page || page < 1) {
+            page = 1;
         }
-        this.curPage = curPage;
+        this.page = page;
     }
 
-    public Integer getPageSize() {
-        return pageSize;
+    public Integer getLimit() {
+        return limit;
     }
 
-    public void setPageSize(Integer pageSize) {
-        if (null == pageSize || pageSize < 1) {
-            pageSize  = 10;
+    public void setLimit(Integer limit) {
+        if (null == limit || limit < 1) {
+            limit  = 10;
         }
-        this.pageSize = pageSize;
+        this.limit = limit;
     }
 
     public Integer getStartPage() {
-        return (this.curPage - 1) * this.pageSize;
+        return (this.page - 1) * this.limit;
     }
 
     public String getSortIndx() {
