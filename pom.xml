@@ -18,6 +18,7 @@
         <module>common-framework</module>
         <module>eureka-server</module>
         <module>common-sdk-tech-service</module>
+        <module>common-redis</module>
     </modules>
 
     <properties>
@@ -44,6 +45,7 @@
         <eureka-server.version>1.4.7.RELEASE</eureka-server.version>
         <feign-okhttp.version>9.5.1</feign-okhttp.version>
         <commons-lang3.version>3.9</commons-lang3.version>
+        <commons-pool2.version>2.6.0</commons-pool2.version>
         <commons-beanutils.version>1.9.3</commons-beanutils.version>
         <hutool.version>4.5.16</hutool.version>
         <fastjson.version>1.2.58</fastjson.version>
@@ -103,7 +105,6 @@
                 <version>${common-loadbalance.version}</version>
             </dependency>
 
-
             <!-- spring Boot-->
             <dependency>
                 <groupId>org.springframework.boot</groupId>
@@ -113,6 +114,11 @@
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-data-jpa</artifactId>
+                <version>${spring-boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-data-redis</artifactId>
                 <version>${spring-boot.version}</version>
             </dependency>
             <dependency>
@@ -147,6 +153,11 @@
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
                 <version>${commons-lang3.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-pool2</artifactId>
+                <version>${commons-pool2.version}</version>
             </dependency>
             <dependency>
                 <groupId>commons-beanutils</groupId>
