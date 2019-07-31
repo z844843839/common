@@ -41,24 +41,48 @@ public class BaseBizEntity extends BaseEntity implements Serializable {
      */
     private Date modified_at;
 
+    public Integer getCreated_id() {
+        return created_id;
+    }
+
     public void setCreated_id(Integer created_id) {
         this.created_id = created_id;
+    }
+
+    public String getCreated_by() {
+        return created_by;
     }
 
     public void setCreated_by(String created_by) {
         this.created_by = created_by;
     }
 
+    public Date getCreated_at() {
+        return created_at;
+    }
+
     public void setCreated_at(Date created_at) {
         this.created_at = created_at;
+    }
+
+    public Integer getModified_id() {
+        return modified_id;
     }
 
     public void setModified_id(Integer modified_id) {
         this.modified_id = modified_id;
     }
 
+    public String getModified_by() {
+        return modified_by;
+    }
+
     public void setModified_by(String modified_by) {
         this.modified_by = modified_by;
+    }
+
+    public Date getModified_at() {
+        return modified_at;
     }
 
     public void setModified_at(Date modified_at) {

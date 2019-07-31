@@ -55,6 +55,12 @@ public class PageParamVO<T> {
     }
 
     public Integer getStartPage() {
+        if (null == page || page < 1) {
+            page = 1;
+        }
+        if (null == limit || limit < 1) {
+            limit  = 10;
+        }
         return (this.page - 1) * this.limit;
     }
 
