@@ -37,6 +37,8 @@ public class MyWebMvcConfig implements WebMvcConfigurer {
                 SerializerFeature.WriteNullListAsEmpty
 //                SerializerFeature.WriteNullBooleanAsFalse
         );
+        //此处是全局处理方式
+        fastJsonConfig.setDateFormat("yyyy-MM-dd HH:mm:ss");
         fastConverter.setFastJsonConfig(fastJsonConfig);
         fastConverter.setSupportedMediaTypes(Collections.singletonList(MediaType.APPLICATION_JSON_UTF8));
         //3、在convert中添加配置信息.
