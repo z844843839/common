@@ -5,6 +5,8 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -152,6 +154,29 @@ public class RedisUtil<T> {
         }
         return redisTemplate.opsForValue().increment(key, delta);
     }
+
+    /**
+     * 生成业务递增编码
+     * @param busCode
+     * @return
+     */
+    public long businessCode(int busCode){
+        //根据业务规则，获取当天六位数
+        String dateStr = new SimpleDateFormat("YYMMdd")
+                .format(new Date());
+        //业务编码 + 6位日期 作为Key
+        String key = busCode + dateStr;
+        //生成6位自增数
+        Long autoNum = increase(key,1);
+        //不足6位，前面补0
+        String autoNumStr = String.format("%0" + 6 + "d", autoNum);
+        Long code = Long.parseLong(key + autoNumStr);
+        //设置编码保存时长
+        setExpireTime(key,24 * 60 * 60);
+        return code;
+    }
+
+
 
     /**
      * 递减
