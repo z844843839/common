@@ -1,5 +1,6 @@
 package com.crt.common.vo;
 
+import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 import java.io.Serializable;
 import java.util.Date;
@@ -14,78 +15,84 @@ public class BaseBizEntity extends BaseEntity implements Serializable {
     /**
      * 创建人ID
      */
-    private Integer created_id;
+    @Column(name = "created_id")
+    private Integer createdId;
 
     /**
      * 创建人姓名
      */
-    private String created_by;
+    @Column(name = "created_by")
+    private String createdBy;
 
     /**
      * 创建时间
      */
-    private Date created_at;
+    @Column(name = "created_at")
+    private Date createdAt;
 
     /**
      * 修改人ID
      */
-    private Integer modified_id;
+    @Column(name = "modified_id")
+    private Integer modifiedId;
 
     /**
      * 修改人姓名
      */
-    private String modified_by;
+    @Column(name = "modified_by")
+    private String modifiedBy;
 
     /**
      * 修改时间
      */
-    private Date modified_at;
+    @Column(name = "modified_at")
+    private Date modifiedAt;
 
-    public Integer getCreated_id() {
-        return created_id;
+    public Integer getCreatedId() {
+        return createdId;
     }
 
-    public void setCreated_id(Integer created_id) {
-        this.created_id = created_id;
+    public void setCreatedId(Integer createdId) {
+        this.createdId = createdId;
     }
 
-    public String getCreated_by() {
-        return created_by;
+    public String getCreatedBy() {
+        return createdBy;
     }
 
-    public void setCreated_by(String created_by) {
-        this.created_by = created_by;
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
     }
 
-    public Date getCreated_at() {
-        return created_at;
+    public Date getCreatedAt() {
+        return createdAt;
     }
 
-    public void setCreated_at(Date created_at) {
-        this.created_at = created_at;
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
     }
 
-    public Integer getModified_id() {
-        return modified_id;
+    public Integer getModifiedId() {
+        return modifiedId;
     }
 
-    public void setModified_id(Integer modified_id) {
-        this.modified_id = modified_id;
+    public void setModifiedId(Integer modifiedId) {
+        this.modifiedId = modifiedId;
     }
 
-    public String getModified_by() {
-        return modified_by;
+    public String getModifiedBy() {
+        return modifiedBy;
     }
 
-    public void setModified_by(String modified_by) {
-        this.modified_by = modified_by;
+    public void setModifiedBy(String modifiedBy) {
+        this.modifiedBy = modifiedBy;
     }
 
-    public Date getModified_at() {
-        return modified_at;
+    public Date getModifiedAt() {
+        return modifiedAt;
     }
 
-    public void setModified_at(Date modified_at) {
-        this.modified_at = modified_at;
+    public void setModifiedAt(Date modifiedAt) {
+        this.modifiedAt = modifiedAt;
     }
 }
