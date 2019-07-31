@@ -1,5 +1,6 @@
 package com.crt.common.web;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
@@ -29,16 +30,18 @@ public class MyWebMvcConfig implements WebMvcConfigurer {
     public HttpMessageConverters fastJsonHttpMessageConverters() {
         FastJsonHttpMessageConverter fastConverter = new FastJsonHttpMessageConverter();
         FastJsonConfig fastJsonConfig = new FastJsonConfig();
+        //此处是全局处理方式
+        JSON.DEFFAULT_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
         // 不忽略对象属性中的null值
         fastJsonConfig.setSerializerFeatures(
                 SerializerFeature.PrettyFormat,
                 SerializerFeature.WriteNullStringAsEmpty,
                 SerializerFeature.WriteNullNumberAsZero,
-                SerializerFeature.WriteNullListAsEmpty
+                SerializerFeature.WriteNullListAsEmpty,
+                SerializerFeature.WriteDateUseDateFormat,
+                SerializerFeature.WriteMapNullValue
 //                SerializerFeature.WriteNullBooleanAsFalse
         );
-        //此处是全局处理方式
-        fastJsonConfig.setDateFormat("yyyy-MM-dd HH:mm:ss");
         fastConverter.setFastJsonConfig(fastJsonConfig);
         fastConverter.setSupportedMediaTypes(Collections.singletonList(MediaType.APPLICATION_JSON_UTF8));
         //3、在convert中添加配置信息.
