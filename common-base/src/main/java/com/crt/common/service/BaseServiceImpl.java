@@ -162,7 +162,8 @@ public class BaseServiceImpl<D extends JpaRepository<T, Integer>, T extends Base
         }
         T obj = optional.get();
         //用传入实体值替换原有的实体值
-        Object oj = BeanUtil.cover(obj, entity);
+//        Object oj = BeanUtil.cover(entity,obj);
+        Object oj = BeanUtil.Copy(obj,entity,false);
         T newObj = dao.save((T) oj);
         //修改后，若有其他操作，在 afterModify()方法中添加
         E6Wrapper after = afterModify(newObj);
