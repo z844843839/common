@@ -36,6 +36,7 @@ public class MyWebMvcConfig implements WebMvcConfigurer {
         fastJsonConfig.setSerializerFeatures(
                 SerializerFeature.PrettyFormat,
                 SerializerFeature.WriteNullStringAsEmpty,
+                //数字类型为null 返回0
                 SerializerFeature.WriteNullNumberAsZero,
                 SerializerFeature.WriteNullListAsEmpty,
                 SerializerFeature.WriteDateUseDateFormat,
