@@ -10,12 +10,15 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.beans.PropertyEditorSupport;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -133,7 +136,10 @@ public abstract class BaseController<S extends BaseService, T extends BaseEntity
      */
     @InitBinder
     protected void initBinder(WebDataBinder binder) {
-        binder.registerCustomEditor(Date.class, new MyDateEditor());
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        CustomDateEditor dateEditor = new CustomDateEditor(df, true);
+        binder.registerCustomEditor(Date.class,dateEditor);
+        //binder.registerCustomEditor(Date.class, new MyDateEditor());
     }
 
     private class MyDateEditor extends PropertyEditorSupport {
