@@ -19,6 +19,7 @@
         <module>eureka-server</module>
         <module>common-sdk-tech-service</module>
         <module>common-redis</module>
+        <module>common-es</module>
     </modules>
 
     <properties>

@@ -10,12 +10,14 @@
     <modelVersion>4.0.0</modelVersion>
 
     <!-- 公共包各自定义版本，不继承父pom版本 -->
-    <groupId>com.crt</groupId>
-    <artifactId>common-base</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <artifactId>common-es</artifactId>
 
     <!-- 各模块中引入的包(二方&三方)必须在common工程pom文件中统一定义版本 -->
     <dependencies>
+        <dependency>
+            <groupId>com.crt</groupId>
+            <artifactId>common-base</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -50,23 +52,44 @@
             <version>1.5.6</version>
             <scope>compile</scope>
         </dependency>
+        <!-- elasticsearch -->
+        <dependency>
+            <groupId>com.bbossgroups.plugins</groupId>
+            <artifactId>bboss-elasticsearch-rest-jdbc</artifactId>
+            <version>5.7.5</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-log4j12</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.osgl/osgl-tool -->
+        <dependency>
+            <groupId>org.osgl</groupId>
+            <artifactId>genie</artifactId>
+            <version>1.9.3</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.osgl/osgl-mvc -->
+        <dependency>
+            <groupId>org.osgl</groupId>
+            <artifactId>osgl-mvc</artifactId>
+            <version>1.9.0</version>
+        </dependency>
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
             <version>4.5.16</version>
         </dependency>
-        <!-- jwt-->
         <dependency>
-            <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt</artifactId>
-            <version>0.9.1</version>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
         </dependency>
-
-        <!-- https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml -->
+        <!-- RabbitMQ-->
         <dependency>
-            <groupId>org.apache.poi</groupId>
-            <artifactId>poi-ooxml</artifactId>
-            <version>3.17</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-amqp</artifactId>
         </dependency>
     </dependencies>
 
