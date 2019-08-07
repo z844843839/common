@@ -175,7 +175,22 @@ public class RedisUtil<T> {
         setExpireTime(key,24 * 60 * 60);
         return code;
     }
-
+    
+    /**
+     * 根据key生成自增指定长度的字符串
+     * @param key 
+     * @param strLength 返回长度以0补齐 
+     * @return
+     */
+    public String increaseStr(String key,int strLength){
+        //生成strLength位自增数
+        Long autoNum = increase(key,1);
+        //不足strLength位，前面补0
+        String autoNumStr = String.format("%0" + strLength + "d", autoNum);
+        //设置编码保存时长
+        setExpireTime(key,365*2*24 * 60 * 60);
+        return autoNumStr;
+    }
 
 
     /**
