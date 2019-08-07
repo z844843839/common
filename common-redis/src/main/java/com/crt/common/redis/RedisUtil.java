@@ -178,7 +178,8 @@ public class RedisUtil<T> {
     
     /**
      * 根据key生成自增指定长度的字符串
-     * @param busCode
+     * @param key 
+     * @param strLength 返回长度以0补齐 
      * @return
      */
     public String increaseStr(String key,int strLength){
