@@ -20,6 +20,7 @@
         <module>common-sdk-tech-service</module>
         <module>common-redis</module>
         <module>common-es</module>
+        <module>common-aspect</module>
     </modules>
 
     <properties>

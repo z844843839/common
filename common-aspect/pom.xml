@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>common</artifactId>
+        <groupId>com.crt</groupId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- 公共包各自定义版本，不继承父pom版本 -->
+    <groupId>com.crt</groupId>
+    <artifactId>common-aspect</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
+    <distributionManagement>
+        <!--snapshot包使用snapshotRepository-->
+        <snapshotRepository>
+            <id>crt-snapshots</id>
+            <name>crt release maven</name>
+            <url>http://nexus.dev.chinacrt.com:23456/repository/crt-snapshots/</url>
+        </snapshotRepository>
+        <!--release包使用repository-->
+        <repository>
+            <id>crt-releases</id>
+            <name>crt release maven</name>
+            <url>http://nexus.dev.chinacrt.com:23456/repository/crt-releases/</url>
+        </repository>
+    </distributionManagement>
+
+</project>
