@@ -43,38 +43,39 @@ public class TokenInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception{
-        // 当前请求方法、请求类
-        Method reqMethod = ((HandlerMethod) handler).getMethod();
-        Class reqClass = reqMethod.getDeclaringClass();
-
-        // 获取当前请求方法上的授权验证注解，并验证授权级别是否为开放级别，若是开放，则直接返回，不在继续验证
-        TokenAuthentication authMethod = (TokenAuthentication)this.getMethodAnnotation(reqMethod, TokenAuthentication.class);
-        if (authMethod != null && authMethod.authLevel() == AuthLevel.NO_AUTH) {
-            return true;
-        }
-
-        // 获取当前请求方法上的授权验证注解，并验证授权级别是否为开放级别，若是开放，则直接返回，不在继续验证
-        TokenAuthentication authClass = (TokenAuthentication)this.getClassAnnotation(reqClass, TokenAuthentication.class);
-        if (authClass != null && authClass.authLevel() == AuthLevel.NO_AUTH) {
-            return true;
-        }
-
-
-        // TODO 暂时定义所有未配置无需验证的请求，均需要执行验证操作
-         return this.exeTokenAuthorized(request,response);
-
-        // 登录授权验证层级，验证请求方法是否定义了
-//        authMethod = (TokenAuthentication)this.getMethodAnnotation(reqMethod, TokenAuthentication.class);
-//        if (authMethod != null && authMethod.authLevel() == AuthLevel.LOGIN) {
-//            return this.exeTokenAuthorized(request,response);
+//        // 当前请求方法、请求类
+//        Method reqMethod = ((HandlerMethod) handler).getMethod();
+//        Class reqClass = reqMethod.getDeclaringClass();
+//
+//        // 获取当前请求方法上的授权验证注解，并验证授权级别是否为开放级别，若是开放，则直接返回，不在继续验证
+//        TokenAuthentication authMethod = (TokenAuthentication)this.getMethodAnnotation(reqMethod, TokenAuthentication.class);
+//        if (authMethod != null && authMethod.authLevel() == AuthLevel.NO_AUTH) {
+//            return true;
 //        }
 //
-//        // 登录授权验证层级，验证请求类是否定义了
-//        authClass = (TokenAuthentication)this.getClassAnnotation(reqClass, TokenAuthentication.class);
-//        if (authClass != null && authClass.authLevel() == AuthLevel.LOGIN) {
-//            return this.exeTokenAuthorized(request,response);
+//        // 获取当前请求方法上的授权验证注解，并验证授权级别是否为开放级别，若是开放，则直接返回，不在继续验证
+//        TokenAuthentication authClass = (TokenAuthentication)this.getClassAnnotation(reqClass, TokenAuthentication.class);
+//        if (authClass != null && authClass.authLevel() == AuthLevel.NO_AUTH) {
+//            return true;
 //        }
+//
+//
+//        // TODO 暂时定义所有未配置无需验证的请求，均需要执行验证操作
+//        // return this.exeTokenAuthorized(request,response);
 //        return true;
+//        // 登录授权验证层级，验证请求方法是否定义了
+////        authMethod = (TokenAuthentication)this.getMethodAnnotation(reqMethod, TokenAuthentication.class);
+////        if (authMethod != null && authMethod.authLevel() == AuthLevel.LOGIN) {
+////            return this.exeTokenAuthorized(request,response);
+////        }
+////
+////        // 登录授权验证层级，验证请求类是否定义了
+////        authClass = (TokenAuthentication)this.getClassAnnotation(reqClass, TokenAuthentication.class);
+////        if (authClass != null && authClass.authLevel() == AuthLevel.LOGIN) {
+////            return this.exeTokenAuthorized(request,response);
+////        }
+////        return true;
+        return true;
     }
 
     @Override
