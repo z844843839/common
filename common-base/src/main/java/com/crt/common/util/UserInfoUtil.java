@@ -42,7 +42,7 @@ public class UserInfoUtil {
      * @return redis里面存储的用户信息
      */
     public static E6Wrapper getUserInfo(HttpServletRequest request) {
-        String token = request.getHeader(uacCookieProperties1.getCookieTokenKey());
+        String token = request.getHeader("token");
         if (StringUtils.isEmpty(token))
         {
             return E6WrapperUtil.error("token值不存在");
