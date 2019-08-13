@@ -160,7 +160,7 @@ public class BaseServiceImpl<D extends JpaRepository<T, Integer>, T extends Base
         if (null == optional || !optional.isPresent()) {
             return E6WrapperUtil.paramError("实体不存在");
         }
-        T obj = optional.get();
+            T obj = optional.get();
         //用传入实体值替换原有的实体值
 //        Object oj = BeanUtil.cover(entity,obj);
         Object oj = BeanUtil.Copy(obj,entity,false);

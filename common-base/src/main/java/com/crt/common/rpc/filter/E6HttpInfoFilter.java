@@ -1,7 +1,7 @@
 package com.crt.common.rpc.filter;
 
 
-import com.crt.common.constant.ConstOfUserContext;
+import com.crt.common.constant.Constants;
 import com.crt.common.context.UserContextHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,7 +41,7 @@ public class  E6HttpInfoFilter extends GenericFilterBean {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         //如果是非静态请求，则把需要的header内容获取放入span中
 
-        Arrays.stream(ConstOfUserContext.HEADERS).forEach(name->saveHeader(name,httpRequest.getHeader(name)));
+        Arrays.stream(Constants.HEADERS).forEach(name->saveHeader(name,httpRequest.getHeader(name)));
 
         //debug模式下，打印header内容
         if(logger.isDebugEnabled()) {

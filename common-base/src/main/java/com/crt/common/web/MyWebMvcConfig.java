@@ -37,7 +37,7 @@ public class MyWebMvcConfig implements WebMvcConfigurer {
                 SerializerFeature.PrettyFormat,
                 SerializerFeature.WriteNullStringAsEmpty,
                 //数字类型为null 返回0
-                SerializerFeature.WriteNullNumberAsZero,
+                //SerializerFeature.WriteNullNumberAsZero,
                 SerializerFeature.WriteNullListAsEmpty,
                 SerializerFeature.WriteDateUseDateFormat,
                 SerializerFeature.WriteMapNullValue
