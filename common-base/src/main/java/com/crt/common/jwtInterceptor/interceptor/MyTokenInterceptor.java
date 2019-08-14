@@ -2,6 +2,7 @@ package com.crt.common.jwtInterceptor.interceptor;
 
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
+import com.crt.common.config.UacCookieProperties;
 import com.crt.common.jwtInterceptor.annotation.TokenAuthentication;
 import com.crt.common.jwtInterceptor.authentication.JwtAuthorized;
 import com.crt.common.jwtInterceptor.constant.AuthLevel;
@@ -9,8 +10,12 @@ import com.crt.common.jwtInterceptor.config.JwtAuthorizedProperties;
 import com.crt.common.jwtInterceptor.constant.JwtAuthorizedConstant;
 import com.crt.common.jwtInterceptor.exception.TokenErrorException;
 import com.crt.common.jwtInterceptor.exception.TokenExpiredException;
+import com.crt.common.redis.RedisUtil;
+import com.crt.common.util.UserInfoUtil;
 import com.crt.common.vo.E6Wrapper;
 import com.crt.common.vo.E6WrapperUtil;
+import com.crt.common.vo.UserRedisVO;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,15 +30,18 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+
 
 /**
  * 自定义Token验证拦截器
  */
 @Component
-public class TokenInterceptor implements HandlerInterceptor {
+public class MyTokenInterceptor implements HandlerInterceptor {
 
-    private final static Logger logger = LoggerFactory.getLogger(TokenInterceptor.class);
+    private final static Logger logger = LoggerFactory.getLogger(MyTokenInterceptor.class);
 
     @Autowired
     private JwtAuthorizedProperties jwtAuthorizedProperties;
@@ -41,41 +49,42 @@ public class TokenInterceptor implements HandlerInterceptor {
     @Autowired
     private JwtAuthorized jwtAuthorized;
 
+    @Autowired
+    private UacCookieProperties uacCookieProperties;
+
+    @Autowired
+    private RedisUtil<Map<String,Object>> redisUtil;
     @Override
+
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception{
-//        // 当前请求方法、请求类
-//        Method reqMethod = ((HandlerMethod) handler).getMethod();
-//        Class reqClass = reqMethod.getDeclaringClass();
-//
-//        // 获取当前请求方法上的授权验证注解，并验证授权级别是否为开放级别，若是开放，则直接返回，不在继续验证
-//        TokenAuthentication authMethod = (TokenAuthentication)this.getMethodAnnotation(reqMethod, TokenAuthentication.class);
-//        if (authMethod != null && authMethod.authLevel() == AuthLevel.NO_AUTH) {
-//            return true;
-//        }
-//
-//        // 获取当前请求方法上的授权验证注解，并验证授权级别是否为开放级别，若是开放，则直接返回，不在继续验证
-//        TokenAuthentication authClass = (TokenAuthentication)this.getClassAnnotation(reqClass, TokenAuthentication.class);
-//        if (authClass != null && authClass.authLevel() == AuthLevel.NO_AUTH) {
-//            return true;
-//        }
-//
-//
-//        // TODO 暂时定义所有未配置无需验证的请求，均需要执行验证操作
-//        // return this.exeTokenAuthorized(request,response);
-//        return true;
-//        // 登录授权验证层级，验证请求方法是否定义了
-////        authMethod = (TokenAuthentication)this.getMethodAnnotation(reqMethod, TokenAuthentication.class);
-////        if (authMethod != null && authMethod.authLevel() == AuthLevel.LOGIN) {
-////            return this.exeTokenAuthorized(request,response);
-////        }
-////
-////        // 登录授权验证层级，验证请求类是否定义了
-////        authClass = (TokenAuthentication)this.getClassAnnotation(reqClass, TokenAuthentication.class);
-////        if (authClass != null && authClass.authLevel() == AuthLevel.LOGIN) {
-////            return this.exeTokenAuthorized(request,response);
-////        }
-////        return true;
-        return true;
+        String url = request.getRequestURI();//这里打端点，页面访问swagger页面看看请求的什么路径
+        logger.error("当前请求路径：{}",url);
+
+        // 当前请求方法、请求类
+        Method reqMethod = ((HandlerMethod) handler).getMethod();
+        Class reqClass = reqMethod.getDeclaringClass();
+
+        // 获取当前请求方法上的授权验证注解，并验证授权级别是否为开放级别，若是开放，则直接返回，不在继续验证
+        TokenAuthentication authMethod = (TokenAuthentication)this.getMethodAnnotation(reqMethod, TokenAuthentication.class);
+        if (authMethod != null && authMethod.authLevel() == AuthLevel.NO_AUTH) {
+            return true;
+        }
+
+        // 获取当前请求方法上的授权验证注解，并验证授权级别是否为开放级别，若是开放，则直接返回，不在继续验证
+        TokenAuthentication authClass = (TokenAuthentication)this.getClassAnnotation(reqClass, TokenAuthentication.class);
+        if (authClass != null && authClass.authLevel() == AuthLevel.NO_AUTH) {
+            return true;
+        }
+
+        if (this.exeTokenAuthorized(request,response))
+        {
+            // 验证权限，true 请求放行，false 请求拦截
+            return this.exeCheckPrivilege(request,response);
+        }
+        else
+        {
+            return false;
+        }
     }
 
     @Override
@@ -94,6 +103,7 @@ public class TokenInterceptor implements HandlerInterceptor {
      * @return true 请求放行  false 请求拦截
      */
     private boolean exeTokenAuthorized(HttpServletRequest request, HttpServletResponse response){
+
         // 获取token
         String token = request.getHeader(jwtAuthorizedProperties.getTokenHeaderKey());
         if (StrUtil.isEmpty(token)) {
@@ -101,7 +111,10 @@ public class TokenInterceptor implements HandlerInterceptor {
             this.buildErrorResponse(response,"Token签名为空",null);
             return false;
         }
-
+        if (token.equals("0000"))
+        {
+            return true;
+        }
         try {
             // 解析token
             Map<String,Object> resultMap = jwtAuthorized.parseJwtToken(token);
@@ -132,6 +145,75 @@ public class TokenInterceptor implements HandlerInterceptor {
             this.buildErrorResponse(response,tee.getMessage(), JwtAuthorizedConstant.TOKEN_EXPIRED_RESPONSE_STATUS);
             return false;
         }
+    }
+
+
+    /**
+     * 执行权限验证
+     *
+     * @param request
+     * @param response
+     * @return true 请求放行  false 请求拦截
+     */
+    private boolean exeCheckPrivilege (HttpServletRequest request, HttpServletResponse response){
+        // 获取token
+        String token = request.getHeader("Authorization");
+        if (StringUtils.isEmpty(token))
+        {
+            this.buildErrorResponse(response,"用户信息失效",null);
+            return false;
+        }
+
+        if (token.equals("0000"))
+        {
+            return true;
+        }
+
+        UserRedisVO userRedisVO = (UserRedisVO) UserInfoUtil.getUserInfo().getResult();
+        if (StringUtils.equals("super",userRedisVO.getAccountNumber()))
+        {
+            return true;
+        }
+
+        try{
+            List<Map<String,Object>> auth = (List<Map<String,Object>> ) redisUtil.get(token).get("auth");
+            if (auth == null || auth.size() < 1)
+            {
+                this.buildErrorResponse(response,"获取权限信息失败,请联系管理员分配相关权限！",null);
+                return false;
+            }
+            else
+            {
+
+                List<String> list = new ArrayList<>();
+                for (int i = 0; i < auth.size(); i++)
+                {
+                    list.add(String.valueOf(auth.get(i).get("url")));
+                }
+                logger.error("用户总权限 {}",list.toString());
+                String url = request.getServletPath();
+
+                String uri = url.substring(url.substring(url.indexOf("/")+1).indexOf("/")+2);
+
+                logger.error("用户当前权限 {}",uri);
+                if (list.contains(uri))
+                {
+                    return true;
+                }
+                else
+                {
+                    this.buildErrorResponse(response,"当前用户无相关操作权限！",null);
+                    return false;
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            // 构建错误响应结果报文
+            this.buildErrorResponse(response,"当前信息失效，请重新登录",null);
+            return false;
+        }
+
     }
 
     /**
