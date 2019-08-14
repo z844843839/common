@@ -1,4 +1,4 @@
-package com.crt.common.config;
+package com.crt.framework.config;
 
 
 
