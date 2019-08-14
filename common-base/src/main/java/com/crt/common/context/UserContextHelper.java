@@ -2,7 +2,7 @@ package com.crt.common.context;
 
 
 
-import com.crt.common.constant.ConstOfUserContext;
+import com.crt.common.constant.Constants;
 import org.slf4j.MDC;
 
 import static java.lang.Integer.parseInt;
@@ -31,17 +31,17 @@ public class UserContextHelper {
      */
     public static void saveHeaderInThreadLocal(String headerName,String headerValue){
         switch (headerName){
-            case ConstOfUserContext.USER_ID:
+            case Constants.USER_ID:
                 //在MDC中添加用户ID，方便日志输出
                 MDC.put(USER_ID_IN_MDC,headerValue);
                 UserContextHelper.setUserId(parseInt(headerValue));break;
-            case ConstOfUserContext.WEBGIS_USER_ID :
+            case Constants.WEBGIS_USER_ID :
                 UserContextHelper.setWebgisUserId(parseInt(headerValue));break;
-            case ConstOfUserContext.CORP_ID :
+            case Constants.CORP_ID :
                 UserContextHelper.setCorpId(parseInt(headerValue));break;
-            case ConstOfUserContext.ORG_ID :
+            case Constants.ORG_ID :
                 UserContextHelper.setOrgId(parseInt(headerValue));break;
-            case ConstOfUserContext.PARENT_ID :
+            case Constants.PARENT_ID :
                 UserContextHelper.setParentId(parseInt(headerValue));
         }
     }
