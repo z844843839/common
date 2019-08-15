@@ -26,7 +26,7 @@ public class TokenInterceptorConfig implements WebMvcConfigurer {
          */
         registry.addInterceptor(getTokenInterceptor()).addPathPatterns("/**")
                 .excludePathPatterns("/rest/login.do/info")
-                .excludePathPatterns("/swagger-resources/**", "/webjars/**", "/v2/**", "/swagger-ui.html/**","/bpm/**");
+                .excludePathPatterns("/swagger-resources/**", "/webjars/**", "/v2/**", "/swagger-ui.html/**","/bpm/**","**/bpm/**");
     }
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
