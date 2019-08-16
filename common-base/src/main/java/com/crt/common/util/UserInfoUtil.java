@@ -42,7 +42,7 @@ public class UserInfoUtil {
      * 获取用户信息方法
      * @return redis里面存储的用户信息
      */
-    public static E6Wrapper getUserInfo() {
+    public static E6Wrapper<UserRedisVO> getUserInfo() {
 
         HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
 
