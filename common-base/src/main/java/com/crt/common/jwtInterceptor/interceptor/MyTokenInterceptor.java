@@ -59,7 +59,10 @@ public class MyTokenInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception{
         String url = request.getRequestURI();//这里打端点，页面访问swagger页面看看请求的什么路径
         logger.error("当前请求路径：{}",url);
-
+		if (url.contains("bpm"))
+		{
+			return true;
+		}
         // 当前请求方法、请求类
         Method reqMethod = ((HandlerMethod) handler).getMethod();
         Class reqClass = reqMethod.getDeclaringClass();
