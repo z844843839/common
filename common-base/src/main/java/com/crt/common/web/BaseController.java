@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.beans.PropertyEditorSupport;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -136,26 +137,30 @@ public abstract class BaseController<S extends BaseService, T extends BaseEntity
      */
     @InitBinder
     protected void initBinder(WebDataBinder binder) {
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        CustomDateEditor dateEditor = new CustomDateEditor(df, true);
-        binder.registerCustomEditor(Date.class,dateEditor);
+        binder.registerCustomEditor(Date.class, new MyDateEditor());
+//        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//        CustomDateEditor dateEditor = new CustomDateEditor(df, true);
+//        binder.registerCustomEditor(Date.class,dateEditor);
         //binder.registerCustomEditor(Date.class, new MyDateEditor());
     }
 
     private class MyDateEditor extends PropertyEditorSupport {
         @Override
-        public void setAsText(String text) {
+        public void setAsText(String text) throws IllegalArgumentException {
+            //通过两次异常的处理可以，绑定两次日期的格式
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date date = null;
             try {
-                if (StringUtils.isBlank(text)) {
-                    setValue(null);
-                    return;
+                date = format.parse(text);
+            } catch (ParseException e) {
+                format = new SimpleDateFormat("yyyy-MM-dd");
+                try {
+                    date = format.parse(text);
+                } catch (ParseException e1) {
+                    logger.error("系统异常:"+e1);
                 }
-                long timeStamp = new Long(text);
-                Date date = new Date(timeStamp);
-                setValue(date);
-            } catch (Exception e) {
-                logger.error("从前台传来的时间戳错误，请检查前台传来的时间戳");
             }
+            setValue(date);
         }
     }
 }
