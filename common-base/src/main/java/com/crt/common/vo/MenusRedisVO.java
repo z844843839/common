@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import java.util.List;
 
 public class MenusRedisVO {
-
     private Integer id;
     //数据类型(0菜单 1资源)
     private int tabMold;
@@ -34,6 +33,8 @@ public class MenusRedisVO {
     private String redirect;
     //是否外联(0否、1是)
     private int alwaysShow;
+    //菜单归属分类
+    private long ascription;
 
     public int getTabMold() {
         return tabMold;
@@ -145,5 +146,13 @@ public class MenusRedisVO {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public long getAscription() {
+        return ascription;
+    }
+
+    public void setAscription(long ascription) {
+        this.ascription = ascription;
     }
 }
