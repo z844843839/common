@@ -1,18 +1,20 @@
 package com.crt.common.util;
 
-//import com.crt.commones.mq.service.MQcroe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
-import java.io.IOException;
+import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -28,6 +30,8 @@ public class WorkFlowUtil {
 
 //    @Autowired
 //    MQcroe mQcroe;
+    @Value("${workflow.url}")
+    private static String url;
 
     /**
      * 流程启动方法
@@ -35,22 +39,28 @@ public class WorkFlowUtil {
      * @return
      */
     public static void flowStartup(Map<String,Object> map){
+//        url = "http://middle-common-bpm.dev.chinacrt.com:23456/bpm/operation/process-operation-confirmStartProcess";
         if (null != map && map.size() > 0){
+            HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
+//            String token = "eyJ0eXBlIjoiSldUIiwiYWxnIjoiSFMyNTYifQ.eyJqdGkiOiIxNTY2MzY4ODczNDY2Iiwic3ViIjoic3VwZXIiLCJhdWQiOiJzdXBlciBNb3ppbGxhLzUuM" +
+//                    "CAoV2luZG93cyBOVCAxMC4wOyBXT1c2NCkgQXBwbGVXZWJLaXQvNTM3LjM2IChLSFRNTCwgbGlrZSBHZWNrbykgQ2hyb21lLzc1LjAuMzc3MC4xNDIgU2FmYXJpLzUzNy4zNi" +
+//                    "IsImlhdCI6MTU2NjM2ODg3MywiZXhwIjoxNTY2Mzk3NjczLCJjdXN0b21BdHRyIjoiMTU2NTYwMzI5MzA5NyJ9.TWtOCmeaZ7kyTrYF4WInMa1-Y1XqQxngkItuJHUsymk";
+            String token = request.getHeader("Authorization");
             RestTemplate restTemplate = new RestTemplate();
             //api url地址
-            String url = "http://middle-common-bpm.dev.chinacrt.com:23456/";
-            url += "/operation/process-operation-confirmStartProcess";
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
             MultiValueMap<String, Object> mvMap= new LinkedMultiValueMap<>();
             for (Map.Entry<String, Object> entry : map.entrySet()) {
                 mvMap.add(entry.getKey(),entry.getValue());
             }
-            HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity<>(mvMap, headers);
-            ResponseEntity<String> response = restTemplate.postForEntity( url, request , String.class );
-            logger.error(" response ====> "+ response.getBody());
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Authorization",token);
+            HttpEntity<MultiValueMap> entity = new HttpEntity<>(mvMap,headers);
+            ResponseEntity<String> exchange = restTemplate.exchange(url,
+                    HttpMethod.POST, entity, String.class);
+            logger.error(" response ====> "+ exchange.getBody());
         }
     }
+
 
 //    /**
 //     * 订阅MQ 处理消费结果
