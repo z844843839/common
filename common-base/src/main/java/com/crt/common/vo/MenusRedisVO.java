@@ -31,7 +31,13 @@ public class MenusRedisVO {
     private int menuState;
     //前端重定向
     private String redirect;
-    //是否外联(0否、1是)
+    //是否外联（0内部 1外部）
+    private int linkType;
+    /**
+     * 如果设置为true，则将始终显示根菜单
+     * 如果没有设置alwaysShow，当项目有多个子路线时，
+     * 它将成为嵌套模式，否则不显示根菜单
+     */
     private int alwaysShow;
     //菜单归属分类
     private long ascription;
@@ -138,6 +144,14 @@ public class MenusRedisVO {
 
     public void setAlwaysShow(int alwaysShow) {
         this.alwaysShow = alwaysShow;
+    }
+
+    public int getLinkType() {
+        return linkType;
+    }
+
+    public void setLinkType(int linkType) {
+        this.linkType = linkType;
     }
 
     public Integer getId() {
