@@ -1,6 +1,7 @@
 package com.crt.commones.mq.service;
 
 import com.crt.commones.mq.config.RabbitMQConfig;
+import com.crt.commones.mq.constant.MqConstX;
 import com.rabbitmq.client.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,19 +32,18 @@ public class MQcroe {
 	/**
 	 * 创建监听器，监听队列
 	 */
-	public List mqMessageListenner(String queue,String routineKey,String exchange) throws AmqpException, IOException {
+	public List mqMessageListenner(String queue,String routineKey) throws AmqpException, IOException {
       	//注意这里：mq本身 创建物理连接
 		Connection connection  = rabbitMQConfig.connectionFactory();
 		//创建虚拟连接，信道
 		Channel channel =  connection.createChannel();
 		channel.basicQos(64);//需要开启手动应答模式，否则无效
 		//处理队列动作，包含创建队列，交换机，以及绑定动作
-		channel.exchangeDeclare(exchange,"topic",true);
-
+		channel.exchangeDeclare(MqConstX.TOPIC_EXCHANGE,"topic",true);
 		//队列名称
 		channel.queueDeclare(queue,true,false,false,null);
 		//绑定交换机队列
-		channel.queueBind(queue,exchange,routineKey);
+		channel.queueBind(queue,MqConstX.TOPIC_EXCHANGE,routineKey);
 
 		List list = new ArrayList();
 		//声明监听队列
