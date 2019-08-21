@@ -1,7 +1,6 @@
 package com.crt.common.util;
 
-import com.alibaba.fastjson.JSONObject;
-import com.crt.commones.mq.service.MQcroe;
+//import com.crt.commones.mq.service.MQcroe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +26,8 @@ public class WorkFlowUtil {
 
     private static final Logger logger = LoggerFactory.getLogger(WorkFlowUtil.class);
 
-    @Autowired
-    MQcroe mQcroe;
+//    @Autowired
+//    MQcroe mQcroe;
 
     /**
      * 流程启动方法
@@ -36,7 +35,6 @@ public class WorkFlowUtil {
      * @return
      */
     public static void flowStartup(Map<String,Object> map){
-        JSONObject json = new JSONObject();
         if (null != map && map.size() > 0){
             RestTemplate restTemplate = new RestTemplate();
             //api url地址
@@ -54,16 +52,16 @@ public class WorkFlowUtil {
         }
     }
 
-    /**
-     * 订阅MQ 处理消费结果
-     * @param queue  doc_type
-     * @param routineKey
-     */
-    public void resultProcess(String queue,String routineKey){
-        try{
-            mQcroe.mqMessageListenner(queue,routineKey);
-        }catch (IOException e){
-            logger.error(" ioexception =====> " + e.getMessage());
-        }
-    }
+//    /**
+//     * 订阅MQ 处理消费结果
+//     * @param queue  doc_type
+//     * @param routineKey
+//     */
+//    public void resultProcess(String queue,String routineKey){
+//        try{
+//            mQcroe.mqMessageListenner(queue,routineKey);
+//        }catch (IOException e){
+//            logger.error(" ioexception =====> " + e.getMessage());
+//        }
+//    }
 }
