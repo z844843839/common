@@ -46,19 +46,22 @@ public class UserInfoUtil {
 
         HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
 
-        String token = request.getHeader("Authorization");
-        if (StringUtils.isEmpty(token))
-        {
-            return E6WrapperUtil.error("token不存在,用户信息获取失败");
-        }
-        else
-        {
-            Object result = userCache.get(token).get("userVO");
-            if (result == null)
+            String token = request.getHeader("Authorization");
+            if(StringUtils.isBlank(token)){
+                token=(String) request.getAttribute("Authorization");
+            }
+            if (StringUtils.isEmpty(token))
             {
-                return E6WrapperUtil.error("token错误,用户信息获取失败");
+                return E6WrapperUtil.error("token不存在,用户信息获取失败");
             }
             else
+            {
+                Object result = userCache.get(token).get("userVO");
+                if (result == null)
+                {
+                    return E6WrapperUtil.error("token错误,用户信息获取失败");
+                }
+                else
             {
                 UserRedisVO userRedisVO = new UserRedisVO();
                 userRedisVO = (UserRedisVO) BeanUtil.Copy(userRedisVO,result,false);
