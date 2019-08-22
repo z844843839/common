@@ -67,7 +67,7 @@ public class WorkFlowUtil {
             JSONObject json = JSONObject.parseObject(result);
             if (200 == Integer.parseInt(json.get("code").toString())){
                 logger.error(" result ====> "+ json.get("message"));
-                return E6WrapperUtil.ok();
+                return E6WrapperUtil.ok(json);
             }else{
                 return E6WrapperUtil.paramError(Integer.parseInt(json.get("code").toString()),json.get("message").toString());
             }
