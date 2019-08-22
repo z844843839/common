@@ -6,10 +6,12 @@ import com.crt.common.vo.E6WrapperUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
@@ -27,14 +29,19 @@ import java.util.Map;
  * @ClassName WorkFlowUtil
  * @Version: 1.0
  */
+@Component
+@PropertySource(value = {"classpath:workflowsetting.properties"},
+        ignoreResourceNotFound = true, encoding = "UTF-8", name = "workflowsetting.properties")
 public class WorkFlowUtil {
 
     private static final Logger logger = LoggerFactory.getLogger(WorkFlowUtil.class);
 
-//    @Autowired
-//    MQcroe mQcroe;
-    @Value("${workflow.url}")
     private static String url;
+
+    @Value("${workflow.url}")
+    public void setUrl(String url) {
+        WorkFlowUtil.url = url;
+    }
 
     /**
      * 流程启动方法
@@ -42,12 +49,8 @@ public class WorkFlowUtil {
      * @return
      */
     public static E6Wrapper flowStartup(Map<String,Object> map){
-//        url = "http://middle-common-bpm.dev.chinacrt.com:23456/bpm/operation/process-operation-confirmStartProcess";
         if (null != map && map.size() > 0){
             HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
-//            String token = "eyJ0eXBlIjoiSldUIiwiYWxnIjoiSFMyNTYifQ.eyJqdGkiOiIxNTY2MzY4ODczNDY2Iiwic3ViIjoic3VwZXIiLCJhdWQiOiJzdXBlciBNb3ppbGxhLzUuM" +
-//                    "CAoV2luZG93cyBOVCAxMC4wOyBXT1c2NCkgQXBwbGVXZWJLaXQvNTM3LjM2IChLSFRNTCwgbGlrZSBHZWNrbykgQ2hyb21lLzc1LjAuMzc3MC4xNDIgU2FmYXJpLzUzNy4zNi" +
-//                    "IsImlhdCI6MTU2NjM2ODg3MywiZXhwIjoxNTY2Mzk3NjczLCJjdXN0b21BdHRyIjoiMTU2NTYwMzI5MzA5NyJ9.TWtOCmeaZ7kyTrYF4WInMa1-Y1XqQxngkItuJHUsymk";
             String token = request.getHeader("Authorization");
             RestTemplate restTemplate = new RestTemplate();
             //api url地址
@@ -72,17 +75,6 @@ public class WorkFlowUtil {
         return E6WrapperUtil.paramError("参数不能未空！");
     }
 
-//    public static void main(String[] args) {
-//        Map<String,Object> map =new HashMap<>();
-//        map.put("bpmProcessId","574718481711104");
-//        Map<String,Object> multiValueMap =new HashMap<>();
-//        multiValueMap.put("entity_id","1211");
-//        multiValueMap.put("doc_type","200");
-//        map.put("multiValueMap",multiValueMap);
-//
-//        WorkFlowUtil.flowStartup(map);
-////        WorkFlowUtil.test1();
-//    }
 
 //    /**
 //     * 订阅MQ 处理消费结果
