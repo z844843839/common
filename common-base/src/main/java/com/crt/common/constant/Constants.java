@@ -65,7 +65,7 @@ public class Constants {
     //定检计划单
     public static int  VERIFICATION_PLAN_BILL= 550;
     //验箱单
-    public static int Check_BOX_BILL = 540;
+    public static int CHECK_BOX_BILL = 540;
     //Constants(包括自备箱进出)L)
     public static int  BOX_IN_AND_OUT = 530;
     //验箱收货单
