@@ -58,8 +58,8 @@ public class MyTokenInterceptor implements HandlerInterceptor {
 
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception{
         String url = request.getRequestURI();//这里打端点，页面访问swagger页面看看请求的什么路径
-        logger.error("当前请求路径：{}",url);
-		if (url.contains("bpm"))
+
+		if (url.contains("bpm") || url.contains("MIDDLE-COMMON-FILEUPLOAD"))
 		{
 			return true;
 		}
