@@ -3,6 +3,7 @@ package com.crt.common.jwtInterceptor.interceptor;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import com.crt.common.config.UacCookieProperties;
+import com.crt.common.constant.Constants;
 import com.crt.common.jwtInterceptor.annotation.TokenAuthentication;
 import com.crt.common.jwtInterceptor.authentication.JwtAuthorized;
 import com.crt.common.jwtInterceptor.constant.AuthLevel;
@@ -195,8 +196,12 @@ public class MyTokenInterceptor implements HandlerInterceptor {
                 }
                 logger.error("用户总权限 {}",list.toString());
                 String url = request.getServletPath();
-
                 String uri = url.substring(url.substring(url.indexOf("/")+1).indexOf("/")+2);
+
+                if (uri.contains(Constants.CONTAINSTR))
+                {
+                    uri = uri.substring(0,uri.indexOf(Constants.CONTAINSTR));
+                }
 
                 logger.error("用户当前权限 {}",uri);
                 if (list.contains(uri))

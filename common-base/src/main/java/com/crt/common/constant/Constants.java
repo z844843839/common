@@ -134,4 +134,6 @@ public class Constants {
     public static int  BOX_MASTER_DATA = 110;
     //客商数据
     public static int  BUSINESS_DATA = 100;
+
+    public static String CONTAINSTR = "?";
 }
