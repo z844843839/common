@@ -19,7 +19,7 @@ public class BaseBpmTraceRecord {
 	private String docType;
 	private String businessKey;
 	private String processId;
-	private Integer assigneeId;
+	private String assigneeId;
 	private String approvalStatus;
 	private Date approvalBtime;
 	private Date approvalEtime;
@@ -66,11 +66,11 @@ public class BaseBpmTraceRecord {
 		this.processId = processId;
 	}
 
-	public Integer getAssigneeId() {
+	public String getAssigneeId() {
 		return assigneeId;
 	}
 
-	public void setAssigneeId(Integer assigneeId) {
+	public void setAssigneeId(String assigneeId) {
 		this.assigneeId = assigneeId;
 	}
 
