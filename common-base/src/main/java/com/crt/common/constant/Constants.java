@@ -26,6 +26,21 @@ public class Constants {
     public static final String PARENT_ID = "parentId";
 
     /**
+     * 工作流完成状态
+     */
+    public static final String WORK_FLOW_STATUS_COMPLETE = "complete";
+
+    /**
+     * 工作流审批状态
+     */
+    public static final String WORK_FLOW_STATUS_ACTIVE = "active";
+
+    /**
+     * 工作流驳回状态
+     */
+    public static final String WORK_FLOW_STATUS_ROLLBACK = "rollback";
+
+    /**
      * 需要透传的header的名称
      */
     public static final String[] HEADERS = {USER_ID,WEBGIS_USER_ID,CORP_ID,ORG_ID,PARENT_ID};
