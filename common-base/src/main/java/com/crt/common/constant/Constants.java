@@ -108,7 +108,7 @@ public class Constants {
     //采购合同
     public final  static int PROCUREMENT_CONTRACT = 330;
     //供应商准入
-    public final static int supplier_access = 320;
+    public final static int SUPPLIER_ACCESS = 320;
     //供应商询价
     public final static int SUPPLIER_INQUIRY = 310;
     //结算方式
@@ -126,13 +126,13 @@ public class Constants {
     //客户信用评估
     public final static int CUSTOMER_CREDIT_ASSESSMENT = 250;
     //客户报价
-    public final static int Customer_Quotation = 240;
+    public final static int CUSTOMER_QUOTATION = 240;
     //物流运输方案
     public final static int  LOGISTICS_TRANSPORTATION_SCHEME = 230;
     //业务可行性分析
     public final static int  BUSINESS_FEASIBILITY_ANALYSIS = 220;
     //客户意向表
-    public final static int  Customer_Intention_Statement = 210;
+    public final static int  CUSTOMER_INTENTION_STATEMENT = 210;
     //员工主数据
     public final static int  EMPLOYEE_MASTER_DATA = 150;
     //地理地标
