@@ -43,7 +43,12 @@ public class Constants {
     /**
      * 工作流分类-采购合同
      */
-    public static final String WORK_FLOW_DOC_TYPE_CONTRACT = "采购合同";
+    public static final String WORK_FLOW_DOC_TYPE_CONTRACT_PURCH = "采购合同";
+    
+    /**
+     * 工作流分类-销售合同
+     */
+    public static final String WORK_FLOW_DOC_TYPE_CONTRACT_SALE = "销售合同";
 
     /**
      * 工作流分类-销售报价
