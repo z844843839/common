@@ -85,6 +85,38 @@ public class Constants {
      */
     public static final String WORK_FLOW_TITLE_MIDDLE_LINE = "-";
 
+    /**
+     * bpmProcessId
+     */
+    public static final String WORK_FLOW_BPMPROCESS_ID = "bpmProcessId";
+
+    /**
+     * entity_id
+     */
+    public static final String WORK_FLOW_ENTITY_ID = "entity_id";
+
+    /**
+     * doc_type
+     */
+    public static final String WORK_FLOW_DOC_TYPE = "doc_type";
+
+    /**
+     * doc_type_name
+     */
+    public static final String WORK_FLOW_DOC_TYPE_NAME = "doc_type_name";
+
+    /**
+     * entity_tiltle
+     */
+    public static final String WORK_FLOW_ENTITY_TILTLE = "entity_tiltle";
+
+    /**
+     * bpm_details_url
+     */
+    public static final String WORK_FLOW_BPM_DETAILS_URL = "bpm_details_url";
+
+
+
 
     /**
      * 需要透传的header的名称
