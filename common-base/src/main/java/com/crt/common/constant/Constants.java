@@ -80,6 +80,11 @@ public class Constants {
      */
     public static final String WORK_FLOW_TITLE_SUFFIX = "申请";
 
+    /**
+     * 工作流标题的“-”
+     */
+    public static final String WORK_FLOW_TITLE_MIDDLE_LINE = "-";
+
 
     /**
      * 需要透传的header的名称
