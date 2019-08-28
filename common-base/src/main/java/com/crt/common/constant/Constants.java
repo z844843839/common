@@ -41,6 +41,47 @@ public class Constants {
     public static final String WORK_FLOW_STATUS_ROLLBACK = "rollback";
 
     /**
+     * 工作流分类-采购合同
+     */
+    public static final String WORK_FLOW_DOC_TYPE_CONTRACT = "采购合同";
+
+    /**
+     * 工作流分类-销售报价
+     */
+    public static final String WORK_FLOW_DOC_TYPE_SALES_QUOTATION = "销售报价";
+
+    /**
+     * 工作流分类-运输方案
+     */
+    public static final String WORK_FLOW_DOC_TYPE_TRANSPORT_SCHEME = "运输方案";
+
+    /**
+     * 工作流分类-投箱管理
+     */
+    public static final String WORK_FLOW_DOC_TYPE_SIGN_IN = "投箱管理";
+
+    /**
+     *工作流分类- 调令申请
+     */
+    public static final String WORK_FLOW_DOC_TYPE_SHIF_ORDER = "调令申请";
+
+    /**
+     * 工作流分类-箱源匹配
+     */
+    public static final String WORK_FLOW_DOC_TYPE_SIGN_IN_RELATION = "箱源匹配";
+
+    /**
+     * 工作流分类-退箱管理
+     */
+    public static final String WORK_FLOW_DOC_TYPE_SIGN_OUT = "退箱管理";
+
+    /**
+     * 工作流标题的“申请”后缀
+     */
+    public static final String WORK_FLOW_TITLE_SUFFIX = "申请";
+
+
+    /**
      * 需要透传的header的名称
      */
     public static final String[] HEADERS = {USER_ID,WEBGIS_USER_ID,CORP_ID,ORG_ID,PARENT_ID};
