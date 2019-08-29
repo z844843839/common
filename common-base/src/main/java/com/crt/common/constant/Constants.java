@@ -186,6 +186,8 @@ public class Constants {
     public final static int  RETURN_BILL = 420;
     //排箱单
     public final static int ARRANGE_BILL = 410;
+    //箱匹配
+    public final static int SIGN_IN_RELATION = 411;
     //应付结算单
     public final static int  STATEMENT_PAYABLE = 340;
     //采购合同
