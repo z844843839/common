@@ -64,6 +64,7 @@ public class WorkFlowUtil {
             headers.add("Authorization",token);
             HttpEntity<MultiValueMap> entity = new HttpEntity<>(mvMap,headers);
             logger.info("WorkFlowUtil启动工作流前数据: {}", JSON.toJSONString(entity, SerializerFeature.WriteMapNullValue));
+            logger.info("WorkFlowUtil启动工作流的URL: {}", url);
             ResponseEntity<String> exchange = restTemplate.exchange(url,
                     HttpMethod.POST, entity, String.class);
             String result =  exchange.getBody();
