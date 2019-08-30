@@ -1,6 +1,8 @@
 package com.crt.common.util;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.crt.common.vo.E6Wrapper;
 import com.crt.common.vo.E6WrapperUtil;
 import org.slf4j.Logger;
@@ -61,10 +63,12 @@ public class WorkFlowUtil {
             HttpHeaders headers = new HttpHeaders();
             headers.add("Authorization",token);
             HttpEntity<MultiValueMap> entity = new HttpEntity<>(mvMap,headers);
+            logger.info("WorkFlowUtil启动工作流前数据: {}", JSON.toJSONString(entity, SerializerFeature.WriteMapNullValue));
             ResponseEntity<String> exchange = restTemplate.exchange(url,
                     HttpMethod.POST, entity, String.class);
             String result =  exchange.getBody();
             JSONObject json = JSONObject.parseObject(result);
+            logger.info("WorkFlowUtil启动工作流返回数据: {}", json);
             if (200 == Integer.parseInt(json.get("code").toString())){
                 logger.error(" result ====> "+ json.get("message"));
                 return E6WrapperUtil.ok(json);
