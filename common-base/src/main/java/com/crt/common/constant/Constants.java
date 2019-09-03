@@ -234,4 +234,26 @@ public class Constants {
     public final static int  BOX_MASTER_DATA = 110;
     //客商数据
     public final static int  BUSINESS_DATA = 100;
+    /**
+     * sql操作符
+     */
+    public final static String LEFT_PARENTHESES = "(";
+
+    public final static String RIGHT_PARENTHESES = ")";
+
+    public final static String SPOT = ".";
+
+    public final static String SPACE = " ";
+
+    public final static String SINGLE_QUOTATION_MARK = "'";
+
+    public final static String PERCENTAGE_MARK = "%";
+
+    public final static String NUMBER_TEPY = "bigint,int,tinyint,smallint";
+
+    public final static String FUZZY_QUERY_KEY = "LIKE";
+
+    public final static String CONNECTOR_OR = "OR";
+
+    public final static String CONNECTOR_AND = "AND";
 }
