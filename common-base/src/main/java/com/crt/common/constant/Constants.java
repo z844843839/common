@@ -127,7 +127,16 @@ public class Constants {
      * 需要透传的header的名称
      */
     public static final String[] HEADERS = {USER_ID,WEBGIS_USER_ID,CORP_ID,ORG_ID,PARENT_ID};
-
+    //角色管理
+    public final static int ROLE_MANAGER = 830;
+    //组织角色设置
+    public final static int ORG_ROLE_MANAGER = 823;
+    //组织管理
+    public final static int ORG_MANAGER = 820;
+    //用户管理
+    public final static int USER_MANAGER = 810;
+    //菜单管理
+    public final static int MENU_MANAGER = 800;
     //会计凭证
     public final static int  ACCOUNTING_VOUCHERS = 660;
     //应付发票
