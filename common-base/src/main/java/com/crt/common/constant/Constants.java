@@ -119,7 +119,26 @@ public class Constants {
      * bpm_details_url
      */
     public static final String WORK_FLOW_BPM_DETAILS_URL = "bpm_details_url";
-
+    /**
+     * 菜单
+     */
+    public static final int MENU = 0;
+    /**
+     * 资源
+     */
+    public static final int RESOURCE = 1;
+    /**
+     * 系统
+     */
+    public static final int FROM_SYSTEM = 0;
+    /**
+     * 平台
+     */
+    public static final int FROM_PLATFORM = 1;
+    /**
+     * 门户
+     */
+    public static final int FROM_PORTAL = 2;
 
 
 
