@@ -16,7 +16,7 @@ public class BaseBizEntity extends BaseEntity implements Serializable {
      * 创建人ID
      */
     @Column(name = "created_id")
-    private Integer createdId;
+    private Long createdId;
 
     /**
      * 创建人姓名
@@ -34,7 +34,7 @@ public class BaseBizEntity extends BaseEntity implements Serializable {
      * 修改人ID
      */
     @Column(name = "modified_id")
-    private Integer modifiedId;
+    private Long modifiedId;
 
     /**
      * 修改人姓名
@@ -48,11 +48,11 @@ public class BaseBizEntity extends BaseEntity implements Serializable {
     @Column(name = "modified_at")
     private Date modifiedAt;
 
-    public Integer getCreatedId() {
+    public Long getCreatedId() {
         return createdId;
     }
 
-    public void setCreatedId(Integer createdId) {
+    public void setCreatedId(Long createdId) {
         this.createdId = createdId;
     }
 
@@ -72,11 +72,11 @@ public class BaseBizEntity extends BaseEntity implements Serializable {
         this.createdAt = createdAt;
     }
 
-    public Integer getModifiedId() {
+    public Long getModifiedId() {
         return modifiedId;
     }
 
-    public void setModifiedId(Integer modifiedId) {
+    public void setModifiedId(Long modifiedId) {
         this.modifiedId = modifiedId;
     }
 
