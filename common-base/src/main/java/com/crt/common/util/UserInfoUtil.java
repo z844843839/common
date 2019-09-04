@@ -72,6 +72,40 @@ public class UserInfoUtil {
         }
     }
 
+    /**
+     * 获取用户当前登陆类型
+     * 0 系统  1 平台
+     * @return redis里面存储的用户信息
+     */
+    public static E6Wrapper<Integer> getLoginType() {
+        HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
+        String token = request.getHeader("Authorization");
+        if(StringUtils.isBlank(token)){
+            token=(String) request.getAttribute("Authorization");
+        }
+        if (StringUtils.isEmpty(token))
+        {
+            return E6WrapperUtil.error("token不存在,用户信息获取失败");
+        }
+        else
+        {
+            Object result = userCache.get(token).get("loginType");
+            if (result == null)
+            {
+                return E6WrapperUtil.error("token错误,用户信息获取失败");
+            }
+            else
+            {
+                return E6WrapperUtil.ok(Integer.parseInt(String.valueOf(result)));
+            }
+        }
+    }
+
+    /**
+     * 根据当前请求路径 返回行级权限SQL
+     * @param currentPath
+     * @return
+     */
     public static E6Wrapper<String> getRowDataAuthSQL(String currentPath){
         StringBuffer sql = new StringBuffer();
         HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
