@@ -78,11 +78,12 @@ public class UserInfoUtil {
      * @return
      */
     public static E6Wrapper<Integer> getHeadInfoByProperty(String propertyName) {
-        if (StringUtils.isEmpty(propertyName)){
-            propertyName = "loginType";
-        }
+        int result  = 0 ;
         HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
-        return E6WrapperUtil.ok(Integer.parseInt(request.getHeader(propertyName)));
+        if (null != request.getHeader(propertyName)){
+            result = Integer.parseInt(String.valueOf(request.getHeader(propertyName)));
+        }
+        return E6WrapperUtil.ok(result);
     }
 
     /**
