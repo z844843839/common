@@ -73,32 +73,16 @@ public class UserInfoUtil {
     }
 
     /**
-     * 获取用户当前登陆类型
-     * 0 系统  1 平台
-     * @return redis里面存储的用户信息
+     * 获取浏览器head中的属性值
+     * @param propertyName 属性名称
+     * @return
      */
-    public static E6Wrapper<Integer> getLoginType() {
+    public static E6Wrapper<Integer> getHeadInfoByProperty(String propertyName) {
+        if (StringUtils.isEmpty(propertyName)){
+            propertyName = "loginType";
+        }
         HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
-        String token = request.getHeader("Authorization");
-        if(StringUtils.isBlank(token)){
-            token=(String) request.getAttribute("Authorization");
-        }
-        if (StringUtils.isEmpty(token))
-        {
-            return E6WrapperUtil.error("token不存在,用户信息获取失败");
-        }
-        else
-        {
-            Object result = userCache.get(token).get("loginType");
-            if (result == null)
-            {
-                return E6WrapperUtil.error("token错误,用户信息获取失败");
-            }
-            else
-            {
-                return E6WrapperUtil.ok(Integer.parseInt(String.valueOf(result)));
-            }
-        }
+        return E6WrapperUtil.ok(Integer.parseInt(request.getHeader(propertyName)));
     }
 
     /**
