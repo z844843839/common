@@ -4,7 +4,7 @@ package com.crt.common.util;
  * 数字转大写
  * @author wangxin@e6yun.com
  */
-public class digitUtils {
+public class DigitUtils {
 
     /**
      * 数字转大写
