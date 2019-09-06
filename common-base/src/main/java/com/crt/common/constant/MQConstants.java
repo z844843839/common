@@ -16,4 +16,19 @@ public class MQConstants {
      * 工作流ROUTINGKEY前缀
      */
     public static final String WORK_FLOW_ROUTINGKEY_PREFIX = "crt_work_flow_routingkey_";
+
+    /**
+     * 工作流合同队列前缀
+     */
+    public  static final  String CONTRACT_QUEUE_PREFIX="com.crt.middle.module.contract.queue_";
+
+    /**
+     * 工作流箱管理队列前缀
+     */
+    public  static final  String ATCM_QUEUE_PREFIX="com.crt.middle.module.atcm.queue_";
+
+    /**
+     * 工作流意向队列前缀
+     */
+    public  static final  String PRECONT_QUEUE_PREFIX="com.crt.middle.module.precont.queue_";
 }

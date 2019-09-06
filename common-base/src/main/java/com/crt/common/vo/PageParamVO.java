@@ -32,6 +32,11 @@ public class PageParamVO<T> {
      */
     private T entity;
 
+    /**
+     * 行级权限sql参数
+     */
+    private String rowParams;
+
     public Integer getPage() {
         return page;
     }
@@ -94,5 +99,13 @@ public class PageParamVO<T> {
 
     public void setEntity(T entity) {
         this.entity = entity;
+    }
+
+    public String getRowParams() {
+        return rowParams;
+    }
+
+    public void setRowParams(String rowParams) {
+        this.rowParams = rowParams;
     }
 }

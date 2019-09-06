@@ -66,6 +66,10 @@ public class UserRedisVO {
     private String housbankbrn;
     //备注
     private String remark;
+    //组织编码
+    private Long orgCode;
+    //组织名称
+    private String orgName;
 
     public Integer getId() {
         return id;
@@ -313,5 +317,21 @@ public class UserRedisVO {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public Long getOrgCode() {
+        return orgCode;
+    }
+
+    public void setOrgCode(Long orgCode) {
+        this.orgCode = orgCode;
+    }
+
+    public String getOrgName() {
+        return orgName;
+    }
+
+    public void setOrgName(String orgName) {
+        this.orgName = orgName;
     }
 }

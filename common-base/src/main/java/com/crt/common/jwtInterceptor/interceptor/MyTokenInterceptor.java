@@ -174,7 +174,7 @@ public class MyTokenInterceptor implements HandlerInterceptor {
         }
 
         UserRedisVO userRedisVO = (UserRedisVO) UserInfoUtil.getUserInfo().getResult();
-        if (StringUtils.equals("super",userRedisVO.getAccountNumber()) || StringUtils.equals("testAuth",userRedisVO.getAccountNumber()))
+        if (StringUtils.equals("super",userRedisVO.getAccountNumber()))
         {
             return true;
         }
