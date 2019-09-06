@@ -60,7 +60,7 @@ public class MyTokenInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception{
         String url = request.getRequestURI();//这里打端点，页面访问swagger页面看看请求的什么路径
 
-		if (url.contains("bpm") || url.contains("MIDDLE-COMMON-FILEUPLOAD"))
+		if (url.contains("bpm") || url.contains("MIDDLE-COMMON-FILEUPLOAD") || url.contains("captcha"))
 		{
 			return true;
 		}
