@@ -44,7 +44,7 @@ public class Constants {
      * 工作流分类-采购合同
      */
     public static final String WORK_FLOW_DOC_TYPE_CONTRACT_PURCH = "采购合同";
-    
+
     /**
      * 工作流分类-销售合同
      */
@@ -287,5 +287,15 @@ public class Constants {
     public final static String CONNECTOR_OR = "OR";
 
     public final static String CONNECTOR_AND = "AND";
+
+    /**
+     * 预检单
+     */
+    public final static int FIX_CHECK =  561;
+
+    /**
+     * 修竣单
+     */
+    public final static int FIX_FINISH =  562;
 
 }
