@@ -1,5 +1,6 @@
 package com.crt.common.service;
 
+import com.crt.common.vo.BaseBizEntity;
 import com.crt.common.vo.BaseEntity;
 import com.crt.common.vo.E6Wrapper;
 import org.springframework.data.repository.NoRepositoryBean;

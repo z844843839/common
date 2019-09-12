@@ -3,6 +3,7 @@ package com.crt.common.web;
 import com.crt.common.service.AbstractUserService;
 import com.crt.common.service.BaseService;
 import com.crt.common.vo.AbstractUser;
+import com.crt.common.vo.BaseBizEntity;
 import com.crt.common.vo.BaseEntity;
 import com.crt.common.vo.E6Wrapper;
 import io.swagger.annotations.ApiOperation;

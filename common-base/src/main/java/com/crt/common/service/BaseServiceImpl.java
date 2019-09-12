@@ -1,17 +1,18 @@
 package com.crt.common.service;
 
 import com.crt.common.util.BeanUtil;
-import com.crt.common.vo.BaseEntity;
-import com.crt.common.vo.E6Wrapper;
-import com.crt.common.vo.E6WrapperUtil;
+import com.crt.common.util.UserInfoUtil;
+import com.crt.common.vo.*;
+import org.apache.commons.lang3.reflect.FieldUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.lang.reflect.*;
+import java.util.*;
 
 /**
  * @Author : malin
@@ -19,6 +20,8 @@ import java.util.Optional;
  * D 应用模块DAO继承JpaRepository 用于扩展自己的方法
  */
 public class BaseServiceImpl<D extends JpaRepository<T, Integer>, T extends BaseEntity> implements BaseService<T> {
+
+    private static final Logger logger = LoggerFactory.getLogger(BaseServiceImpl.class);
 
     /**
      * Spring Data JPA 注入
@@ -67,6 +70,8 @@ public class BaseServiceImpl<D extends JpaRepository<T, Integer>, T extends Base
         }else{
             return before;
         }
+        //设置创建人，创建时间，修改人，修改时间
+        entity = setEntityOperationInfo(entity,"save");
         entity = dao.save(entity);
         //新增后，若有其他操作，在 afterSave()方法中添加
         E6Wrapper after = afterSave(entity);
@@ -163,8 +168,10 @@ public class BaseServiceImpl<D extends JpaRepository<T, Integer>, T extends Base
             T obj = optional.get();
         //用传入实体值替换原有的实体值
 //        Object oj = BeanUtil.cover(entity,obj);
+        //设置修改人，修改时间
         Object oj = BeanUtil.Copy(obj,entity,false);
-        T newObj = dao.save((T) oj);
+        T modifyObj = setEntityOperationInfo((T)oj,"modify");
+        T newObj = dao.save(modifyObj);
         //修改后，若有其他操作，在 afterModify()方法中添加
         E6Wrapper after = afterModify(newObj);
         if (after.success()) {
@@ -252,5 +259,70 @@ public class BaseServiceImpl<D extends JpaRepository<T, Integer>, T extends Base
     public E6Wrapper<List<T>> findListAll() {
         List<T> list = dao.findAll();
         return E6WrapperUtil.ok(list);
+    }
+
+
+    private T setEntityOperationInfo(T entity,String operationType){
+        //获取当前登陆人
+        E6Wrapper loginUser = UserInfoUtil.getUserInfo();
+        UserRedisVO opUser = (UserRedisVO)loginUser.getResult();
+        // 获取实体类的所有属性，返回Field数组
+        Field[] field = FieldUtils.getAllFields(entity.getClass());
+        String[] operationArray = new String[]{"createdId","createdBy","createdAt","modifiedId","modifiedBy","modifiedAt"};
+        try {
+            // 遍历所有属性
+            for (int i = 0; i < field.length; i++) {
+                // 获取属性的名字
+                String name = field[i].getName();
+                if (Arrays.asList(operationArray).contains(name)){
+                    Date currntDate = new Date();
+                    for (int j=0;j <operationArray.length;j++){
+                        // 将属性的首字符大写，方便构造get，set方法
+                        name = name.substring(0, 1).toUpperCase() + name.substring(1);
+                        if ("save".equals(operationType)){
+                            if ("CreatedId".equals(name)){
+                                Method m = entity.getClass().getMethod("set"+name,Long.class);
+                                m.invoke(entity, opUser.getUserCode());
+                                break;
+                            }
+                            if ("CreatedBy".equals(name)){
+                                Method m = entity.getClass().getMethod("set"+name,String.class);
+                                m.invoke(entity, opUser.getRealName());
+                                break;
+                            }
+                            if ("CreatedAt".equals(name)){
+                                Method m = entity.getClass().getMethod("set"+name,Date.class);
+                                m.invoke(entity, currntDate);
+                                break;
+                            }
+                        }
+                        if ("ModifiedId".equals(name)){
+                            Method m = entity.getClass().getMethod("set"+name,Long.class);
+                            m.invoke(entity, opUser.getUserCode());
+                            break;
+                        }
+                        if ("ModifiedBy".equals(name)){
+                            Method m = entity.getClass().getMethod("set"+name,String.class);
+                            m.invoke(entity, opUser.getRealName());
+                            break;
+                        }
+                        if ("ModifiedAt".equals(name)){
+                            Method m = entity.getClass().getMethod("set"+name,Date.class);
+                            m.invoke(entity,currntDate);
+                            break;
+                        }
+                    }
+                }
+            }
+        } catch (NoSuchMethodException e) {
+            logger.error(" NoSuchMethodException ===> "+e.getMessage());
+        } catch (SecurityException e) {
+            logger.error(" SecurityException ===> "+e.getMessage());
+        }catch (IllegalAccessException e) {
+            logger.error(" IllegalAccessException ===> "+e.getMessage());
+        } catch (InvocationTargetException e) {
+            logger.error(" InvocationTargetException ===> "+e.getMessage());
+        }
+        return entity;
     }
 }

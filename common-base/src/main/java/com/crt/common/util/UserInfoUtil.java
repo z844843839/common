@@ -158,6 +158,9 @@ public class UserInfoUtil {
                 }
             }
         }
+        if ("() OR ()".equals(sql.toString())){
+            return E6WrapperUtil.ok("");
+        }
         return E6WrapperUtil.ok(sql.toString());
     }
 }

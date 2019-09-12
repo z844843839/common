@@ -70,6 +70,9 @@ public class PageParamVO<T> {
     }
 
     public String getSortIndx() {
+        if (StringUtils.isEmpty(this.sortIndx)){
+            this.sortIndx = "id";
+        }
         return sortIndx;
     }
 
@@ -82,6 +85,9 @@ public class PageParamVO<T> {
     }
 
     public String getSortDir() {
+        if (StringUtils.isEmpty(this.sortDir)){
+            this.sortDir = "DESC";
+        }
         return sortDir;
     }
 
