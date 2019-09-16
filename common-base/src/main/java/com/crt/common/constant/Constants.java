@@ -139,6 +139,14 @@ public class Constants {
      * 门户
      */
     public static final int FROM_PORTAL = 2;
+    /**
+     * 删除 1
+     */
+    public static final int DELETE = 1;
+    /**
+     * 未删除 0
+     */
+    public static final int NOT_DELETE = 0;
 
 
 
