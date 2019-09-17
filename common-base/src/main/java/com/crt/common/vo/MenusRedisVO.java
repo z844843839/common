@@ -6,63 +6,104 @@ import java.util.List;
 
 public class MenusRedisVO {
     private Integer id;
-    //数据类型(0菜单 1资源)
-    private int tabMold;
-    //菜单编码
-    private long menuCode;
-    //父菜单编码
-    private long parentId;
-    //请求url
+    /**
+     * 数据类型(0菜单 1资源)
+     */
+    private Integer tabMold;
+    /**
+     * 菜单编码
+     */
+    private Long menuCode;
+    /**
+     * 父菜单编码
+     */
+    private Long parentId;
+    /**
+     * 请求url
+     */
     private String url;
-    //路径编码
+    /**
+     * 路径编码
+     */
     private String path;
-    //组件
+    /**
+     * 组件
+     */
     private String component;
-    //子集 忽略空值输出JSON
+    /**
+     * 组件名称
+     */
+    private String componentName;
+    /**
+     * 子集 忽略空值输出JSON
+     */
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<MenusRedisVO> children;
-    //菜单标题
-    private String title;
-    //菜单图标
-    private String icon;
-    //菜单类型（0 目录 1.菜单 2url 3按钮）
-    private int menuType;
-    //菜单状态（0正常、1隐藏）
-    private int menuState;
-    //前端重定向
-    private String redirect;
-    //是否外联（0内部 1外部）
-    private int linkType;
     /**
-     * 如果设置为true，则将始终显示根菜单
-     * 如果没有设置alwaysShow，当项目有多个子路线时，
-     * 它将成为嵌套模式，否则不显示根菜单
+     * 菜单标题
      */
-    private int alwaysShow;
-    //菜单归属分类
-    private long ascription;
+    private String title;
+    /**
+     * 菜单图标
+     */
+    private String icon;
+    /**
+     * 菜单类型（0 目录 1.菜单 2url 3按钮）
+     */
+    private Integer menuType;
+    /**
+     * 菜单状态（0正常、1隐藏）
+     */
+    private Integer menuState;
+    /**
+     * 前端重定向
+     */
+    private String redirect;
+    /**
+     * 是否外联（0内部 1外部）
+     */
+    private Integer linkType ;
+    /**
+     * 是否缓存 0 缓存 1 不缓存
+     */
+    private Integer alwaysShow;
+    /**
+     * 菜单归属分类
+     */
+    private Long ascription;
 
-    public int getTabMold() {
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Integer getTabMold() {
+        if (null == tabMold){
+            return 0;
+        }
         return tabMold;
     }
 
-    public void setTabMold(int tabMold) {
+    public void setTabMold(Integer tabMold) {
         this.tabMold = tabMold;
     }
 
-    public long getMenuCode() {
+    public Long getMenuCode() {
         return menuCode;
     }
 
-    public void setMenuCode(long menuCode) {
+    public void setMenuCode(Long menuCode) {
         this.menuCode = menuCode;
     }
 
-    public long getParentId() {
+    public Long getParentId() {
         return parentId;
     }
 
-    public void setParentId(long parentId) {
+    public void setParentId(Long parentId) {
         this.parentId = parentId;
     }
 
@@ -114,19 +155,25 @@ public class MenusRedisVO {
         this.icon = icon;
     }
 
-    public int getMenuType() {
+    public Integer getMenuType() {
+        if (null == menuType){
+            return 0;
+        }
         return menuType;
     }
 
-    public void setMenuType(int menuType) {
+    public void setMenuType(Integer menuType) {
         this.menuType = menuType;
     }
 
-    public int getMenuState() {
+    public Integer getMenuState() {
+        if (null == menuState){
+            return 0;
+        }
         return menuState;
     }
 
-    public void setMenuState(int menuState) {
+    public void setMenuState(Integer menuState) {
         this.menuState = menuState;
     }
 
@@ -138,35 +185,63 @@ public class MenusRedisVO {
         this.redirect = redirect;
     }
 
-    public int getAlwaysShow() {
-        return alwaysShow;
-    }
-
-    public void setAlwaysShow(int alwaysShow) {
-        this.alwaysShow = alwaysShow;
-    }
-
-    public int getLinkType() {
+    public Integer getLinkType() {
+        if (null == linkType){
+            return 0;
+        }
         return linkType;
     }
 
-    public void setLinkType(int linkType) {
+    public void setLinkType(Integer linkType) {
         this.linkType = linkType;
     }
 
-    public Integer getId() {
-        return id;
+    public Integer getAlwaysShow() {
+        if (null == alwaysShow){
+            return 0;
+        }
+        return alwaysShow;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setAlwaysShow(Integer alwaysShow) {
+        this.alwaysShow = alwaysShow;
     }
 
-    public long getAscription() {
+    public Long getAscription() {
         return ascription;
     }
 
-    public void setAscription(long ascription) {
+    public void setAscription(Long ascription) {
         this.ascription = ascription;
+    }
+
+    public String getComponentName() {
+        return componentName;
+    }
+
+    public void setComponentName(String componentName) {
+        this.componentName = componentName;
+    }
+
+    @Override
+    public String toString() {
+        return "MenusRedisVO{" +
+                "id=" + id +
+                ", tabMold=" + tabMold +
+                ", menuCode=" + menuCode +
+                ", parentId=" + parentId +
+                ", url='" + url + '\'' +
+                ", path='" + path + '\'' +
+                ", component='" + component + '\'' +
+                ", children=" + children +
+                ", title='" + title + '\'' +
+                ", icon='" + icon + '\'' +
+                ", menuType=" + menuType +
+                ", menuState=" + menuState +
+                ", redirect='" + redirect + '\'' +
+                ", linkType=" + linkType +
+                ", alwaysShow=" + alwaysShow +
+                ", ascription=" + ascription +
+                '}';
     }
 }

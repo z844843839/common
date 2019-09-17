@@ -286,8 +286,9 @@ public class BaseServiceImpl<D extends JpaRepository<T, Integer>, T extends Base
                         name = name.substring(0, 1).toUpperCase() + name.substring(1);
                         if ("save".equals(operationType)){
                             if ("CreatedId".equals(name)){
-                                Method m = entity.getClass().getMethod("set"+name,Long.class);
-                                m.invoke(entity, opUser.getUserCode());
+                                Method m = entity.getClass().getMethod("set"+name,Integer.class);
+//                                m.invoke(entity, opUser.getUserCode());
+                                m.invoke(entity, opUser.getId());
                                 break;
                             }
                             if ("CreatedBy".equals(name)){
@@ -302,8 +303,9 @@ public class BaseServiceImpl<D extends JpaRepository<T, Integer>, T extends Base
                             }
                         }
                         if ("ModifiedId".equals(name)){
-                            Method m = entity.getClass().getMethod("set"+name,Long.class);
-                            m.invoke(entity, opUser.getUserCode());
+                            Method m = entity.getClass().getMethod("set"+name,Integer.class);
+//                            m.invoke(entity, opUser.getUserCode());
+                            m.invoke(entity, opUser.getId());
                             break;
                         }
                         if ("ModifiedBy".equals(name)){

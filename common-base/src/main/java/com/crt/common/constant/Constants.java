@@ -147,6 +147,10 @@ public class Constants {
      * 未删除 0
      */
     public static final int NOT_DELETE = 0;
+    /**
+     * 根节点
+     */
+    public static final String ROOT_NODE = "0";
 
 
 
