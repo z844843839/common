@@ -261,8 +261,13 @@ public class BaseServiceImpl<D extends JpaRepository<T, Integer>, T extends Base
         return E6WrapperUtil.ok(list);
     }
 
-
-    private T setEntityOperationInfo(T entity,String operationType){
+    /**
+     * 设置创建人创建时间修改人修改时间方法
+     * @param entity
+     * @param operationType
+     * @return
+     */
+    protected T setEntityOperationInfo(T entity,String operationType){
         //获取当前登陆人
         E6Wrapper loginUser = UserInfoUtil.getUserInfo();
         UserRedisVO opUser = (UserRedisVO)loginUser.getResult();
