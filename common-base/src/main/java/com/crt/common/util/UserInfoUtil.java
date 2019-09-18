@@ -19,7 +19,7 @@ import java.util.*;
 
 /**
  * 用户信息获取工具类
- * @author malin 
+ * @author malin
  */
 @Component
 public class UserInfoUtil {
@@ -64,6 +64,34 @@ public class UserInfoUtil {
                 UserRedisVO userRedisVO = new UserRedisVO();
                 userRedisVO = (UserRedisVO) BeanUtil.Copy(userRedisVO, result, false);
                 return E6WrapperUtil.ok(userRedisVO);
+            }
+
+        }
+    }
+
+    /**
+     * 获取用户信息方法
+     * redis里面存储的用户信息
+     * @return UserRedisVO
+     */
+    public static UserRedisVO getLonginUserInfo() {
+
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+
+        String token = request.getHeader("Authorization");
+        if (StringUtils.isBlank(token)) {
+            token = (String) request.getAttribute("Authorization");
+        }
+        if (StringUtils.isEmpty(token)) {
+            return null;
+        } else {
+            Object result = userCache.get(token).get("userVO");
+            if (result == null) {
+                return null;
+            } else {
+                UserRedisVO userRedisVO = new UserRedisVO();
+                userRedisVO = (UserRedisVO) BeanUtil.Copy(userRedisVO, result, false);
+                return userRedisVO;
             }
 
         }

@@ -26,6 +26,12 @@ public class Constants {
     public static final String PARENT_ID = "parentId";
 
     /**
+     * HashMap使用如下构造方法进行初始化，
+     * 如果暂时无法确定集合大小，那么指定默认值（16）即可
+     */
+    public static final int HASHMAP_DEFAULT_SIZE = 16;
+
+    /**
      * 工作流完成状态
      */
     public static final String WORK_FLOW_STATUS_COMPLETE = "complete";

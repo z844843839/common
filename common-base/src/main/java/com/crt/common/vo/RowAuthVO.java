@@ -1,6 +1,11 @@
 package com.crt.common.vo;
 
+/**
+ * 数据权限VO
+ * @author malin
+ */
 public class RowAuthVO{
+
     private String tag;
     private Long orgRoleCode;
     private String setTable;
@@ -72,5 +77,19 @@ public class RowAuthVO{
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    @Override
+    public String toString() {
+        return "RowAuthVO{" +
+                "tag='" + tag + '\'' +
+                ", orgRoleCode=" + orgRoleCode +
+                ", setTable='" + setTable + '\'' +
+                ", setColumn='" + setColumn + '\'' +
+                ", columnType='" + columnType + '\'' +
+                ", setOperator='" + setOperator + '\'' +
+                ", setValue='" + setValue + '\'' +
+                ", url='" + url + '\'' +
+                '}';
     }
 }

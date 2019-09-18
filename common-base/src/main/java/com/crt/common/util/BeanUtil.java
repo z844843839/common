@@ -1,19 +1,137 @@
 package com.crt.common.util;
 
+import com.crt.common.constant.Constants;
+import com.crt.common.vo.RowAuthVO;
 import org.apache.commons.beanutils.BeanMap;
-import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.math.BigDecimal;
+import java.lang.reflect.Modifier;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static cn.hutool.core.bean.BeanUtil.mapToBean;
+
 /**
  * Bean工具
+ * @author malin
  */
 public class BeanUtil {
+
+    private static final Logger logger = LoggerFactory.getLogger(BeanUtil.class);
+
+    /**
+     * 实体对象转为Map
+     * @param entity
+     * @return Map
+     */
+    public static <T> Map<String,Object> objectToMap(T entity){
+        Map<String, Object> map = new HashMap<>(Constants.HASHMAP_DEFAULT_SIZE);
+        if (null == entity) {
+            return null;
+        }
+        Field[] fields = entity.getClass().getDeclaredFields();
+        try {
+            for (Field field : fields) {
+                field.setAccessible(true);
+                map.put(field.getName(), getProperty(entity,field.getName()));
+            }
+        } catch (Exception e) {
+            logger.error("[objectToMap] exception message : " + e.getMessage());
+        }
+        return map;
+    }
+
+    /**
+     * map转为实体对象
+     * @param map
+     * @param clazz
+     * @param <T>
+     * @return entity
+     */
+    public static <T> T mapToObject(Map<String, Object> map, Class<T> clazz) {
+        T entity = null;
+        if (null == map){
+            return entity;
+        }
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        try {
+            // 使用newInstance来创建对象
+            entity = clazz.newInstance();
+            // 获取类中的所有字段
+            Field[] fields = entity.getClass().getDeclaredFields();
+            for (Field field : fields) {
+                int mod = field.getModifiers();
+                // 判断是拥有某个修饰符
+                if (Modifier.isStatic(mod) || Modifier.isFinal(mod)) {
+                    continue;
+                }
+                // 当字段使用private修饰时，需要加上
+                field.setAccessible(true);
+                // 获取参数类型名字
+                String filedTypeName = field.getType().getName();
+                // 判断是否为时间类型，使用equalsIgnoreCase比较字符串，不区分大小写
+                // 给 entity 的属性赋值
+                if (filedTypeName.equalsIgnoreCase("java.util.date")) {
+                    String datetimestamp = (String) map.get(field.getName());
+                    if (datetimestamp.equalsIgnoreCase("null")) {
+                        field.set(entity, null);
+                    } else {
+                        field.set(entity, sdf.parse(datetimestamp));
+                    }
+                }else {
+                    field.set(entity, map.get(field.getName()));
+                }
+            }
+        }catch (Exception e){
+            logger.error("[mapToObject] exception message : " + e.getMessage());
+        }
+        return entity;
+    }
+
+    /**
+     * listMap 转 listBean
+     * @param data
+     * @param clazz
+     * @param <T>
+     * @return List<T>
+     */
+    public static <T> List<T> listMapToListBean(List<Map<String, Object>> data, Class<T> clazz){
+        List<T> result = null;
+        if (null == data){
+            return result;
+        }
+        result = new ArrayList<>();
+        for (Map<String,Object> map : data) {
+            T entity =  mapToBean(map,clazz,false);
+            result.add(entity);
+        }
+        return result;
+    }
+
+    /**
+     * listBean 转 listMap
+     * @param data
+     * @param <T>
+     * @return
+     */
+    public static <T> List<Map<String,Object>> listBeanToListMap(List<T> data){
+        List<Map<String,Object>> result = null;
+        if (null == data){
+            return result;
+        }
+        result = new ArrayList<>();
+        for (T entity : data){
+            Map<String,Object> map = objectToMap(entity);
+            result.add(map);
+        }
+        return result;
+    }
 
     /**
      * 将Bean复制到Map里面去。
@@ -173,6 +291,32 @@ public class BeanUtil {
             alist.add((T) o);
         }
         return alist;
+
+    }
+
+    public static void main(String[] args) {
+        List<RowAuthVO> ravs = new ArrayList<>();
+        RowAuthVO rav = new RowAuthVO();
+        rav.setOrgRoleCode(1L);
+        rav.setColumnType("varchar");
+        rav.setSetColumn("userName");
+        rav.setSetOperator("LIKE");
+        rav.setSetTable("user_user");
+        rav.setSetValue("王");
+        ravs.add(rav);
+        List<Map<String,Object>> map =  listBeanToListMap(ravs);
+        System.out.println(map.toString());
+        List<Map<String,Object>> maps = new ArrayList<>();
+        Map<String,Object> mm = new HashMap<>();
+        mm.put("columnType","varchar");
+        mm.put("orgRoleCode",2L);
+        mm.put("setColumn","userName");
+        mm.put("setTable","user_user");
+        mm.put("setValue","王");
+        mm.put("setOperator","LIKE");
+        maps.add(mm);
+        List<RowAuthVO> rv = listMapToListBean(maps,RowAuthVO.class);
+        System.out.println(rv.toString());
 
     }
 }
