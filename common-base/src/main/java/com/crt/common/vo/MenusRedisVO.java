@@ -64,7 +64,13 @@ public class MenusRedisVO {
      */
     private Integer linkType ;
     /**
-     * 是否缓存 0 缓存 1 不缓存
+     * 是否缓存 0 缓存 1不缓存
+     */
+    private Integer nocache;
+    /**
+     * 如果设置为true，则将始终显示根菜单
+     * 如果没有设置alwaysShow，当项目有多个子路线时，
+     * 它将成为嵌套模式，否则不显示根菜单
      */
     private Integer alwaysShow;
     /**
@@ -221,6 +227,14 @@ public class MenusRedisVO {
 
     public void setComponentName(String componentName) {
         this.componentName = componentName;
+    }
+
+    public Integer getNocache() {
+        return nocache;
+    }
+
+    public void setNocache(Integer nocache) {
+        this.nocache = nocache;
     }
 
     @Override

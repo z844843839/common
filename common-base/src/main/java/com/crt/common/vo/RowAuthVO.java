@@ -2,7 +2,7 @@ package com.crt.common.vo;
 
 public class RowAuthVO{
     private String tag;
-    private long orgRoleCode;
+    private Long orgRoleCode;
     private String setTable;
     private String setColumn;
     private String columnType;
@@ -18,11 +18,11 @@ public class RowAuthVO{
         this.tag = tag;
     }
 
-    public long getOrgRoleCode() {
+    public Long getOrgRoleCode() {
         return orgRoleCode;
     }
 
-    public void setOrgRoleCode(long orgRoleCode) {
+    public void setOrgRoleCode(Long orgRoleCode) {
         this.orgRoleCode = orgRoleCode;
     }
 

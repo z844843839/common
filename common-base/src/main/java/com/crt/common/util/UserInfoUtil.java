@@ -19,6 +19,7 @@ import java.util.*;
 
 /**
  * 用户信息获取工具类
+ * @author malin 
  */
 @Component
 public class UserInfoUtil {
