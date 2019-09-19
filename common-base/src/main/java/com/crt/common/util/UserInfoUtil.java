@@ -61,8 +61,6 @@ public class UserInfoUtil {
         if (StringUtils.isEmpty(token)) {
             return E6WrapperUtil.error("token不存在,用户信息获取失败");
         } else {
-            logger.info("userCache{}",userCache);
-            logger.info("token-value:token:{}",userCache.get(token));
             Object result = userCache.get(token).get("userVO");
             if (result == null) {
                 return E6WrapperUtil.error("token错误,用户信息获取失败");
