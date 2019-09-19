@@ -179,6 +179,13 @@ public class MyTokenInterceptor implements HandlerInterceptor {
             return true;
         }
 
+        /**
+         * 临时添加官网用户不做拦截
+         */
+        if (Constants.FROM_PORTAL == userRedisVO.getUserType()){
+            return true;
+        }
+
         try{
             List<Map<String,Object>> auth = (List<Map<String,Object>> ) redisUtil.get(token).get("auth");
             if (auth == null || auth.size() < 1)

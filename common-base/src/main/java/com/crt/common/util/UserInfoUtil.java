@@ -74,31 +74,73 @@ public class UserInfoUtil {
     }
 
     /**
-     * 获取用户信息方法
+     * 获取登陆用户真实姓名
      * redis里面存储的用户信息
-     * @return UserRedisVO
+     * @return String
      */
-    public static UserRedisVO getLonginUserInfo() {
-
-        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-
-        String token = request.getHeader("Authorization");
-        if (StringUtils.isBlank(token)) {
-            token = (String) request.getAttribute("Authorization");
+    public static String getLoginUserRealName() {
+        E6Wrapper<UserRedisVO> e6Wrapper = getUserInfo();
+        if (e6Wrapper.success()){
+            UserRedisVO loginUser = e6Wrapper.getResult();
+            return loginUser.getRealName();
         }
-        if (StringUtils.isEmpty(token)) {
-            return null;
-        } else {
-            Object result = userCache.get(token).get("userVO");
-            if (result == null) {
-                return null;
-            } else {
-                UserRedisVO userRedisVO = new UserRedisVO();
-                userRedisVO = (UserRedisVO) BeanUtil.Copy(userRedisVO, result, false);
-                return userRedisVO;
-            }
+        return null;
+    }
 
+    /**
+     * 获取登陆用户ID
+     * redis里面存储的用户信息
+     * @return Integer
+     */
+    public static Integer getLoginUserId() {
+        E6Wrapper<UserRedisVO> e6Wrapper = getUserInfo();
+        if (e6Wrapper.success()){
+            UserRedisVO loginUser = e6Wrapper.getResult();
+            return loginUser.getId();
         }
+        return null;
+    }
+
+    /**
+     * 获取登陆用户编码
+     * redis里面存储的用户信息
+     * @return Long
+     */
+    public static Long getLoginUserCode() {
+        E6Wrapper<UserRedisVO> e6Wrapper = getUserInfo();
+        if (e6Wrapper.success()){
+            UserRedisVO loginUser = e6Wrapper.getResult();
+            return loginUser.getUserCode();
+        }
+        return null;
+    }
+
+    /**
+     * 获取登陆用户所属组织名称
+     * redis里面存储的用户信息
+     * @return String
+     */
+    public static String getLoginUserOrgName() {
+        E6Wrapper<UserRedisVO> e6Wrapper = getUserInfo();
+        if (e6Wrapper.success()){
+            UserRedisVO loginUser = e6Wrapper.getResult();
+            return loginUser.getOrgName();
+        }
+        return null;
+    }
+
+    /**
+     * 获取登陆用户所属组织编码
+     * redis里面存储的用户信息
+     * @return Long
+     */
+    public static Long getLoginUserOrgCode() {
+        E6Wrapper<UserRedisVO> e6Wrapper = getUserInfo();
+        if (e6Wrapper.success()){
+            UserRedisVO loginUser = e6Wrapper.getResult();
+            return loginUser.getOrgCode();
+        }
+        return null;
     }
 
     /**
@@ -163,7 +205,7 @@ public class UserInfoUtil {
                             RowAuthVO rav = currentRowAuthList.get(i);
                             if (count >= 1) {
                                 RowAuthVO lastRav = currentRowAuthList.get(i - 1);
-                                if (rav.getOrgRoleCode() == lastRav.getOrgRoleCode()) {
+                                if (rav.getOrgRoleCode().equals(lastRav.getOrgRoleCode())) {
                                     sql.append(Constants.SPACE);
                                     sql.append(Constants.CONNECTOR_AND);
                                     sql.append(Constants.SPACE);

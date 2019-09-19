@@ -293,30 +293,4 @@ public class BeanUtil {
         return alist;
 
     }
-
-    public static void main(String[] args) {
-        List<RowAuthVO> ravs = new ArrayList<>();
-        RowAuthVO rav = new RowAuthVO();
-        rav.setOrgRoleCode(1L);
-        rav.setColumnType("varchar");
-        rav.setSetColumn("userName");
-        rav.setSetOperator("LIKE");
-        rav.setSetTable("user_user");
-        rav.setSetValue("王");
-        ravs.add(rav);
-        List<Map<String,Object>> map =  listBeanToListMap(ravs);
-        System.out.println(map.toString());
-        List<Map<String,Object>> maps = new ArrayList<>();
-        Map<String,Object> mm = new HashMap<>();
-        mm.put("columnType","varchar");
-        mm.put("orgRoleCode",2L);
-        mm.put("setColumn","userName");
-        mm.put("setTable","user_user");
-        mm.put("setValue","王");
-        mm.put("setOperator","LIKE");
-        maps.add(mm);
-        List<RowAuthVO> rv = listMapToListBean(maps,RowAuthVO.class);
-        System.out.println(rv.toString());
-
-    }
 }
