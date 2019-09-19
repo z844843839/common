@@ -8,6 +8,8 @@ import com.crt.common.vo.E6WrapperUtil;
 import com.crt.common.vo.RowAuthVO;
 import com.crt.common.vo.UserRedisVO;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -23,6 +25,8 @@ import java.util.*;
  */
 @Component
 public class UserInfoUtil {
+
+   private static Logger logger= LoggerFactory.getLogger(UserInfoUtil.class);
 
     @Autowired
     private UacCookieProperties uacCookieProperties;
@@ -57,6 +61,8 @@ public class UserInfoUtil {
         if (StringUtils.isEmpty(token)) {
             return E6WrapperUtil.error("token不存在,用户信息获取失败");
         } else {
+            logger.info("userCache{}",userCache);
+            logger.info("token-value:token:{}",userCache.get(token));
             Object result = userCache.get(token).get("userVO");
             if (result == null) {
                 return E6WrapperUtil.error("token错误,用户信息获取失败");
