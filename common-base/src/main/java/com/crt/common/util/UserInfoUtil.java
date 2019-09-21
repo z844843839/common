@@ -161,10 +161,11 @@ public class UserInfoUtil {
     /**
      * 根据当前请求路径 返回行级权限SQL
      *
-     * @param currentPath
-     * @return
+     * @param currentPath 分页查询请求路径
+     * @param tableAlias  表别名 【选填】 为null时 别名为原表名
+     * @return String
      */
-    public static E6Wrapper<String> getRowDataAuthSQL(String currentPath) {
+    public static String getRowDataAuthSQL(String currentPath,String tableAlias) {
         StringBuffer sql = new StringBuffer();
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         String token = request.getHeader("Authorization");
@@ -172,10 +173,10 @@ public class UserInfoUtil {
             token = (String) request.getAttribute("Authorization");
         }
         if (StringUtils.isEmpty(token)) {
-            return E6WrapperUtil.error("token不存在,用户信息获取失败");
+            return null;
         } else {
             if (StringUtils.isEmpty(currentPath)) {
-                return E6WrapperUtil.error("当前路径为空");
+                return null;
             }
             if (userCache.get(token).containsKey("rowAuth")) {
                 List<RowAuthVO> rowAuthList = (List<RowAuthVO>) userCache.get(token).get("rowAuth");
@@ -221,7 +222,11 @@ public class UserInfoUtil {
                             }
                             //拼接SQL 表名.列名 操作符 值
                             sql.append(Constants.SPACE);
-                            sql.append(rav.getSetTable());
+                            if (StringUtils.isNotEmpty(tableAlias)){
+                                sql.append(tableAlias);
+                            }else {
+                                sql.append(rav.getSetTable());
+                            }
                             sql.append(Constants.SPOT);
                             sql.append(rav.getSetColumn());
                             sql.append(Constants.SPACE);
@@ -245,6 +250,6 @@ public class UserInfoUtil {
                 }
             }
         }
-        return E6WrapperUtil.ok(sql.toString());
+        return sql.toString();
     }
 }

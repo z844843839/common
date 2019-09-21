@@ -50,7 +50,7 @@ public class BaseServiceImpl<D extends JpaRepository<T, Integer>, T extends Base
      * @return
      */
     @Override
-    @Transactional
+    @Transactional(rollbackOn = Exception.class)
     public E6Wrapper beforeSave(T entity) {
         return E6WrapperUtil.ok(entity);
     }
@@ -61,7 +61,7 @@ public class BaseServiceImpl<D extends JpaRepository<T, Integer>, T extends Base
      * @return
      */
     @Override
-    @Transactional
+    @Transactional(rollbackOn = Exception.class)
     public E6Wrapper save(T entity) {
         //新增前，若有其他操作，在 beforeSave()方法中添加
         E6Wrapper before = beforeSave(entity);
@@ -88,7 +88,7 @@ public class BaseServiceImpl<D extends JpaRepository<T, Integer>, T extends Base
      * @return
      */
     @Override
-    @Transactional
+    @Transactional(rollbackOn = Exception.class)
     public E6Wrapper afterSave(T entity) {
         return E6WrapperUtil.ok(entity);
     }
@@ -99,7 +99,7 @@ public class BaseServiceImpl<D extends JpaRepository<T, Integer>, T extends Base
      * @return
      */
     @Override
-    @Transactional
+    @Transactional(rollbackOn = Exception.class)
     public E6Wrapper beforeDelete(T entity) {
         return E6WrapperUtil.ok(entity);
     }
@@ -110,7 +110,7 @@ public class BaseServiceImpl<D extends JpaRepository<T, Integer>, T extends Base
      * @return
      */
     @Override
-    @Transactional
+    @Transactional(rollbackOn = Exception.class)
     public E6Wrapper deleteById(Integer id) {
         //根据主键ID查询实体
         Optional<T> optional = dao.findById(id);
@@ -136,7 +136,7 @@ public class BaseServiceImpl<D extends JpaRepository<T, Integer>, T extends Base
      * @return
      */
     @Override
-    @Transactional
+    @Transactional(rollbackOn = Exception.class)
     public E6Wrapper beforeModify(T entity) {
         return E6WrapperUtil.ok(entity);
     }
@@ -148,7 +148,7 @@ public class BaseServiceImpl<D extends JpaRepository<T, Integer>, T extends Base
      * @return
      */
     @Override
-    @Transactional
+    @Transactional(rollbackOn = Exception.class)
     public E6Wrapper modify(Integer id, T entity) {
         if (null == entity) {
             return E6WrapperUtil.ok();
@@ -187,7 +187,7 @@ public class BaseServiceImpl<D extends JpaRepository<T, Integer>, T extends Base
      * @return
      */
     @Override
-    @Transactional
+    @Transactional(rollbackOn = Exception.class)
     public E6Wrapper afterModify(T entity) {
         return E6WrapperUtil.ok(entity);
     }
@@ -213,7 +213,7 @@ public class BaseServiceImpl<D extends JpaRepository<T, Integer>, T extends Base
      * @return
      */
     @Override
-    @Transactional
+    @Transactional(rollbackOn = Exception.class)
     public E6Wrapper beforeFind(T entity) {
         return E6WrapperUtil.ok(entity);
     }
@@ -286,9 +286,9 @@ public class BaseServiceImpl<D extends JpaRepository<T, Integer>, T extends Base
                         name = name.substring(0, 1).toUpperCase() + name.substring(1);
                         if ("save".equals(operationType)){
                             if ("CreatedId".equals(name)){
-                                Method m = entity.getClass().getMethod("set"+name,Integer.class);
+                                Method m = entity.getClass().getMethod("set"+name,Long.class);
 //                                m.invoke(entity, opUser.getUserCode());
-                                m.invoke(entity, opUser.getId());
+                                m.invoke(entity, opUser.getId().longValue());
                                 break;
                             }
                             if ("CreatedBy".equals(name)){
@@ -303,9 +303,9 @@ public class BaseServiceImpl<D extends JpaRepository<T, Integer>, T extends Base
                             }
                         }
                         if ("ModifiedId".equals(name)){
-                            Method m = entity.getClass().getMethod("set"+name,Integer.class);
+                            Method m = entity.getClass().getMethod("set"+name,Long.class);
 //                            m.invoke(entity, opUser.getUserCode());
-                            m.invoke(entity, opUser.getId());
+                            m.invoke(entity, opUser.getId().longValue());
                             break;
                         }
                         if ("ModifiedBy".equals(name)){
