@@ -309,6 +309,12 @@ public class Constants {
 
     public final static String CONNECTOR_AND = "AND";
 
+    public final static String SQL_KEY_AS = "AS";
+
+    public final static String SQL_KEY_LIMIT = "LIMIT";
+
+    public final static String SQL_KEY_COUNT = "COUNT";
+
     /**
      * 预检单
      */
