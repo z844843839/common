@@ -3,6 +3,7 @@ package com.crt.common.util;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.crt.common.constant.Constants;
 import com.crt.common.vo.E6Wrapper;
 import com.crt.common.vo.E6WrapperUtil;
 import org.slf4j.Logger;
@@ -51,6 +52,33 @@ public class WorkFlowUtil {
      * @return
      */
     public static E6Wrapper flowStartup(Map<String,Object> map){
+        String workFlowUrl=url+ Constants.PROCESS_START_URL_SUFFIX;
+        return WorkFlowUtil.executeWorkFlow(map,workFlowUrl);
+    }
+
+    /**
+     * 流程驳回后再提交
+     * @param map Map<String,Object>
+     * @return
+     */
+    public static E6Wrapper flowReset(Map<String,Object> map){
+        String workFlowUrl=url+ Constants.PROCESS_RESET_URL_SUFFIX;
+        return WorkFlowUtil.executeWorkFlow(map,workFlowUrl);
+    }
+
+    /**
+     * 流程驳回后再提交
+     * @param map Map<String,Object>
+     * @return
+     */
+    public static E6Wrapper flowStop(Map<String,Object> map){
+        String workFlowUrl=url+ Constants.PROCESS_STOP_URL_SUFFIX;
+        return WorkFlowUtil.executeWorkFlow(map,workFlowUrl);
+    }
+
+
+
+    public static E6Wrapper executeWorkFlow(Map<String,Object> map,String workFlowUrl){
         if (null != map && map.size() > 0){
             HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
             String token = request.getHeader("Authorization");
@@ -63,13 +91,13 @@ public class WorkFlowUtil {
             HttpHeaders headers = new HttpHeaders();
             headers.add("Authorization",token);
             HttpEntity<MultiValueMap> entity = new HttpEntity<>(mvMap,headers);
-            logger.info("WorkFlowUtil启动工作流前数据: {}", JSON.toJSONString(entity, SerializerFeature.WriteMapNullValue));
-            logger.info("WorkFlowUtil启动工作流的URL: {}", url);
-            ResponseEntity<String> exchange = restTemplate.exchange(url,
+            logger.info("WorkFlowUtil执行工作流前数据: {}", JSON.toJSONString(entity, SerializerFeature.WriteMapNullValue));
+            logger.info("WorkFlowUtil执行工作流的URL: {}", workFlowUrl);
+            ResponseEntity<String> exchange = restTemplate.exchange(workFlowUrl,
                     HttpMethod.POST, entity, String.class);
             String result =  exchange.getBody();
             JSONObject json = JSONObject.parseObject(result);
-            logger.info("WorkFlowUtil启动工作流返回数据: {}", json);
+            logger.info("WorkFlowUtil执行工作流返回数据: {}", json);
             if (200 == Integer.parseInt(json.get("code").toString())){
                 logger.error(" result ====> "+ json.get("message"));
                 return E6WrapperUtil.ok(json);
@@ -80,17 +108,4 @@ public class WorkFlowUtil {
         return E6WrapperUtil.paramError("参数不能未空！");
     }
 
-
-//    /**
-//     * 订阅MQ 处理消费结果
-//     * @param queue  doc_type
-//     * @param routineKey
-//     */
-//    public void resultProcess(String queue,String routineKey){
-//        try{
-//            mQcroe.mqMessageListenner(queue,routineKey);
-//        }catch (IOException e){
-//            logger.error(" ioexception =====> " + e.getMessage());
-//        }
-//    }
 }

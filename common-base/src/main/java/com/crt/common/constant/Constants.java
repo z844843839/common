@@ -319,4 +319,17 @@ public class Constants {
      */
     public final static int FIX_FINISH =  562;
 
+    /**
+     * 工作流启动地址
+     */
+    public final static String PROCESS_START_URL_SUFFIX="bpm/operation/process-operation-confirmStartProcess";
+    /**
+     * 工作流驳回后再提交地址
+     */
+    public final static String PROCESS_RESET_URL_SUFFIX="bpm/operation/task-operation-completeTask";
+    /**
+     * 工作流终止地址
+     */
+    public final static String PROCESS_STOP_URL_SUFFIX="bpm/operation/process-operation-confirmStartProcess";
+
 }
