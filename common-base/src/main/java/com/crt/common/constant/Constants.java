@@ -315,6 +315,10 @@ public class Constants {
 
     public final static String SQL_KEY_COUNT = "COUNT";
 
+    public final static String SQL_KEY_WHERE = "WHERE";
+
+    public final static String SQL_KEY_ON = "ON";
+
     /**
      * 预检单
      */

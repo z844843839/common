@@ -54,20 +54,13 @@ public class SqlInterceptor implements Interceptor {
                 InterceptAnnotation interceptorAnnotation = method.getAnnotation(InterceptAnnotation.class);
                 if (interceptorAnnotation.flag()) {
                     sql = cleanSqlSpace(sql);
-                    String tableAlias = getTableAlias(sql);
-                    String moreThan = "";
-                    String rowSql = UserInfoUtil.getRowDataAuthSQL(null,tableAlias);
-                    if (sql.indexOf("LIMIT") >= 0){
-                        moreThan = sql.substring(sql.indexOf("LIMIT"),sql.length());
-                        sql = sql.substring(0,sql.indexOf("LIMIT"));
-                    }else if(sql.indexOf("COUNT") >= 0 || sql.indexOf("count") >= 0){
-                        if (sql.indexOf("WHERE") < 0 && sql.indexOf("where") < 0){
-                            StringBuffer sqlbff = new StringBuffer(sql);
-                            sqlbff.append(Constants.SPACE).append("WHERE").append(Constants.SPACE);
-                            sql = sqlbff.toString();
-                        }
+                    if(sql.indexOf("COUNT") >= 0 || sql.indexOf("count") >= 0){
+                        sql = sql.substring(sql.indexOf("FROM (") + 6 ,sql.length());
+                        sql = sql.substring(0,sql.indexOf(") AS total"));
                     }
-                    mSql = sql + Constants.CONNECTOR_AND + Constants.SPACE + rowSql + Constants.SPACE + moreThan;
+                    String tableAlias = sql.substring(sql.indexOf("SELECT")+7,sql.indexOf("."));
+                    String rowSql = UserInfoUtil.getRowDataAuthSQL(null,tableAlias);
+                    mSql = interceptSQL(sql,tableAlias,rowSql);
                 }
             }
         }
@@ -104,22 +97,30 @@ public class SqlInterceptor implements Interceptor {
     }
 
     /**
-     *获取sql中的表别名
+     * sql拼接数据权限条件
      * @param sql
+     * @param alias
+     * @param rowSql
      * @return String
      */
-    private String getTableAlias(String sql){
-        String alias = null;
-        if (sql.indexOf("ON") >= 0){
-            alias = sql.substring(sql.lastIndexOf("AS")+2,sql.lastIndexOf("ON"));
-        }else{
-            alias = sql.substring(sql.lastIndexOf("AS")+2,sql.lastIndexOf("WHERE"));
+    private static String interceptSQL(String sql,String alias,String rowSql){
+        String moreThan = "";
+        String cutPoint = "AS" + Constants.SPACE + alias.trim();
+        moreThan = sql.substring(sql.lastIndexOf(cutPoint) + (cutPoint.length()),sql.length()).trim();
+        sql = sql.substring(0,sql.lastIndexOf(cutPoint) + (cutPoint.length()));
+        if (moreThan.indexOf("WHERE") >= 0){
+            moreThan = moreThan.substring(moreThan.indexOf("WHERE") + 5,moreThan.length()).trim();
         }
-        if (null != alias){
-            alias = alias.replaceAll("\r|\n", "");
+        if (moreThan.indexOf(alias.trim() + Constants.SPOT) >= 0){
+            moreThan = Constants.CONNECTOR_AND + Constants.SPACE + moreThan.trim();
         }
-        return alias.trim();
+        StringBuffer sbuffer = new StringBuffer(sql);
+        sbuffer.append(Constants.SPACE).append("WHERE");
+        sql = sbuffer.toString();
+        String finalSql = sql + Constants.SPACE + rowSql + Constants.SPACE  + moreThan;
+        return finalSql;
     }
+
 
     @Override
     public Object plugin(Object target) {

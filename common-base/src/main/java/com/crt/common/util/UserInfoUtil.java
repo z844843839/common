@@ -158,18 +158,6 @@ public class UserInfoUtil {
         return E6WrapperUtil.ok(result);
     }
 
-    public static List<RowAuthVO> getDataAuthTables(){
-        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-        String token = request.getHeader("Authorization");
-        if (StringUtils.isNotEmpty(token) && null != userCache.get(token)){
-            if (userCache.get(token).containsKey("rowAuth")) {
-                List<RowAuthVO> rowAuthList = (List<RowAuthVO>) userCache.get(token).get("rowAuth");
-                return rowAuthList;
-            }
-        }
-        return null;
-    }
-
     /**
      * 根据当前请求路径 返回行级权限SQL
      *
