@@ -26,7 +26,7 @@ import java.util.Properties;
 
 @Component
 @Intercepts({@Signature(type = StatementHandler.class, method = "prepare", args = {Connection.class, Integer.class})})
-public class SqlInterceptor implements Interceptor {
+public class DataAuthInterceptor implements Interceptor {
 
 
     @Override
