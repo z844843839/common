@@ -3,6 +3,7 @@ package com.crt.common.sqlInterceptor;
 
 import com.crt.common.constant.Constants;
 import com.crt.common.util.UserInfoUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.executor.statement.StatementHandler;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
@@ -52,14 +53,14 @@ public class DataAuthInterceptor implements Interceptor {
         for (Method method : classType.getDeclaredMethods()) {
             if (method.isAnnotationPresent(InterceptAnnotation.class) && mName.equals(method.getName())) {
                 InterceptAnnotation interceptorAnnotation = method.getAnnotation(InterceptAnnotation.class);
-                if (interceptorAnnotation.flag()) {
+                String tableAlias = sql.substring(sql.indexOf("SELECT")+7,sql.indexOf("."));
+                String rowSql = UserInfoUtil.getRowDataAuthSQL(null,tableAlias);
+                if (interceptorAnnotation.flag() && StringUtils.isNotEmpty(rowSql)) {
                     sql = cleanSqlSpace(sql);
                     if(sql.indexOf("COUNT") >= 0 || sql.indexOf("count") >= 0){
                         sql = sql.substring(sql.indexOf("FROM (") + 6 ,sql.length());
                         sql = sql.substring(0,sql.indexOf(") AS total"));
                     }
-                    String tableAlias = sql.substring(sql.indexOf("SELECT")+7,sql.indexOf("."));
-                    String rowSql = UserInfoUtil.getRowDataAuthSQL(null,tableAlias);
                     mSql = interceptSQL(sql,tableAlias,rowSql);
                 }
             }
