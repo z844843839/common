@@ -70,6 +70,10 @@ public class UserRedisVO {
     private Long orgCode;
     //组织名称
     private String orgName;
+    //角色编码
+    private Long roleCode;
+    //角色名称
+    private String roleName;
 
     public Integer getId() {
         return id;
@@ -333,5 +337,21 @@ public class UserRedisVO {
 
     public void setOrgName(String orgName) {
         this.orgName = orgName;
+    }
+
+    public Long getRoleCode() {
+        return roleCode;
+    }
+
+    public void setRoleCode(Long roleCode) {
+        this.roleCode = roleCode;
+    }
+
+    public String getRoleName() {
+        return roleName;
+    }
+
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
     }
 }

@@ -67,7 +67,7 @@ public class WorkFlowUtil {
     }
 
     /**
-     * 流程驳回后再提交
+     * 流程终止方法
      * @param map Map<String,Object>
      * @return
      */

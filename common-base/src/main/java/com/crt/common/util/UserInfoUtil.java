@@ -252,6 +252,8 @@ public class UserInfoUtil {
                             count++;
                         }
                         sql.append(Constants.RIGHT_PARENTHESES);
+                    }else{
+                        return null;
                     }
                 }
             }
