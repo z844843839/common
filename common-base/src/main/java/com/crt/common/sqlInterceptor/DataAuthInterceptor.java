@@ -56,9 +56,7 @@ public class DataAuthInterceptor implements Interceptor {
                 boolean totalFlag = false;
                 String tableAlias = null;
                 sql = cleanSqlSpace(sql);
-                Boolean cap = (sql.indexOf("COUNT(1)") >= 0 || sql.indexOf("COUNT(*)") >= 0);
-                Boolean low = (sql.indexOf("count(1)") >= 0 || sql.indexOf("count(*)") >= 0);
-                if(cap || low){
+                if (interceptorAnnotation.queryType()==InterceptAnnotation.QueryAuthSqlType.QUERY_COUNT ){
                     sql = sql.substring(sql.indexOf("FROM (") + 6 ,sql.length());
                     sql = sql.substring(0,sql.indexOf(") AS total"));
                     totalFlag = true;

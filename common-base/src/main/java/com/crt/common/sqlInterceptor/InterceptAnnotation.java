@@ -15,4 +15,10 @@ public @interface  InterceptAnnotation {
 
     boolean flag() default true;
 
+    QueryAuthSqlType queryType();
+
+    public enum QueryAuthSqlType{
+        QUERY_LIMIT,QUERY_COUNT;
+    }
 }
+
