@@ -53,15 +53,23 @@ public class DataAuthInterceptor implements Interceptor {
         for (Method method : classType.getDeclaredMethods()) {
             if (method.isAnnotationPresent(InterceptAnnotation.class) && mName.equals(method.getName())) {
                 InterceptAnnotation interceptorAnnotation = method.getAnnotation(InterceptAnnotation.class);
-                String tableAlias = sql.substring(sql.indexOf("SELECT")+7,sql.indexOf("."));
+                boolean totalFlag = false;
+                String tableAlias = null;
+                sql = cleanSqlSpace(sql);
+                if(sql.indexOf("COUNT") >= 0 || sql.indexOf("count") >= 0){
+                    sql = sql.substring(sql.indexOf("FROM (") + 6 ,sql.length());
+                    sql = sql.substring(0,sql.indexOf(") AS total"));
+                    totalFlag = true;
+                }
+                tableAlias = sql.substring(sql.indexOf("SELECT")+7,sql.indexOf("."));
                 String rowSql = UserInfoUtil.getRowDataAuthSQL(null,tableAlias);
                 if (interceptorAnnotation.flag() && StringUtils.isNotEmpty(rowSql)) {
-                    sql = cleanSqlSpace(sql);
-                    if(sql.indexOf("COUNT") >= 0 || sql.indexOf("count") >= 0){
-                        sql = sql.substring(sql.indexOf("FROM (") + 6 ,sql.length());
-                        sql = sql.substring(0,sql.indexOf(") AS total"));
-                    }
                     mSql = interceptSQL(sql,tableAlias,rowSql);
+                    if (totalFlag){
+                        StringBuffer sbff = new StringBuffer();
+                        sbff.append("SELECT count(1) FROM ( ").append(mSql).append(" ) AS total ");
+                        mSql = sbff.toString();
+                    }
                 }
             }
         }
