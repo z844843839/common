@@ -17,8 +17,18 @@ public @interface  InterceptAnnotation {
 
     QueryAuthSqlType queryType();
 
-    public enum QueryAuthSqlType{
-        QUERY_LIMIT,QUERY_COUNT;
+    /**
+     *
+     */
+     enum QueryAuthSqlType{
+        /**
+         * 集合查询
+         */
+        QUERY_LIMIT,
+        /**
+         * 数量查询
+         */
+        QUERY_COUNT;
     }
 }
 

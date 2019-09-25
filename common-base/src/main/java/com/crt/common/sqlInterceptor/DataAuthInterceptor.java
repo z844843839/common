@@ -55,19 +55,26 @@ public class DataAuthInterceptor implements Interceptor {
                 InterceptAnnotation interceptorAnnotation = method.getAnnotation(InterceptAnnotation.class);
                 boolean totalFlag = false;
                 String tableAlias = null;
+                String countStart = "SELECT count(1) FROM";
+                String countEnd = "AS total";
                 sql = cleanSqlSpace(sql);
-                if (interceptorAnnotation.queryType()==InterceptAnnotation.QueryAuthSqlType.QUERY_COUNT ){
-                    sql = sql.substring(sql.indexOf("FROM (") + 6 ,sql.length());
-                    sql = sql.substring(0,sql.indexOf(") AS total"));
+                if (interceptorAnnotation.queryType() == InterceptAnnotation.QueryAuthSqlType.QUERY_COUNT) {
+                    sql = sql.substring(sql.indexOf(countStart) + countStart.length(), sql.length());
+                    sql = sql.substring(0, sql.indexOf(countEnd));
+                    sql = sql.substring(sql.indexOf("(") + 1, sql.lastIndexOf(")") - 1).trim();
                     totalFlag = true;
                 }
-                tableAlias = sql.substring(sql.indexOf("SELECT")+7,sql.indexOf("."));
-                String rowSql = UserInfoUtil.getRowDataAuthSQL(null,tableAlias);
+                tableAlias = sql.substring(sql.indexOf("SELECT") + 7, sql.indexOf("."));
+                String rowSql = UserInfoUtil.getRowDataAuthSQL(null, tableAlias);
                 if (interceptorAnnotation.flag() && StringUtils.isNotEmpty(rowSql)) {
-                    mSql = interceptSQL(sql,tableAlias,rowSql);
-                    if (totalFlag){
+                    mSql = interceptSQL(sql, tableAlias, rowSql);
+                    if (totalFlag) {
                         StringBuffer sbff = new StringBuffer();
-                        sbff.append("SELECT count(1) FROM ( ").append(mSql).append(" ) AS total ");
+                        sbff.append(countStart).append(Constants.SPACE);
+                        sbff.append(Constants.LEFT_PARENTHESES).append(Constants.SPACE);
+                        sbff.append(mSql);
+                        sbff.append(Constants.SPACE).append(Constants.RIGHT_PARENTHESES);
+                        sbff.append(Constants.SPACE).append(countEnd);
                         mSql = sbff.toString();
                     }
                 }
@@ -84,10 +91,11 @@ public class DataAuthInterceptor implements Interceptor {
     /**
      * 清除sql中多余空格
      * 保持每个单词之间最多有一个空格
+     *
      * @param sql
      * @return String
      */
-    private String cleanSqlSpace(String sql){
+    private String cleanSqlSpace(String sql) {
         StringBuilder result = new StringBuilder();
         // 前一个是否为空格，默认第一个不是
         boolean space = false;
@@ -96,7 +104,7 @@ public class DataAuthInterceptor implements Interceptor {
                 //当前不是空格
                 space = false;
                 result.append(sql.charAt(i));
-            }else if (!space){
+            } else if (!space) {
                 //当前是空格，但前一个不是空格
                 space = true;
                 result.append(sql.charAt(i));
@@ -107,26 +115,27 @@ public class DataAuthInterceptor implements Interceptor {
 
     /**
      * sql拼接数据权限条件
+     *
      * @param sql
      * @param alias
      * @param rowSql
      * @return String
      */
-    private static String interceptSQL(String sql,String alias,String rowSql){
+    private static String interceptSQL(String sql, String alias, String rowSql) {
         String moreThan = "";
         String cutPoint = "AS" + Constants.SPACE + alias.trim();
-        moreThan = sql.substring(sql.lastIndexOf(cutPoint) + (cutPoint.length()),sql.length()).trim();
-        sql = sql.substring(0,sql.lastIndexOf(cutPoint) + (cutPoint.length()));
-        if (moreThan.indexOf("WHERE") >= 0){
-            moreThan = moreThan.substring(moreThan.indexOf("WHERE") + 5,moreThan.length()).trim();
+        moreThan = sql.substring(sql.lastIndexOf(cutPoint) + (cutPoint.length()), sql.length()).trim();
+        sql = sql.substring(0, sql.lastIndexOf(cutPoint) + (cutPoint.length()));
+        if (moreThan.indexOf("WHERE") >= 0) {
+            moreThan = moreThan.substring(moreThan.indexOf("WHERE") + 5, moreThan.length()).trim();
         }
-        if (moreThan.indexOf(alias.trim() + Constants.SPOT) >= 0){
+        if (moreThan.indexOf(alias.trim() + Constants.SPOT) >= 0) {
             moreThan = Constants.CONNECTOR_AND + Constants.SPACE + moreThan.trim();
         }
         StringBuffer sbuffer = new StringBuffer(sql);
         sbuffer.append(Constants.SPACE).append("WHERE");
         sql = sbuffer.toString();
-        String finalSql = sql + Constants.SPACE + rowSql + Constants.SPACE  + moreThan;
+        String finalSql = sql + Constants.SPACE + rowSql + Constants.SPACE + moreThan;
         return finalSql;
     }
 
