@@ -342,4 +342,23 @@ public class Constants {
      */
     public final static String PROCESS_STOP_URL_SUFFIX="bpm/operation/process-operation-confirmStartProcess";
 
+
+    /**
+     * 数字集合
+     */
+    public  final static Integer NUMBER_NEGATIVE_ONE = -1;
+    public  final static Integer NUMBER_ZERO = 0;
+    public  final static Integer NUMBER_ONE = 1;
+    public  final static Integer NUMBER_TWO = 2;
+    public  final static Integer NUMBER_THREE = 3;
+    public  final static Integer NUMBER_FOUR = 4;
+    public  final static Integer NUMBER_FIVE = 5;
+    public  final static Integer NUMBER_SIX = 6;
+    public  final static Integer NUMBER_SEVEN = 7;
+    public  final static Integer NUMBER_EIGHT = 8;
+    public  final static Integer NUMBER_NINE = 9;
+    public  final static Integer NUMBER_TEN = 10;
+
+
+
 }
