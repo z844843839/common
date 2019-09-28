@@ -28,24 +28,12 @@ import java.util.Date;
  * S 业务Serivce 需要继承BaseSerivce
  * T 业务PO 继承BaseEntity 或 BaseBizEntity
  */
-public abstract class BaseController<S extends BaseService, T extends BaseEntity> {
+public abstract class BaseController<S extends BaseService, T extends BaseEntity>{
 
     protected static final Logger logger = LoggerFactory.getLogger(BaseController.class);
 
-    @Autowired(required = false)
-    private AbstractUserService abstractUserService;
-
     @Autowired
     protected S service;
-
-    /**
-     * 登陆用户信息
-     *
-     * @return
-     */
-    public AbstractUser getLoginUser() {
-        return abstractUserService.getLoginUser();
-    }
 
     /**
      * 根据ID验证实体是否存在

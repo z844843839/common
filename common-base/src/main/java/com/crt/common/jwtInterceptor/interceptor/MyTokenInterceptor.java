@@ -38,6 +38,7 @@ import java.util.Map;
 
 /**
  * 自定义Token验证拦截器
+ * @author wangxin@e6yun.com
  */
 @Component
 public class MyTokenInterceptor implements HandlerInterceptor {
@@ -55,10 +56,13 @@ public class MyTokenInterceptor implements HandlerInterceptor {
 
     @Autowired
     private RedisUtil<Map<String,Object>> redisUtil;
-    @Override
 
+    @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception{
-        String url = request.getRequestURI();//这里打端点，页面访问swagger页面看看请求的什么路径
+        /**
+         * 这里打端点，页面访问swagger页面看看请求的什么路径
+         */
+        String url = request.getRequestURI();
 
 		if (url.contains("bpm") || url.contains("MIDDLE-COMMON-FILEUPLOAD") || url.contains("captcha"))
 		{
@@ -97,6 +101,7 @@ public class MyTokenInterceptor implements HandlerInterceptor {
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, @Nullable Exception ex) throws Exception {
+
     }
 
     /**
