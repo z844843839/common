@@ -175,11 +175,35 @@ public class RedisUtil<T> {
         setExpireTime(key,24 * 60 * 60);
         return code;
     }
-    
+
+    /**
+     *根据传入的页面编码前缀和自增字符长度返回业务编码
+     * cp11+190929+000001
+     * redis保存1天
+     * @param busCode 需要生成的业务前缀编码例如：210，cp11 保证每个编码全项目唯一
+     * @param strLength 要返回的业务后面自增的字符长度 大于1的整数
+     * @return 例如传入的busCode：cp11 strLength：6  则返回业务编码cp11190928000001
+     */
+    public String createBusinessCode(String busCode,int strLength){
+        //根据业务规则，获取当天六位数
+        String dateStr = new SimpleDateFormat("YYMMdd")
+                .format(new Date());
+        //业务编码 + 6位日期 作为Key
+        String key = busCode + dateStr;
+        //生成6位自增数
+        Long autoNum = increase(key,1);
+        //不足6位，前面补0
+        String autoNumStr = String.format("%0" + strLength + "d", autoNum);
+        String businessCode =key + autoNumStr;
+        //设置编码保存时长
+        setExpireTime(key,24 * 60 * 60);
+        return businessCode;
+    }
+
     /**
      * 根据key生成自增指定长度的字符串
-     * @param key 
-     * @param strLength 返回长度以0补齐 
+     * @param key
+     * @param strLength 返回长度以0补齐
      * @return
      */
     public String increaseStr(String key,int strLength){
