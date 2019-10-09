@@ -39,7 +39,7 @@ public class ControllerExceptionHandler {
     @ResponseBody
     @ExceptionHandler(value = Exception.class)
     public ResponseEntity glocalExceptionHandler(WebRequest webRequest, HttpServletRequest request, HttpServletResponse response, Exception ex) {
-        logger.error("global exception:",ex.getMessage());
+        logger.error("global exception:",ex);
         //这里不应该把服务端的异常 返回给前端界面，会有安全隐患
         return new ResponseEntity( E6WrapperUtil.error("系统异常,请稍后重试"), HttpStatus.INTERNAL_SERVER_ERROR);
     }

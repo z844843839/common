@@ -72,7 +72,7 @@ public class Constants {
     public static final String WORK_FLOW_DOC_TYPE_SIGN_IN = "投箱管理";
 
     /**
-     *工作流分类- 调令申请
+     * 工作流分类- 调令申请
      */
     public static final String WORK_FLOW_DOC_TYPE_SHIF_ORDER = "调令申请";
 
@@ -159,11 +159,10 @@ public class Constants {
     public static final String ROOT_NODE = "0";
 
 
-
     /**
      * 需要透传的header的名称
      */
-    public static final String[] HEADERS = {USER_ID,WEBGIS_USER_ID,CORP_ID,ORG_ID,PARENT_ID};
+    public static final String[] HEADERS = {USER_ID, WEBGIS_USER_ID, CORP_ID, ORG_ID, PARENT_ID};
 
     //岗位管理
     public final static int POST_MANAGER = 840;
@@ -178,13 +177,13 @@ public class Constants {
     //菜单管理
     public final static int MENU_MANAGER = 800;
     //会计凭证
-    public final static int  ACCOUNTING_VOUCHERS = 660;
+    public final static int ACCOUNTING_VOUCHERS = 660;
     //应付发票
-    public final static int  INVOICE_PAYABLE = 650;
+    public final static int INVOICE_PAYABLE = 650;
     //应收发票
-    public  final static int AR_INVOICE = 640;
+    public final static int AR_INVOICE = 640;
     //付款申请
-    public final static  int  APPLICATION_PAYMENT = 630 ;
+    public final static int APPLICATION_PAYMENT = 630;
     //付款单
     public final static int PAYMENT_SLIP = 620;
     //收据信息表
@@ -196,7 +195,7 @@ public class Constants {
     //箱配合入库单
     public final static int BOX_MATCHING_WAREHOUSING_BILL = 581;
     //箱配件申请单
-    public final static int  APPLICATION_FORM_BOX_ACCESSORIES_BILL = 580;
+    public final static int APPLICATION_FORM_BOX_ACCESSORIES_BILL = 580;
     //箱报废单
     public final static int BOX_SCRAP_BILL = 570;
     //维修结果单
@@ -210,37 +209,37 @@ public class Constants {
     //定检申请单
     public final static int VERIFICATION_APPLICATION_BILL = 553;
     //定检计划单
-    public final static int  VERIFICATION_PLAN_BILL= 550;
+    public final static int VERIFICATION_PLAN_BILL = 550;
     //验箱单
     public final static int CHECK_BOX_BILL = 540;
     //Constants(包括自备箱进出)L)
-    public final static int  BOX_IN_AND_OUT = 530;
+    public final static int BOX_IN_AND_OUT = 530;
     //验箱收货单
-    public final static int  INSPECTION_RECEIPT = 520;
+    public final static int INSPECTION_RECEIPT = 520;
     //箱服务合同
-    public final static int  BOX_SERVICE_CONTRACT = 510;
+    public final static int BOX_SERVICE_CONTRACT = 510;
     //运量确认单
     public final static int TRAFFIC_CONFIRMATION_BILL = 480;
     //作业单
     public final static int WORKSHEET = 470;
     //供应商订单
-    public final static int  SUPPLIER_ORDERS = 460;
+    public final static int SUPPLIER_ORDERS = 460;
     //客户订单
-    public final static int  CUSTOMER_ORDERS = 450;
+    public final static int CUSTOMER_ORDERS = 450;
     //客户运输计划
     public final static int CUSTOMER_TRANSPORTATION_PLAN = 440;
     //调令单
-    public final static int  CALL_ORDER = 430;
+    public final static int CALL_ORDER = 430;
     //退箱单
-    public final static int  RETURN_BILL = 420;
+    public final static int RETURN_BILL = 420;
     //排箱单
     public final static int ARRANGE_BILL = 410;
     //箱匹配
     public final static int SIGN_IN_RELATION = 411;
     //应付结算单
-    public final static int  STATEMENT_PAYABLE = 340;
+    public final static int STATEMENT_PAYABLE = 340;
     //采购合同
-    public final  static int PROCUREMENT_CONTRACT = 330;
+    public final static int PROCUREMENT_CONTRACT = 330;
     //供应商准入
     public final static int SUPPLIER_ACCESS = 320;
     //供应商询价
@@ -248,13 +247,13 @@ public class Constants {
     //结算方式
     public final static int SETTLEMENT_METHOD = 299;
     //归属公司
-    public final static int  Ownership_Company = 298;
+    public final static int Ownership_Company = 298;
     //付款方式
-    public final static int  Payment_WAY = 297;
+    public final static int Payment_WAY = 297;
     //全程客户类型
     public final static int WHOLE_CUSTOMER_TYPE = 296;
     //应收结算单
-    public final static int ACCOUNTS_RECEIVABLE_BILL= 270;
+    public final static int ACCOUNTS_RECEIVABLE_BILL = 270;
     //销售合同
     public final static int SALES_CONTRACT = 260;
     //客户信用评估
@@ -262,30 +261,30 @@ public class Constants {
     //客户报价
     public final static int CUSTOMER_QUOTATION = 240;
     //物流运输方案
-    public final static int  LOGISTICS_TRANSPORTATION_SCHEME = 230;
+    public final static int LOGISTICS_TRANSPORTATION_SCHEME = 230;
     //业务可行性分析
-    public final static int  BUSINESS_FEASIBILITY_ANALYSIS = 220;
+    public final static int BUSINESS_FEASIBILITY_ANALYSIS = 220;
     //客户意向表
-    public final static int  CUSTOMER_INTENTION_STATEMENT = 210;
+    public final static int CUSTOMER_INTENTION_STATEMENT = 210;
     //员工主数据
-    public final static int  EMPLOYEE_MASTER_DATA = 150;
+    public final static int EMPLOYEE_MASTER_DATA = 150;
     //地理地标
-    public final static int  GEOGRAPHICAL_LANDMARKS = 140;
+    public final static int GEOGRAPHICAL_LANDMARKS = 140;
     //业务项目主数据
-    public final static int  BUSINESS_PROJECT_MASTER_DATA = 130;
+    public final static int BUSINESS_PROJECT_MASTER_DATA = 130;
     //品类主数据
-    public final static int  CATEGORY_MASTER_DATA = 120;
+    public final static int CATEGORY_MASTER_DATA = 120;
     //箱技术参数
-    public final static int  TECHNICAL_PARAMETERS_BOX = 114;
+    public final static int TECHNICAL_PARAMETERS_BOX = 114;
     //箱修字典
-    public final static int  BOX_REPAIR_DICTIONARY = 112;
+    public final static int BOX_REPAIR_DICTIONARY = 112;
     //箱主数据
-    public final static int  BOX_MASTER_DATA = 110;
+    public final static int BOX_MASTER_DATA = 110;
     //客商数据
 
     public static String CONTAINSTR = "?";
 
-    public final static int  BUSINESS_DATA = 100;
+    public final static int BUSINESS_DATA = 100;
     /**
      * sql操作符
      */
@@ -322,42 +321,52 @@ public class Constants {
     /**
      * 预检单
      */
-    public final static int FIX_CHECK =  561;
+    public final static int FIX_CHECK = 561;
 
     /**
      * 修竣单
      */
-    public final static int FIX_FINISH =  562;
+    public final static int FIX_FINISH = 562;
 
     /**
      * 工作流启动地址
      */
-    public final static String PROCESS_START_URL_SUFFIX="bpm/operation/process-operation-confirmStartProcess";
+    public final static String PROCESS_START_URL_SUFFIX = "bpm/operation/process-operation-confirmStartProcess";
     /**
      * 工作流驳回后再提交地址
      */
-    public final static String PROCESS_RESET_URL_SUFFIX="bpm/operation/task-operation-completeTask";
+    public final static String PROCESS_RESET_URL_SUFFIX = "bpm/operation/task-operation-completeTask";
     /**
      * 工作流终止地址
      */
-    public final static String PROCESS_STOP_URL_SUFFIX="bpm/operation/process-operation-confirmStartProcess";
+    public final static String PROCESS_STOP_URL_SUFFIX = "bpm/operation/process-operation-confirmStartProcess";
 
 
     /**
      * 数字集合
      */
-    public  final static Integer NUMBER_NEGATIVE_ONE = -1;
-    public  final static Integer NUMBER_ZERO = 0;
-    public  final static Integer NUMBER_ONE = 1;
-    public  final static Integer NUMBER_TWO = 2;
-    public  final static Integer NUMBER_THREE = 3;
-    public  final static Integer NUMBER_FOUR = 4;
-    public  final static Integer NUMBER_FIVE = 5;
-    public  final static Integer NUMBER_SIX = 6;
-    public  final static Integer NUMBER_SEVEN = 7;
-    public  final static Integer NUMBER_EIGHT = 8;
-    public  final static Integer NUMBER_NINE = 9;
-    public  final static Integer NUMBER_TEN = 10;
+    public final static Integer NUMBER_NEGATIVE_ONE = -1;
+    public final static Integer NUMBER_ZERO = 0;
+    public final static Integer NUMBER_ONE = 1;
+    public final static Integer NUMBER_TWO = 2;
+    public final static Integer NUMBER_THREE = 3;
+    public final static Integer NUMBER_FOUR = 4;
+    public final static Integer NUMBER_FIVE = 5;
+    public final static Integer NUMBER_SIX = 6;
+    public final static Integer NUMBER_SEVEN = 7;
+    public final static Integer NUMBER_EIGHT = 8;
+    public final static Integer NUMBER_NINE = 9;
+    public final static Integer NUMBER_TEN = 10;
+    public final static Integer NUMBER_ELEVEN = 11;
+    public final static Integer NUMBER_TWELVE = 12;
+    public final static Integer NUMBER_THIRTEEN = 13;
+    public final static Integer NUMBER_FOURTEEN = 14;
+    public final static Integer NUMBER_FIFTEEN = 15;
+    public final static Integer NUMBER_SIXTEEN = 16;
+    public final static Integer NUMBER_SEVENTEEN = 17;
+    public final static Integer NUMBER_EIGHTEEN = 18;
+    public final static Integer NUMBER_NINETEEN = 19;
+    public final static Integer NUMBER_TWENTY = 20;
 
 
 
