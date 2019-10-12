@@ -10,7 +10,11 @@ import java.util.Date;
  * @author malin
  */
 @Data
-public class UserRedisVO extends BaseEntity{
+public class UserRedisVO{
+    /**
+     * 用户ID
+     */
+    private Integer id;
     /**
      * 用户编码
      */

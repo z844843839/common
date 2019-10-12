@@ -269,8 +269,8 @@ public class BaseServiceImpl<D extends JpaRepository<T, Integer>, T extends Base
      */
     protected T setEntityOperationInfo(T entity,String operationType){
         //获取当前登陆人
-        E6Wrapper loginUser = UserInfoUtil.getUserInfo();
-        UserRedisVO opUser = (UserRedisVO)loginUser.getResult();
+//        E6Wrapper loginUser = UserInfoUtil.getUserInfo();
+//        UserRedisVO opUser = (UserRedisVO)loginUser.getResult();
         // 获取实体类的所有属性，返回Field数组
         Field[] field = FieldUtils.getAllFields(entity.getClass());
         String[] operationArray = new String[]{"createdId","createdBy","createdAt","modifiedId","modifiedBy","modifiedAt"};
@@ -287,13 +287,12 @@ public class BaseServiceImpl<D extends JpaRepository<T, Integer>, T extends Base
                         if ("save".equals(operationType)){
                             if ("CreatedId".equals(name)){
                                 Method m = entity.getClass().getMethod("set"+name,Long.class);
-//                                m.invoke(entity, opUser.getUserCode());
-                                m.invoke(entity, opUser.getId().longValue());
+                                m.invoke(entity, UserInfoUtil.getLoginUserId().longValue());
                                 break;
                             }
                             if ("CreatedBy".equals(name)){
                                 Method m = entity.getClass().getMethod("set"+name,String.class);
-                                m.invoke(entity, opUser.getRealName());
+                                m.invoke(entity, UserInfoUtil.getLoginUserRealName());
                                 break;
                             }
                             if ("CreatedAt".equals(name)){
@@ -304,13 +303,12 @@ public class BaseServiceImpl<D extends JpaRepository<T, Integer>, T extends Base
                         }
                         if ("ModifiedId".equals(name)){
                             Method m = entity.getClass().getMethod("set"+name,Long.class);
-//                            m.invoke(entity, opUser.getUserCode());
-                            m.invoke(entity, opUser.getId().longValue());
+                            m.invoke(entity, UserInfoUtil.getLoginUserId().longValue());
                             break;
                         }
                         if ("ModifiedBy".equals(name)){
                             Method m = entity.getClass().getMethod("set"+name,String.class);
-                            m.invoke(entity, opUser.getRealName());
+                            m.invoke(entity, UserInfoUtil.getLoginUserRealName());
                             break;
                         }
                         if ("ModifiedAt".equals(name)){

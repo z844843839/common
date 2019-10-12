@@ -1,12 +1,17 @@
 package com.crt.common.web;
 
+import com.alibaba.fastjson.JSON;
+import com.crt.common.constant.Constants;
 import com.crt.common.vo.E6WrapperUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -15,6 +20,8 @@ import org.springframework.web.context.request.WebRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @Author liupengfei@e6yun.com
@@ -36,12 +43,31 @@ import javax.servlet.http.HttpServletResponse;
 public class ControllerExceptionHandler {
     private static final Logger logger = LoggerFactory.getLogger(ControllerExceptionHandler.class);
 
+    /**
+     * 所有验证框架异常捕获处理
+     * @return
+     */
     @ResponseBody
-    @ExceptionHandler(value = Exception.class)
-    public ResponseEntity glocalExceptionHandler(WebRequest webRequest, HttpServletRequest request, HttpServletResponse response, Exception ex) {
-        logger.error("global exception:",ex);
+    @ExceptionHandler(value = {BindException.class, MethodArgumentNotValidException.class})
+    public Object validationExceptionHandler(Exception exception) {
+        BindingResult bindResult = null;
+        Map<String,String> paramMsg = new HashMap<>(Constants.HASHMAP_DEFAULT_SIZE);
+        if (exception instanceof BindException) {
+            bindResult = ((BindException) exception).getBindingResult();
+        } else if (exception instanceof MethodArgumentNotValidException) {
+            bindResult = ((MethodArgumentNotValidException) exception).getBindingResult();
+        }
+        String msg;
+        if (bindResult != null && bindResult.hasErrors()) {
+            for (FieldError error: bindResult.getFieldErrors()) {
+                paramMsg.put(error.getField(),error.getDefaultMessage());
+            }
+            msg = JSON.toJSONString(paramMsg);
+        }else {
+            msg = "系统繁忙，请稍后重试";
+        }
         //这里不应该把服务端的异常 返回给前端界面，会有安全隐患
-        return new ResponseEntity( E6WrapperUtil.error("系统异常,请稍后重试"), HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity(E6WrapperUtil.error(msg), HttpStatus.OK);
     }
 
 }
