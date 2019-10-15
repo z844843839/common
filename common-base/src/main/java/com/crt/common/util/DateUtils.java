@@ -664,5 +664,14 @@ public class DateUtils {
         return Date.from(zdt.toInstant());
     }
 
-
+    /**
+     * 时间格式化
+     * @param date
+     * @return
+     */
+    public static String dateStr(Date date){
+        SimpleDateFormat sdf =new SimpleDateFormat("yyyy-MM-dd HH:mm:ss" );
+        String str = sdf.format(date);
+        return str;
+    }
 }

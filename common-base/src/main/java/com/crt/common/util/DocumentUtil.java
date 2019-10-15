@@ -2,7 +2,6 @@ package com.crt.common.util;
 
 import cn.hutool.poi.excel.ExcelReader;
 import cn.hutool.poi.excel.ExcelUtil;
-import cn.hutool.poi.excel.ExcelWriter;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.poi.ss.usermodel.*;
@@ -17,10 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class DocumentUtil {
 
@@ -177,7 +173,15 @@ public class DocumentUtil {
                 int j = 0;
                 for (Map.Entry<String, String> entry : headAlias.entrySet()) {
                     Cell cell = row1.createCell(j);
-                    cell.setCellValue(list.get(i).get(entry.getKey()) == null ? " " : list.get(i).get(entry.getKey()).toString());
+                    if ("createdAt".equals(entry.getKey()) || "modifiedAt".equals(entry.getKey())){
+                        String dateStr = "";
+                        if (null != list.get(i).get(entry.getKey())){
+                            dateStr =  DateUtils.dateStr((Date) list.get(i).get(entry.getKey()));
+                        }
+                        cell.setCellValue(dateStr);
+                    }else {
+                        cell.setCellValue(list.get(i).get(entry.getKey()) == null ? " " : list.get(i).get(entry.getKey()).toString());
+                    }
                     j++;
                 }
             }
