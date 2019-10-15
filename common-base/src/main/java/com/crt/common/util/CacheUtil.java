@@ -66,6 +66,21 @@ public class CacheUtil {
         }
     }
 
+    /**
+     * 判断key是否存在
+     *
+     * @param key 键
+     * @return true 存在 false不存在
+     */
+    public static Boolean delete(String key) {
+        try {
+            return keyValueStorage.delete(key);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 
     /**
      * 普通缓存获取
@@ -114,10 +129,10 @@ public class CacheUtil {
      * @param time  时间(秒) time要大于0 如果time小于等于0 将设置无限期
      * @return true成功 false 失败
      */
-    public static Boolean setValandTime(String key, Object value, long time) {
+    public static Boolean setValAndTime(String key, Object value, long time) {
         try {
             if (time > 0) {
-                keyValueStorage.setValandTime(key, JSON.toJSONString(value), time);
+                keyValueStorage.setValAndTime(key, JSON.toJSONString(value), time);
             } else {
                 set(key, value);
             }
