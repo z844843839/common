@@ -315,4 +315,20 @@ public class BeanUtil {
         return alist;
 
     }
+
+    /**
+     * 将原始list的数据复制到list里
+     * @param source 原始list
+     * @param target 目标list
+     * @param clazz 目标class
+     */
+    public static void copyForList(List source, List target, Class clazz) throws IllegalAccessException, InstantiationException{
+        if (source != null && target != null) {
+            for (Object sourceClazz : source) {
+                Object targetClazz = clazz.newInstance();
+                cn.hutool.core.bean.BeanUtil.copyProperties(sourceClazz, targetClazz);
+                target.add(targetClazz);
+            }
+        }
+    }
 }
