@@ -90,11 +90,17 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
         </dependency>
-<!--        <dependency>
-            <groupId>middle-comm-kvs</groupId>
-            <artifactId>middle-comm-redis-rpc</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>-->
+        <dependency>
+            <groupId>io.github.openfeign</groupId>
+            <artifactId>feign-core</artifactId>
+            <version>9.5.1</version>
+            <scope>compile</scope>
+        </dependency>
+        <!--        <dependency>
+                    <groupId>middle-comm-kvs</groupId>
+                    <artifactId>middle-comm-redis-rpc</artifactId>
+                    <version>1.0-SNAPSHOT</version>
+                </dependency>-->
     </dependencies>
 
     <distributionManagement>
