@@ -25,9 +25,10 @@ public class BaseBpmTraceRecord {
 	private String assigneeId;
 	/**
 	 * complete 完成
-	 * active  审批中
+	 * active   审批中
 	 * rollback 驳回到发起人
-	 *
+	 * delete   终止
+	 * noRepairValue  无维修价值
 	 */
 	private String approvalStatus;
 	private Date approvalBtime;

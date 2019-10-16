@@ -15,7 +15,7 @@ public class MQConstants {
     /**
      * 工作流ROUTINGKEY前缀
      */
-    public static final String WORK_FLOW_ROUTINGKEY_PREFIX = "crt_work_flow_routingkey_";
+    public static final String WORK_FLOW_ROUTINGKEY_PREFIX = "crt_work_flow_routingkey";
 
     /**
      * 工作流合同队列前缀

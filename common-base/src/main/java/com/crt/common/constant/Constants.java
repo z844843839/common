@@ -46,6 +46,17 @@ public class Constants {
      */
     public static final String WORK_FLOW_STATUS_ROLLBACK = "rollback";
 
+
+    /**
+     * 工作流终止状态
+     */
+    public static final String WORK_FLOW_STATUS_DELETE = "delete";
+
+    /**
+     * 无维修价值
+     */
+    public static final String WORK_FLOW_STATUS_NOREPAIRVALUE = "noRepairValue";
+
     /**
      * 工作流分类-采购合同
      */
