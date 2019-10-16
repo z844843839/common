@@ -18,7 +18,13 @@ import java.util.Objects;
 @Data
 public class BaseBpmTraceRecord {
 	private Integer id;
+	/**
+	 * 对象id
+	 */
 	private Integer entityId;
+	/**
+	 * 业务类型
+	 */
 	private String docType;
 	private String businessKey;
 	private String processId;
