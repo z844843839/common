@@ -1,5 +1,7 @@
 package com.crt.common.vo;
 
+import lombok.Data;
+
 import javax.persistence.*;
 import java.util.Date;
 import java.util.Objects;
@@ -13,6 +15,7 @@ import java.util.Objects;
  * @Modified Remark
  * @Version 1.0
  **/
+@Data
 public class BaseBpmTraceRecord {
 	private Integer id;
 	private Integer entityId;
@@ -20,121 +23,15 @@ public class BaseBpmTraceRecord {
 	private String businessKey;
 	private String processId;
 	private String assigneeId;
+	/**
+	 * complete 完成
+	 * active  审批中
+	 * rollback 驳回到发起人
+	 *
+	 */
 	private String approvalStatus;
 	private Date approvalBtime;
 	private Date approvalEtime;
 	private Integer deleted;
 	private String comments;
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public Integer getEntityId() {
-		return entityId;
-	}
-
-	public void setEntityId(Integer entityId) {
-		this.entityId = entityId;
-	}
-
-	public String getDocType() {
-		return docType;
-	}
-
-	public void setDocType(String docType) {
-		this.docType = docType;
-	}
-
-	public String getBusinessKey() {
-		return businessKey;
-	}
-
-	public void setBusinessKey(String businessKey) {
-		this.businessKey = businessKey;
-	}
-
-	public String getProcessId() {
-		return processId;
-	}
-
-	public void setProcessId(String processId) {
-		this.processId = processId;
-	}
-
-	public String getAssigneeId() {
-		return assigneeId;
-	}
-
-	public void setAssigneeId(String assigneeId) {
-		this.assigneeId = assigneeId;
-	}
-
-	public String getApprovalStatus() {
-		return approvalStatus;
-	}
-
-	public void setApprovalStatus(String approvalStatus) {
-		this.approvalStatus = approvalStatus;
-	}
-
-	public Date getApprovalBtime() {
-		return approvalBtime;
-	}
-
-	public void setApprovalBtime(Date approvalBtime) {
-		this.approvalBtime = approvalBtime;
-	}
-
-	public Date getApprovalEtime() {
-		return approvalEtime;
-	}
-
-	public void setApprovalEtime(Date approvalEtime) {
-		this.approvalEtime = approvalEtime;
-	}
-
-	public Integer getDeleted() {
-		return deleted;
-	}
-
-	public void setDeleted(Integer deleted) {
-		this.deleted = deleted;
-	}
-
-	public String getComments() {
-		return comments;
-	}
-
-	public void setComments(String comments) {
-		this.comments = comments;
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		BaseBpmTraceRecord that = (BaseBpmTraceRecord) o;
-		return id == that.id &&
-				entityId == that.entityId &&
-				assigneeId == that.assigneeId &&
-				deleted == that.deleted &&
-				Objects.equals(docType, that.docType) &&
-				Objects.equals(businessKey, that.businessKey) &&
-				Objects.equals(processId, that.processId) &&
-				Objects.equals(approvalStatus, that.approvalStatus) &&
-				Objects.equals(approvalBtime, that.approvalBtime) &&
-				Objects.equals(approvalEtime, that.approvalEtime) &&
-				Objects.equals(comments, that.comments);
-	}
-
-	@Override
-	public int hashCode() {
-
-		return Objects.hash(id, entityId, docType, businessKey, processId, assigneeId, approvalStatus, approvalBtime, approvalEtime, deleted, comments);
-	}
 }
