@@ -1,8 +1,8 @@
 package com.crt.common.util;
 
 import com.crt.common.constant.Constants;
-import com.crt.common.vo.RowAuthVO;
 import org.apache.commons.beanutils.BeanMap;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,18 +19,21 @@ import static cn.hutool.core.bean.BeanUtil.mapToBean;
 
 /**
  * Bean工具
+ *
  * @author malin
  */
 public class BeanUtil {
 
     private static final Logger logger = LoggerFactory.getLogger(BeanUtil.class);
+    private Method[] methodes;
 
     /**
      * 实体对象转为Map
+     *
      * @param entity
      * @return Map
      */
-    public static <T> Map<String,Object> objectToMap(T entity){
+    public static <T> Map<String, Object> objectToMap(T entity) {
         Map<String, Object> map = new HashMap<>(Constants.HASHMAP_DEFAULT_SIZE);
         if (null == entity) {
             return null;
@@ -39,7 +42,7 @@ public class BeanUtil {
         try {
             for (Field field : fields) {
                 field.setAccessible(true);
-                map.put(field.getName(), getProperty(entity,field.getName()));
+                map.put(field.getName(), getProperty(entity, field.getName()));
             }
         } catch (Exception e) {
             logger.error("[objectToMap] exception message : " + e.getMessage());
@@ -49,6 +52,7 @@ public class BeanUtil {
 
     /**
      * map转为实体对象
+     *
      * @param map
      * @param clazz
      * @param <T>
@@ -56,7 +60,7 @@ public class BeanUtil {
      */
     public static <T> T mapToObject(Map<String, Object> map, Class<T> clazz) {
         T entity = null;
-        if (null == map){
+        if (null == map) {
             return entity;
         }
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -84,11 +88,11 @@ public class BeanUtil {
                     } else {
                         field.set(entity, sdf.parse(datetimestamp));
                     }
-                }else {
+                } else {
                     field.set(entity, map.get(field.getName()));
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error("[mapToObject] exception message : " + e.getMessage());
         }
         return entity;
@@ -96,19 +100,20 @@ public class BeanUtil {
 
     /**
      * listMap 转 listBean
+     *
      * @param data
      * @param clazz
      * @param <T>
      * @return List<T>
      */
-    public static <T> List<T> listMapToListBean(List<Map<String, Object>> data, Class<T> clazz){
+    public static <T> List<T> listMapToListBean(List<Map<String, Object>> data, Class<T> clazz) {
         List<T> result = null;
-        if (null == data){
+        if (null == data) {
             return result;
         }
         result = new ArrayList<>();
-        for (Map<String,Object> map : data) {
-            T entity =  mapToBean(map,clazz,false);
+        for (Map<String, Object> map : data) {
+            T entity = mapToBean(map, clazz, false);
             result.add(entity);
         }
         return result;
@@ -116,18 +121,19 @@ public class BeanUtil {
 
     /**
      * listBean 转 listMap
+     *
      * @param data
      * @param <T>
      * @return
      */
-    public static <T> List<Map<String,Object>> listBeanToListMap(List<T> data){
-        List<Map<String,Object>> result = null;
-        if (null == data){
+    public static <T> List<Map<String, Object>> listBeanToListMap(List<T> data) {
+        List<Map<String, Object>> result = null;
+        if (null == data) {
             return result;
         }
         result = new ArrayList<>();
-        for (T entity : data){
-            Map<String,Object> map = objectToMap(entity);
+        for (T entity : data) {
+            Map<String, Object> map = objectToMap(entity);
             result.add(map);
         }
         return result;
@@ -173,7 +179,7 @@ public class BeanUtil {
      * @return obje
      */
     public static Object Copy(Object obje, Object sour, boolean isCover) {
-        Field[] fields = sour.getClass().getDeclaredFields();
+        Field[] fields = FieldUtils.getAllFields(sour.getClass());
         for (int i = 0, j = fields.length; i < j; i++) {
             String propertyName = fields[i].getName();
             Object propertyValue = getProperty(sour, propertyName);
@@ -228,9 +234,17 @@ public class BeanUtil {
     public static Object getProperty(Object bean, String propertyName) {
         Class clazz = bean.getClass();
         try {
-            Field field = clazz.getDeclaredField(propertyName);
-            Method method = clazz.getDeclaredMethod(getGetterName(field.getName()), new Class[]{});
-            return method.invoke(bean, new Object[]{});
+            Field[] fields = FieldUtils.getAllFields(clazz);
+            for (Field field : fields) {
+                if (field.getName().equals(propertyName)){
+                    Method[] methodes = clazz.getMethods();
+                    for (Method method : methodes) {
+                        if (getGetterName(field.getName()).equals(method.getName())){
+                            return method.invoke(bean, new Object[]{});
+                        }
+                    }
+                }
+            }
         } catch (Exception e) {
         }
         return null;
@@ -247,9 +261,17 @@ public class BeanUtil {
     private static Object setProperty(Object bean, String propertyName, Object value) {
         Class clazz = bean.getClass();
         try {
-            Field field = clazz.getDeclaredField(propertyName);
-            Method method = clazz.getDeclaredMethod(getSetterName(field.getName()), new Class[]{field.getType()});
-            return method.invoke(bean, new Object[]{value});
+            Field[] fields = FieldUtils.getAllFields(clazz);
+            for (Field field : fields) {
+                if (field.getName().equals(propertyName)){
+                    Method[] methodes = clazz.getMethods();
+                    for (Method method : methodes) {
+                        if (getSetterName(field.getName()).equals(method.getName())){
+                            return method.invoke(bean, new Object[]{value});
+                        }
+                    }
+                }
+            }
         } catch (Exception e) {
         }
         return null;
