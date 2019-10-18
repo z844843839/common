@@ -206,7 +206,7 @@ public class MyTokenInterceptor implements HandlerInterceptor {
                 {
                     list.add(String.valueOf(auth.get(i).get("url")));
                 }
-                logger.error("用户总权限 {}",list.toString());
+                //logger.error("用户总权限 {}",list.toString());
                 String url = request.getServletPath();
                 String uri = url.substring(url.substring(url.indexOf("/")+1).indexOf("/")+2);
                 if (uri.contains(Constants.CONTAINSTR))
