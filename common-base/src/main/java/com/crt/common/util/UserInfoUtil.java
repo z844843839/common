@@ -62,11 +62,12 @@ public class UserInfoUtil {
         if (StringUtils.isEmpty(token)) {
             return E6WrapperUtil.error("token不存在,用户信息获取失败");
         } else {
-            UserRedisVO userRedisVO = null;
+            UserRedisVO userRedisVO = new UserRedisVO();
             Object result = userCache.get(token).get("userVO");
             if (result == null) {
-                String userKey = token + "user";
-                userRedisVO = CacheUtil.get(userKey, UserRedisVO.class);
+//                String userKey = token + "user";
+//                userRedisVO = CacheUtil.get(userKey, UserRedisVO.class);
+                return E6WrapperUtil.error("token错误,用户信息获取失败");
             } else {
                 userRedisVO = (UserRedisVO) BeanUtil.Copy(userRedisVO, result, false);
             }
