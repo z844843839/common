@@ -21,12 +21,13 @@ import java.util.*;
 
 /**
  * 用户信息获取工具类
+ *
  * @author malin
  */
 @Component
 public class UserInfoUtil {
 
-   private static Logger logger= LoggerFactory.getLogger(UserInfoUtil.class);
+    private static Logger logger = LoggerFactory.getLogger(UserInfoUtil.class);
 
     @Autowired
     private UacCookieProperties uacCookieProperties;
@@ -61,26 +62,31 @@ public class UserInfoUtil {
         if (StringUtils.isEmpty(token)) {
             return E6WrapperUtil.error("token不存在,用户信息获取失败");
         } else {
+            UserRedisVO userRedisVO = null;
             Object result = userCache.get(token).get("userVO");
             if (result == null) {
-                return E6WrapperUtil.error("token错误,用户信息获取失败");
+                String userKey = token + "user";
+                userRedisVO = CacheUtil.get(userKey, UserRedisVO.class);
             } else {
-                UserRedisVO userRedisVO = new UserRedisVO();
                 userRedisVO = (UserRedisVO) BeanUtil.Copy(userRedisVO, result, false);
-                return E6WrapperUtil.ok(userRedisVO);
             }
-
+            if (null != userRedisVO) {
+                return E6WrapperUtil.ok(userRedisVO);
+            } else {
+                return E6WrapperUtil.error("token错误,用户信息获取失败");
+            }
         }
     }
 
     /**
      * 获取登陆用户真实姓名
      * redis里面存储的用户信息
+     *
      * @return String
      */
     public static String getLoginUserRealName() {
         E6Wrapper<UserRedisVO> e6Wrapper = getUserInfo();
-        if (e6Wrapper.success()){
+        if (e6Wrapper.success()) {
             UserRedisVO loginUser = e6Wrapper.getResult();
             return loginUser.getRealName();
         }
@@ -90,11 +96,12 @@ public class UserInfoUtil {
     /**
      * 获取登陆用户ID
      * redis里面存储的用户信息
+     *
      * @return Integer
      */
     public static Integer getLoginUserId() {
         E6Wrapper<UserRedisVO> e6Wrapper = getUserInfo();
-        if (e6Wrapper.success()){
+        if (e6Wrapper.success()) {
             UserRedisVO loginUser = e6Wrapper.getResult();
             return loginUser.getId();
         }
@@ -104,11 +111,12 @@ public class UserInfoUtil {
     /**
      * 获取登陆用户编码
      * redis里面存储的用户信息
+     *
      * @return Long
      */
     public static Long getLoginUserCode() {
         E6Wrapper<UserRedisVO> e6Wrapper = getUserInfo();
-        if (e6Wrapper.success()){
+        if (e6Wrapper.success()) {
             UserRedisVO loginUser = e6Wrapper.getResult();
             return loginUser.getUserCode();
         }
@@ -118,11 +126,12 @@ public class UserInfoUtil {
     /**
      * 获取登陆用户所属组织名称
      * redis里面存储的用户信息
+     *
      * @return String
      */
     public static String getLoginUserOrgName() {
         E6Wrapper<UserRedisVO> e6Wrapper = getUserInfo();
-        if (e6Wrapper.success()){
+        if (e6Wrapper.success()) {
             UserRedisVO loginUser = e6Wrapper.getResult();
             return loginUser.getOrgName();
         }
@@ -132,11 +141,12 @@ public class UserInfoUtil {
     /**
      * 获取登陆用户所属组织编码
      * redis里面存储的用户信息
+     *
      * @return Long
      */
     public static Long getLoginUserOrgCode() {
         E6Wrapper<UserRedisVO> e6Wrapper = getUserInfo();
-        if (e6Wrapper.success()){
+        if (e6Wrapper.success()) {
             UserRedisVO loginUser = e6Wrapper.getResult();
             return loginUser.getOrgCode();
         }
@@ -165,7 +175,7 @@ public class UserInfoUtil {
      * @param tableAlias  表别名 【选填】 为null时 别名为原表名
      * @return String
      */
-    public static String getRowDataAuthSQL(String currentPath,String tableAlias) {
+    public static String getRowDataAuthSQL(String currentPath, String tableAlias) {
         StringBuffer sql = new StringBuffer();
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         String token = request.getHeader("Authorization");
@@ -177,10 +187,9 @@ public class UserInfoUtil {
         } else {
             if (StringUtils.isEmpty(currentPath)) {
                 String url = request.getServletPath();
-                String uri = url.substring(url.substring(url.indexOf("/")+1).indexOf("/")+2);
-                if (uri.contains(Constants.CONTAINSTR))
-                {
-                    uri = uri.substring(0,uri.indexOf(Constants.CONTAINSTR));
+                String uri = url.substring(url.substring(url.indexOf("/") + 1).indexOf("/") + 2);
+                if (uri.contains(Constants.CONTAINSTR)) {
+                    uri = uri.substring(0, uri.indexOf(Constants.CONTAINSTR));
                 }
                 currentPath = uri;
             }
@@ -228,9 +237,9 @@ public class UserInfoUtil {
                             }
                             //拼接SQL 表名.列名 操作符 值
                             sql.append(Constants.SPACE);
-                            if (StringUtils.isNotEmpty(tableAlias)){
+                            if (StringUtils.isNotEmpty(tableAlias)) {
                                 sql.append(tableAlias);
-                            }else {
+                            } else {
                                 sql.append(rav.getSetTable());
                             }
                             sql.append(Constants.SPOT);
@@ -252,7 +261,7 @@ public class UserInfoUtil {
                             count++;
                         }
                         sql.append(Constants.RIGHT_PARENTHESES);
-                    }else{
+                    } else {
                         return null;
                     }
                 }

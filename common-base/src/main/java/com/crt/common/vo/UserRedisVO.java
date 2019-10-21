@@ -144,6 +144,10 @@ public class UserRedisVO{
      */
     private String orgName;
     /**
+     * （官网）供应商服务类型
+     */
+    private Integer serviceType;
+    /**
      * 角色编码
      */
     private Long roleCode;

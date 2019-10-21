@@ -307,6 +307,8 @@ public class Constants {
 
     public final static String SPACE = " ";
 
+    public final static String COMMA = ",";
+
     public final static String SINGLE_QUOTATION_MARK = "'";
 
     public final static String PERCENTAGE_MARK = "%";
@@ -379,6 +381,8 @@ public class Constants {
     public final static Integer NUMBER_NINETEEN = 19;
     public final static Integer NUMBER_TWENTY = 20;
 
+
+
     /**
      * 单据状态 BILL_STATUS
      */
@@ -402,6 +406,11 @@ public class Constants {
      *  已生效（下游已使用）
      */
     public final static Integer BILL_STATUS_EFFECTIVE = 500;
+
+    /**
+     * 超级管理员登陆名称
+     */
+    public final static String SUPER_ADMINISTRATOR = "super";
 
 
 
