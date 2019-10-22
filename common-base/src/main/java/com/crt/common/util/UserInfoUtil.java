@@ -244,7 +244,11 @@ public class UserInfoUtil {
                                 sql.append(rav.getSetTable());
                             }
                             sql.append(Constants.SPOT);
-                            sql.append(rav.getSetColumn());
+                            if (StringUtils.isNotEmpty(rav.getColumnAlias())){
+                                sql.append(rav.getColumnAlias());
+                            }else {
+                                sql.append(rav.getSetColumn());
+                            }
                             sql.append(Constants.SPACE);
                             sql.append(rav.getSetOperator().toUpperCase());
                             sql.append(Constants.SPACE);
@@ -255,8 +259,8 @@ public class UserInfoUtil {
                                 sql.append(rav.getSetValue());
                                 if (Constants.FUZZY_QUERY_KEY.equals(rav.getSetOperator().toUpperCase())) {
                                     sql.append(Constants.PERCENTAGE_MARK);
-                                    sql.append(Constants.SINGLE_QUOTATION_MARK);
                                 }
+                                sql.append(Constants.SINGLE_QUOTATION_MARK);
                             }
                             sql.append(Constants.SPACE);
                             count++;
