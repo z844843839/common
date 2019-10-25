@@ -92,7 +92,7 @@ public class OperateDelLogAspect {
                 } else {
                     operaterResult = Constants.RESULT_FAIL;
                 }
-                logJson.put("操作结果",operaterResult);
+                logJson.put("result",operaterResult);
             }
             messageQueueService.send("crt_e6_log_exchange","crt_e6_log_routingkey",logJson.toString());
             return operateResult;
