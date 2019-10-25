@@ -116,7 +116,7 @@ public class VerifyUtil {
         if (c18 == 31) {
             c18 = 'Y';
         } else if (c18 == 30) {
-            c18 = '0';
+//            c18 = '0';
         }
         if (str.charAt(c18) != codes[1].charAt(0)) {
             return false;
