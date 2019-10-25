@@ -412,7 +412,35 @@ public class Constants {
      */
     public final static String SUPER_ADMINISTRATOR = "super";
 
+    /**
+     * java基础类型数组
+     */
+    public static String[] BASIC_TYPES = {"java.lang.Integer", "java.lang.Double",
+            "java.lang.Float", "java.lang.Long", "java.lang.Short",
+            "java.lang.Byte", "java.lang.Boolean", "java.lang.Char",
+            "java.lang.String", "int", "double", "long", "short", "byte",
+            "boolean", "char", "float"};
 
+    public static String OPERATE_TYPE_SAVE = "新增";
 
+    public static String OPERATE_TYPE_MODIFY = "修改";
 
+    public static String OPERATE_TYPE_DELETE = "删除";
+
+    /**
+     * 返回状态200 成功
+     */
+    public static Integer STATUS_CODE_SUCCESS = 200;
+    /**
+     * 操作结果0 成功
+     */
+    public static int RESULT_SUCCESS = 0;
+    /**
+     * 操作结果1 失败
+     */
+    public static int RESULT_FAIL = 1;
+    /**
+     * 操作结果2 未知
+     */
+    public static int RESULT_UNKNOWN = 2;
 }
