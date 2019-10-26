@@ -40,18 +40,22 @@ public class ExceptionLogAspect {
      */
     @AfterThrowing(pointcut = "serviceAspect()",throwing = "e")
     public void doAfterThrowing(JoinPoint joinPoint, Throwable e){
-        JSONObject logJson = new JSONObject();
-        String logKey = "exceptionLog";
-        logJson.put("logType",logKey);
-        logJson.put("exceptionMethod", (joinPoint.getTarget().getClass().getName() + "." + joinPoint.getSignature().getName() + "()"));
-        logJson.put("exceptionCode:",e.getClass().getName());
-        logJson.put("exceptionMsg:",e.getMessage());
-        //当前操作用户
-        logJson.put("operaterCode",UserInfoUtil.getLoginUserCode().toString());
-        logJson.put("operaterName",UserInfoUtil.getLoginUserRealName());
-        logJson.put("createdAt",new Date());
-        /*==========数据库日志=========*/
-        messageQueueService.send("crt_e6_log_exchange","crt_e6_log_routingkey",logJson.toString());
+        try {
+            JSONObject logJson = new JSONObject();
+            String logKey = "exceptionLog";
+            logJson.put("logType",logKey);
+            logJson.put("exceptionMethod", (joinPoint.getTarget().getClass().getName() + "." + joinPoint.getSignature().getName() + "()"));
+            logJson.put("exceptionCode:",e.getClass().getName());
+            logJson.put("exceptionMsg:",e.getMessage());
+            //当前操作用户
+            logJson.put("operaterCode",UserInfoUtil.getLoginUserCode().toString());
+            logJson.put("operaterName",UserInfoUtil.getLoginUserRealName());
+            logJson.put("createdAt",new Date());
+            /*==========数据库日志=========*/
+            messageQueueService.send("crt_e6_log_exchange","crt_e6_log_routingkey",logJson.toString());
+        } catch (Exception e1) {
+            log.error("日志记录异常{}",e1.getMessage());
+        }
     }
 
 }
