@@ -272,13 +272,15 @@ public class BaseServiceImpl<D extends JpaRepository<T, Integer>, T extends Base
     protected T setEntityOperationInfo(T entity,String operationType){
         //设置操作人信息
         String operateName = Constants.DEFAULT_OPERATER;
-        if (StringUtils.isNotEmpty(UserInfoUtil.getLoginUserRealName())) {
-            operateName = UserInfoUtil.getLoginUserRealName();
-        }
         Integer operateId = 0;
-        if (null != UserInfoUtil.getLoginUserId() && UserInfoUtil.getLoginUserId() > 0){
-            operateId = UserInfoUtil.getLoginUserId();
-        }
+        try {
+            if (StringUtils.isNotEmpty(UserInfoUtil.getLoginUserRealName())) {
+                operateName = UserInfoUtil.getLoginUserRealName();
+            }
+            if (null != UserInfoUtil.getLoginUserId() && UserInfoUtil.getLoginUserId() > 0){
+                operateId = UserInfoUtil.getLoginUserId();
+            }
+        } catch (Exception e) {}
         // 获取实体类的所有属性，返回Field数组
         Field[] field = FieldUtils.getAllFields(entity.getClass());
         String[] operationArray = new String[]{"createdId","createdBy","createdAt","modifiedId","modifiedBy","modifiedAt"};
