@@ -1,5 +1,6 @@
 package com.crt.common.service;
 
+import com.crt.common.constant.Constants;
 import com.crt.common.util.BeanUtil;
 import com.crt.common.util.UserInfoUtil;
 import com.crt.common.vo.*;
@@ -269,6 +270,15 @@ public class BaseServiceImpl<D extends JpaRepository<T, Integer>, T extends Base
      * @return
      */
     protected T setEntityOperationInfo(T entity,String operationType){
+        //设置操作人信息
+        String operateName = Constants.DEFAULT_OPERATER;
+        if (StringUtils.isNotEmpty(UserInfoUtil.getLoginUserRealName())) {
+            operateName = UserInfoUtil.getLoginUserRealName();
+        }
+        Integer operateId = 0;
+        if (null != UserInfoUtil.getLoginUserId() && UserInfoUtil.getLoginUserId() > 0){
+            operateId = UserInfoUtil.getLoginUserId();
+        }
         // 获取实体类的所有属性，返回Field数组
         Field[] field = FieldUtils.getAllFields(entity.getClass());
         String[] operationArray = new String[]{"createdId","createdBy","createdAt","modifiedId","modifiedBy","modifiedAt"};
@@ -281,40 +291,38 @@ public class BaseServiceImpl<D extends JpaRepository<T, Integer>, T extends Base
                     for (int j=0;j <operationArray.length;j++){
                         // 将属性的首字符大写，方便构造get，set方法
                         name = name.substring(0, 1).toUpperCase() + name.substring(1);
-                        if (StringUtils.isNotEmpty(UserInfoUtil.getLoginUserRealName())) {
-                            Date currentDate = new Date();
-                            if ("save".equals(operationType)) {
-                                if ("CreatedId".equals(name)) {
-                                    Method m = entity.getClass().getMethod("set" + name, Long.class);
-                                    m.invoke(entity, UserInfoUtil.getLoginUserId().longValue());
-                                    break;
-                                }
-                                if ("CreatedBy".equals(name)) {
-                                    Method m = entity.getClass().getMethod("set" + name, String.class);
-                                    m.invoke(entity, UserInfoUtil.getLoginUserRealName());
-                                    break;
-                                }
-                                if ("CreatedAt".equals(name)) {
-                                    Method m = entity.getClass().getMethod("set" + name, Date.class);
-                                    m.invoke(entity, currentDate);
-                                    break;
-                                }
-                            }
-                            if ("ModifiedId".equals(name)) {
+                        Date currentDate = new Date();
+                        if ("save".equals(operationType)) {
+                            if ("CreatedId".equals(name)) {
                                 Method m = entity.getClass().getMethod("set" + name, Long.class);
-                                m.invoke(entity, UserInfoUtil.getLoginUserId().longValue());
+                                m.invoke(entity, operateId.longValue());
                                 break;
                             }
-                            if ("ModifiedBy".equals(name)) {
+                            if ("CreatedBy".equals(name)) {
                                 Method m = entity.getClass().getMethod("set" + name, String.class);
-                                m.invoke(entity, UserInfoUtil.getLoginUserRealName());
+                                m.invoke(entity, operateName);
                                 break;
                             }
-                            if ("ModifiedAt".equals(name)) {
+                            if ("CreatedAt".equals(name)) {
                                 Method m = entity.getClass().getMethod("set" + name, Date.class);
                                 m.invoke(entity, currentDate);
                                 break;
                             }
+                        }
+                        if ("ModifiedId".equals(name)) {
+                            Method m = entity.getClass().getMethod("set" + name, Long.class);
+                            m.invoke(entity, operateId.longValue());
+                            break;
+                        }
+                        if ("ModifiedBy".equals(name)) {
+                            Method m = entity.getClass().getMethod("set" + name, String.class);
+                            m.invoke(entity, operateName);
+                            break;
+                        }
+                        if ("ModifiedAt".equals(name)) {
+                            Method m = entity.getClass().getMethod("set" + name, Date.class);
+                            m.invoke(entity, currentDate);
+                            break;
                         }
                     }
                 }

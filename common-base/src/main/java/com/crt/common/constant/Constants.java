@@ -412,6 +412,8 @@ public class Constants {
      */
     public final static String SUPER_ADMINISTRATOR = "super";
 
+    public final static String DEFAULT_OPERATER = "系统管理员";
+
     /**
      * java基础类型数组
      */
