@@ -3,6 +3,7 @@ package com.crt.common.service;
 import com.crt.common.util.BeanUtil;
 import com.crt.common.util.UserInfoUtil;
 import com.crt.common.vo.*;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -268,9 +269,6 @@ public class BaseServiceImpl<D extends JpaRepository<T, Integer>, T extends Base
      * @return
      */
     protected T setEntityOperationInfo(T entity,String operationType){
-        //获取当前登陆人
-//        E6Wrapper loginUser = UserInfoUtil.getUserInfo();
-//        UserRedisVO opUser = (UserRedisVO)loginUser.getResult();
         // 获取实体类的所有属性，返回Field数组
         Field[] field = FieldUtils.getAllFields(entity.getClass());
         String[] operationArray = new String[]{"createdId","createdBy","createdAt","modifiedId","modifiedBy","modifiedAt"};
@@ -280,41 +278,43 @@ public class BaseServiceImpl<D extends JpaRepository<T, Integer>, T extends Base
                 // 获取属性的名字
                 String name = field[i].getName();
                 if (Arrays.asList(operationArray).contains(name)){
-                    Date currntDate = new Date();
                     for (int j=0;j <operationArray.length;j++){
                         // 将属性的首字符大写，方便构造get，set方法
                         name = name.substring(0, 1).toUpperCase() + name.substring(1);
-                        if ("save".equals(operationType)){
-                            if ("CreatedId".equals(name)){
-                                Method m = entity.getClass().getMethod("set"+name,Long.class);
+                        if (StringUtils.isNotEmpty(UserInfoUtil.getLoginUserRealName())) {
+                            Date currentDate = new Date();
+                            if ("save".equals(operationType)) {
+                                if ("CreatedId".equals(name)) {
+                                    Method m = entity.getClass().getMethod("set" + name, Long.class);
+                                    m.invoke(entity, UserInfoUtil.getLoginUserId().longValue());
+                                    break;
+                                }
+                                if ("CreatedBy".equals(name)) {
+                                    Method m = entity.getClass().getMethod("set" + name, String.class);
+                                    m.invoke(entity, UserInfoUtil.getLoginUserRealName());
+                                    break;
+                                }
+                                if ("CreatedAt".equals(name)) {
+                                    Method m = entity.getClass().getMethod("set" + name, Date.class);
+                                    m.invoke(entity, currentDate);
+                                    break;
+                                }
+                            }
+                            if ("ModifiedId".equals(name)) {
+                                Method m = entity.getClass().getMethod("set" + name, Long.class);
                                 m.invoke(entity, UserInfoUtil.getLoginUserId().longValue());
                                 break;
                             }
-                            if ("CreatedBy".equals(name)){
-                                Method m = entity.getClass().getMethod("set"+name,String.class);
+                            if ("ModifiedBy".equals(name)) {
+                                Method m = entity.getClass().getMethod("set" + name, String.class);
                                 m.invoke(entity, UserInfoUtil.getLoginUserRealName());
                                 break;
                             }
-                            if ("CreatedAt".equals(name)){
-                                Method m = entity.getClass().getMethod("set"+name,Date.class);
-                                m.invoke(entity, currntDate);
+                            if ("ModifiedAt".equals(name)) {
+                                Method m = entity.getClass().getMethod("set" + name, Date.class);
+                                m.invoke(entity, currentDate);
                                 break;
                             }
-                        }
-                        if ("ModifiedId".equals(name)){
-                            Method m = entity.getClass().getMethod("set"+name,Long.class);
-                            m.invoke(entity, UserInfoUtil.getLoginUserId().longValue());
-                            break;
-                        }
-                        if ("ModifiedBy".equals(name)){
-                            Method m = entity.getClass().getMethod("set"+name,String.class);
-                            m.invoke(entity, UserInfoUtil.getLoginUserRealName());
-                            break;
-                        }
-                        if ("ModifiedAt".equals(name)){
-                            Method m = entity.getClass().getMethod("set"+name,Date.class);
-                            m.invoke(entity,currntDate);
-                            break;
                         }
                     }
                 }
