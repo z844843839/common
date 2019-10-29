@@ -46,7 +46,7 @@ public class ExceptionLogAspect {
             logJson.put("logType",logKey);
             logJson.put("exceptionMethod", (joinPoint.getTarget().getClass().getName() + "." + joinPoint.getSignature().getName() + "()"));
             logJson.put("exceptionCode:",e.getClass().getName());
-            logJson.put("exceptionMsg:",e);
+            logJson.put("exceptionMsg:",e.toString());
             //当前操作用户
             logJson.put("operaterCode",UserInfoUtil.getLoginUserCode().toString());
             logJson.put("operaterName",UserInfoUtil.getLoginUserRealName());
