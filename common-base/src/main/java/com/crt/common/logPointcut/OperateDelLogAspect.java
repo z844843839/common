@@ -2,7 +2,6 @@ package com.crt.common.logPointcut;
 
 import com.alibaba.fastjson.JSONObject;
 import com.crt.common.constant.Constants;
-import com.crt.common.util.DateUtils;
 import com.crt.common.util.UserInfoUtil;
 import com.crt.common.vo.E6Wrapper;
 import com.crt.common.vo.E6WrapperUtil;
@@ -19,8 +18,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * 删除操作日志切入类
