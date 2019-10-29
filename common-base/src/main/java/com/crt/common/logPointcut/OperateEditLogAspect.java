@@ -1,6 +1,7 @@
 package com.crt.common.logPointcut;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
 import com.crt.common.constant.Constants;
 import com.crt.common.util.UserInfoUtil;
@@ -90,9 +91,13 @@ public class OperateEditLogAspect {
              */
             String operateType = Constants.OPERATE_TYPE_SAVE;
             if (null != param){
-                JSONObject json = JSON.parseObject(JSONObject.toJSON(param).toString());
-                String pk = "id";
-                if (json.getInteger(pk)!=null){
+                try{
+                    JSONObject json = JSON.parseObject(JSONObject.toJSON(param).toString());
+                    String pk = "id";
+                    if (json.getInteger(pk)!=null){
+                        operateType = Constants.OPERATE_TYPE_MODIFY;
+                    }
+                }catch (JSONException e){
                     operateType = Constants.OPERATE_TYPE_MODIFY;
                 }
             }
