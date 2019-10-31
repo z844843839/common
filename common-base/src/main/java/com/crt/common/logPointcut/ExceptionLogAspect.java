@@ -12,6 +12,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Date;
 
 /**
@@ -46,16 +50,32 @@ public class ExceptionLogAspect {
             logJson.put("logType",logKey);
             logJson.put("exceptionMethod", (joinPoint.getTarget().getClass().getName() + "." + joinPoint.getSignature().getName() + "()"));
             logJson.put("exceptionCode",e.getClass().getName());
-            logJson.put("exceptionMsg",e.toString());
+            logJson.put("exceptionMsg",getExceptionAllinformation(e));
             //当前操作用户
             logJson.put("operaterCode",UserInfoUtil.getLoginUserCode().toString());
             logJson.put("operaterName",UserInfoUtil.getLoginUserRealName());
             logJson.put("createdAt",new Date());
             /*==========数据库日志=========*/
-            messageQueueService.send("crt_e6_log_exchange","crt_e6_log_routingkey",logJson.toString());
+            try {
+                messageQueueService.send("crt_e6_log_exchange","crt_e6_log_routingkey",logJson.toString());
+            }catch (NullPointerException en){
+            }
         } catch (Exception e1) {
             log.error("日志记录异常{}",e1.getMessage());
         }
     }
 
+    /**
+     * 输出详细异常信息
+     * @param e
+     * @return String
+     */
+    private static String getExceptionAllinformation(Throwable e) {
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw, true);
+        e.printStackTrace(pw);
+        pw.flush();
+        sw.flush();
+        return sw.toString();
+    }
 }
