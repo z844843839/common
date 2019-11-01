@@ -73,12 +73,13 @@
             <artifactId>common-redis</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
-
+        <!-- MQ 开始 -->
         <dependency>
             <groupId>com-crt-middle</groupId>
             <artifactId>middle-comm-rabbitmq-rpc</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+        <!-- MQ 结束 -->
         <!--<dependency>-->
             <!--<groupId>com.crt</groupId>-->
             <!--<artifactId>common-es</artifactId>-->
