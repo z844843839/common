@@ -100,7 +100,9 @@ public class ExceptionLogAspect {
             logJson.put("createdAt", new Date());
             /*==========数据库日志=========*/
             try {
-                messageQueueService.send("crt_e6_log_exchange", "crt_e6_log_routingkey", logJson.toString());
+                new Thread( () ->{
+                    messageQueueService.send("crt_e6_log_exchange", "crt_e6_log_routingkey", logJson.toString());
+                }).start();
             } catch (NullPointerException en) {
             }
         } catch (Exception e1) {

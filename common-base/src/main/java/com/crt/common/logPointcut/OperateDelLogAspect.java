@@ -116,8 +116,10 @@ public class OperateDelLogAspect {
                 logJson.put("result",operaterResult);
             }
             try {
-                messageQueueService.send("crt_e6_log_exchange","crt_e6_log_routingkey",logJson.toString());
-            }catch (NullPointerException e){
+                new Thread( () ->{
+                    messageQueueService.send("crt_e6_log_exchange","crt_e6_log_routingkey",logJson.toString());
+                }).start();
+            }catch (Exception e){
             }
             return operateResult;
         } catch (Throwable throwable) {
