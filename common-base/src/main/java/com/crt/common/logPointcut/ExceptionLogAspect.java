@@ -23,6 +23,7 @@ import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -43,9 +44,58 @@ public class ExceptionLogAspect {
     /**
      * 设置操作异常切入点记录异常日志 扫描所有controller包下操作
      */
-    @Pointcut("execution(public * com.crt.*.*.*.controller.*.*(..))")
+    @Pointcut("execution(public * com.crt..*Controller.*(..))")
     public void operExceptionLogPoinCut() {
 
+    }
+
+
+    /**
+     * 设置操作异常切入点记录异常日志 扫描所有rpc包下操作
+     */
+    @Pointcut("execution(public * com.crt..rpc..*.*(..))")
+    public void operExceptionLogRpcPoinCut() {
+
+    }
+
+   @AfterThrowing(pointcut = "operExceptionLogRpcPoinCut()", throwing = "e")
+    public void doRpcAfterThrowing(JoinPoint joinPoint, Throwable e) {
+        JSONObject logJson = new JSONObject();
+        String logKey = "exceptionLog";
+        logJson.put("logType", logKey);
+        try {
+            // 从切面织入点处通过反射机制获取织入点处的方法
+            MethodSignature signature = (MethodSignature) joinPoint.getSignature();
+            // 获取切入点所在的方法
+            Method method = signature.getMethod();
+            // 获取请求的类名
+            String className = joinPoint.getTarget().getClass().getName();
+            //异常类名
+            logJson.put("exceptionClass", className);
+            // 获取请求的方法名
+            String methodName = method.getName();
+            //异常方法
+            logJson.put("exceptionMethod", methodName);
+            // 请求的参数
+            String params = Arrays.toString(joinPoint.getArgs());
+            //异常参数
+            logJson.put("exceptionParam", params);
+            //转换异常信息为字符串
+            String exceptionMsg = stackTraceToString(e.getClass().getName(), e.getMessage(), e.getStackTrace());
+            //异常信息
+            logJson.put("exceptionMsg", exceptionMsg);
+            //当前操作时间
+            logJson.put("createdAt", new Date());
+            /*==========数据库日志=========*/
+            try {
+                new Thread( () ->{
+                    messageQueueService.send("crt_e6_log_exchange", "crt_e6_log_routingkey", logJson.toString());
+                }).start();
+            } catch (NullPointerException en) {
+            }
+        } catch (Exception e1) {
+            log.error("日志记录异常{}", e1.getMessage());
+        }
     }
 
 
