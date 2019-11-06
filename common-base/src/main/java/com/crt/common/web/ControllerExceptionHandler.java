@@ -64,7 +64,7 @@ public class ControllerExceptionHandler {
             msg = "系统繁忙，请稍后重试";
         }
         //这里不应该把服务端的异常 返回给前端界面，会有安全隐患
-        return new ResponseEntity(E6WrapperUtil.error(msg), HttpStatus.OK);
+        return E6WrapperUtil.ok(Constants.INTERNAL_SERVER_ERROR,msg,null);
     }
 
 }
