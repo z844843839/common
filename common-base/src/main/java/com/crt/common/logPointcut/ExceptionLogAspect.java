@@ -18,15 +18,11 @@ import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
 
 /**
  * 异常日志切入类
@@ -41,14 +37,9 @@ public class ExceptionLogAspect {
     @Autowired
     private MessageQueueService messageQueueService;
 
-    /**
-     * 设置操作异常切入点记录异常日志 扫描所有controller包下操作
-     */
-    @Pointcut("execution(public * com.crt..*Controller.*(..))")
-    public void operExceptionLogPoinCut() {
-
-    }
-
+    /**注入线程池**/
+    @Autowired
+    private ExecutorService executorService;
 
     /**
      * 设置操作异常切入点记录异常日志 扫描所有service包下操作
@@ -64,7 +55,6 @@ public class ExceptionLogAspect {
         String logKey = "exceptionLog";
         logJson.put("logType", logKey);
         try {
-
             try {
                 // 获取RequestAttributes
                 RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
@@ -89,7 +79,7 @@ public class ExceptionLogAspect {
             //异常类名
             logJson.put("exceptionClass", className);
             // 获取请求的方法名
-            String methodName = method.getName();
+            String methodName = method.getName() + "()";
             //异常方法
             logJson.put("exceptionMethod", methodName);
             // 请求的参数
@@ -100,7 +90,6 @@ public class ExceptionLogAspect {
             String exceptionMsg = stackTraceToString(e.getClass().getName(), e.getMessage(), e.getStackTrace());
             //异常信息
             logJson.put("exceptionMsg", exceptionMsg);
-
             try {
                 //当前操作用户编码
                 logJson.put("operaterCode", UserInfoUtil.getLoginUserCode().toString());
@@ -112,80 +101,43 @@ public class ExceptionLogAspect {
                 //当前操作用户姓名
                 logJson.put("operaterName", "系统管理");
             }
-
             //当前操作时间
             logJson.put("createdAt", new Date());
             /*==========数据库日志=========*/
             try {
-                new Thread( () ->{
-                    messageQueueService.send("crt_e6_log_exchange", "crt_e6_log_routingkey", logJson.toString());
-                }).start();
-            } catch (NullPointerException en) {
+                executorService.execute(new MqRunnable(messageQueueService,logJson.toJSONString()));
+            } catch (Exception en) {
+                log.error("MQ调用异常{}", e.getMessage());
             }
-        } catch (Exception e1) {
-            log.error("日志记录异常{}", e1.getMessage());
+        } catch (Exception ex) {
+            log.error("日志记录异常{}", ex.getMessage());
         }
     }
 
-
-    /**
-     * @Description 异常通知 用于拦截service层记录异常日志
-     */
-   // @AfterThrowing(pointcut = "operExceptionLogPoinCut()", throwing = "e")
-    public void doAfterThrowing(JoinPoint joinPoint, Throwable e) {
-        // 获取RequestAttributes
-        RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
-        // 从获取RequestAttributes中获取HttpServletRequest的信息
-        HttpServletRequest request = (HttpServletRequest) requestAttributes.resolveReference(RequestAttributes.REFERENCE_REQUEST);
-        JSONObject logJson = new JSONObject();
-        String logKey = "exceptionLog";
-        logJson.put("logType", logKey);
-        try {
-            //异常请求
-            String exceptionUrl = request.getRequestURL().toString();
-            logJson.put("exceptionUrl", exceptionUrl);
-            //异常模块
-            String module = request.getRequestURI();
-            module = module.substring(1, module.length());
-            module = module.substring(0, module.indexOf("/"));
-            logJson.put("exceptionModule", module);
-            // 从切面织入点处通过反射机制获取织入点处的方法
-            MethodSignature signature = (MethodSignature) joinPoint.getSignature();
-            // 获取切入点所在的方法
-            Method method = signature.getMethod();
-            // 获取请求的类名
-            String className = joinPoint.getTarget().getClass().getName();
-            //异常类名
-            logJson.put("exceptionClass", className);
-            // 获取请求的方法名
-            String methodName = method.getName();
-            //异常方法
-            logJson.put("exceptionMethod", methodName);
-            // 请求的参数
-            Map<String, String> rtnMap = converMap(request.getParameterMap());
-            // 将参数所在的数组转换成json
-            String params = JSON.toJSONString(rtnMap);
-            //异常参数
-            logJson.put("exceptionParam", params);
-            //转换异常信息为字符串
-            String exceptionMsg = stackTraceToString(e.getClass().getName(), e.getMessage(), e.getStackTrace());
-            //异常信息
-            logJson.put("exceptionMsg", exceptionMsg);
-            //当前操作用户编码
-            logJson.put("operaterCode", UserInfoUtil.getLoginUserCode().toString());
-            //当前操作用户姓名
-            logJson.put("operaterName", UserInfoUtil.getLoginUserRealName());
-            //当前操作时间
-            logJson.put("createdAt", new Date());
-            /*==========数据库日志=========*/
-            try {
-                new Thread( () ->{
-                    messageQueueService.send("crt_e6_log_exchange", "crt_e6_log_routingkey", logJson.toString());
-                }).start();
-            } catch (NullPointerException en) {
-            }
-        } catch (Exception e1) {
-            log.error("日志记录异常{}", e1.getMessage());
+    class MqRunnable implements Runnable {
+        private MessageQueueService messageQueueService;
+        private String logStr;
+        public MqRunnable(MessageQueueService messageQueueService,String logStr){
+            super();
+            this.messageQueueService=messageQueueService;
+            this.logStr = logStr;
+        }
+        /**
+         * When an object implementing interface <code>Runnable</code> is used
+         * to create a thread, starting the thread causes the object's
+         * <code>run</code> method to be called in that separately executing
+         * thread.
+         * <p>
+         * The general contract of the method <code>run</code> is that it may
+         * take any action whatsoever.
+         *
+         * @see Thread#run()
+         */
+        @Override
+        public void run() {
+            String exchange = "crt_e6_log_exchange";
+            String key = "crt_e6_log_routingkey";
+            messageQueueService.send(exchange,key,logStr);
         }
     }
 

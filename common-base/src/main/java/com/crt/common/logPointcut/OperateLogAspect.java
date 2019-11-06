@@ -1,9 +1,9 @@
 package com.crt.common.logPointcut;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
 import com.crt.common.constant.Constants;
+import com.crt.common.jwtInterceptor.annotation.TokenAuthentication;
+import com.crt.common.jwtInterceptor.constant.AuthLevel;
 import com.crt.common.util.UserInfoUtil;
 import com.crt.common.vo.E6Wrapper;
 import com.crt.common.vo.E6WrapperUtil;
@@ -25,10 +25,9 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.security.Permission;
 import java.util.Date;
+import java.util.concurrent.ExecutorService;
 
 /**
  * 修改（新增和编辑）操作日志切入类
@@ -36,34 +35,21 @@ import java.util.Date;
  */
 @Aspect
 @Component
-public class OperateEditLogAspect {
-    private static final Logger log = LoggerFactory.getLogger(OperateEditLogAspect.class);
+public class OperateLogAspect {
+    private static final Logger log = LoggerFactory.getLogger(OperateLogAspect.class);
 
     @Autowired
     private MessageQueueService messageQueueService;
+
+    /**注入线程池**/
+    @Autowired
+    private ExecutorService executorService;
 
     /**
      * 切点， 切所有的Controller所有的写入方法， 包括新增、更新
      * TODO  把这个切点动态化
      */
-    @Pointcut("execution(* com.crt.common.web.BaseController.save(..)) " +
-            " || execution(public * com.crt.*.*.*.*Controller.save*(..))" +
-            " || execution(public * com.crt.*.*.*.*Controller.audit*(..))" +
-            " || execution(public * com.crt.*.*.*.*Controller.freezing(..))" +
-            " || execution(public * com.crt.*.*.*.*Controller.unfreeze(..))" +
-            " || execution(public * com.crt.*.*.*.*Controller.initPassword(..))" +
-            " || execution(public * com.crt.*.*.*.*Controller.submitAnswer(..))" +
-            " || execution(public * com.crt.*.*.*.*Controller.approve(..))" +
-            " || execution(public * com.crt.*.*.*.*Controller.enable(..))" +
-            " || execution(public * com.crt.*.*.*.*Controller.discard(..))" +
-            " || execution(public * com.crt.*.*.*.*Controller.examine(..))" +
-            " || execution(public * com.crt.*.*.*.*Controller.publish(..))" +
-            " || execution(public * com.crt.*.*.*.*Controller.register(..))" +
-            " || execution(public * com.crt.*.*.*.*Controller.insert*(..))" +
-            " || execution(public * com.crt.*.*.*.*Controller.reset*(..))" +
-            " || execution(* com.crt.common.web.BaseController.update*(..)) " +
-            " || execution(* com.crt.common.web.BaseController.modify(..)) " +
-            " || execution(* com.crt.*.*.*.*Controller.modify*(..))")
+    @Pointcut("execution(public * com.crt..*Controller.*(..))")
     private void controllerPiontcout() {
 
     }
@@ -94,22 +80,8 @@ public class OperateEditLogAspect {
                     }
                 }
             }
-            /**
-             * 操作类型
-             */
-            String operateType = Constants.OPERATE_TYPE_SAVE;
-            if (null != param){
-                try{
-                    JSONObject json = JSON.parseObject(JSONObject.toJSON(param).toString());
-                    String pk = "id";
-                    if (json.getInteger(pk)!=null){
-                        operateType = Constants.OPERATE_TYPE_MODIFY;
-                    }
-                }catch (JSONException e){
-                    operateType = Constants.OPERATE_TYPE_MODIFY;
-                }
-            }
-            logJson.put("operateType",operateType);
+            //操作类型 默认为空
+            logJson.put("operateType","");
             //执行原方法
             Object operateResult = point.proceed();
             //操作模块
@@ -130,9 +102,13 @@ public class OperateEditLogAspect {
             //获取方法上注解
             ApiOperation api = targetMethod.getAnnotation(ApiOperation.class);
             logJson.put("operateContent",api.value());
-            //当前操作用户
-            logJson.put("operaterCode",UserInfoUtil.getLoginUserCode());
-            logJson.put("operaterName",UserInfoUtil.getLoginUserRealName());
+            //获取方法上注解
+            TokenAuthentication auth = targetMethod.getAnnotation(TokenAuthentication.class);
+            if (null == auth || !AuthLevel.NO_AUTH.equals(auth.authLevel())){
+                //当前操作用户
+                logJson.put("operaterCode",UserInfoUtil.getLoginUserCode());
+                logJson.put("operaterName",UserInfoUtil.getLoginUserRealName());
+            }
             logJson.put("createdAt",new Date());
             Integer operaterResult = Constants.RESULT_UNKNOWN;
             if (null != operateResult){
@@ -145,17 +121,43 @@ public class OperateEditLogAspect {
                 logJson.put("result",operaterResult);
             }
             try {
-                 new Thread( () ->{
-                        messageQueueService.send("crt_e6_log_exchange","crt_e6_log_routingkey",logJson.toString());
-                }).start();
+                executorService.execute(new MqRunnable(messageQueueService,logJson.toJSONString()));
             }catch (Exception e){
+                log.error("MQ调用异常{}", e.getMessage());
             }
             return operateResult;
         } catch (Throwable throwable) {
-            throwable.printStackTrace();
+            throwable.getMessage();
             msg = "系统繁忙，请稍后重试";
+            return E6WrapperUtil.ok(Constants.INTERNAL_SERVER_ERROR,msg,null);
         }
-        return new ResponseEntity(E6WrapperUtil.error(msg), HttpStatus.OK);
     }
 
+    class MqRunnable implements Runnable {
+        private MessageQueueService messageQueueService;
+        private String logStr;
+
+        public MqRunnable(MessageQueueService messageQueueService,String logStr){
+            super();
+            this.messageQueueService=messageQueueService;
+            this.logStr = logStr;
+        }
+        /**
+         * When an object implementing interface <code>Runnable</code> is used
+         * to create a thread, starting the thread causes the object's
+         * <code>run</code> method to be called in that separately executing
+         * thread.
+         * <p>
+         * The general contract of the method <code>run</code> is that it may
+         * take any action whatsoever.
+         *
+         * @see Thread#run()
+         */
+        @Override
+        public void run() {
+            String exchange = "crt_e6_log_exchange";
+            String key = "crt_e6_log_routingkey";
+            messageQueueService.send(exchange,key,logStr);
+        }
+    }
 }

@@ -58,15 +58,15 @@ public class MyTokenInterceptor implements HandlerInterceptor {
     private RedisUtil<Map<String,Object>> redisUtil;
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception{
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)throws Exception{
         /**
          * 这里打端点，页面访问swagger页面看看请求的什么路径
          */
         String url = request.getRequestURI();
-		if (url.contains("bpm") || url.contains("MIDDLE-COMMON-FILEUPLOAD") || url.contains("MIDDLE-COMM-MSG"))
-		{
-			return true;
-		}
+        if (url.contains("bpm") || url.contains("MIDDLE-COMMON-FILEUPLOAD") || url.contains("MIDDLE-COMM-MSG"))
+        {
+            return true;
+        }
         // 当前请求方法、请求类
         Method reqMethod = ((HandlerMethod) handler).getMethod();
         Class reqClass = reqMethod.getDeclaringClass();
@@ -76,7 +76,6 @@ public class MyTokenInterceptor implements HandlerInterceptor {
         if (authMethod != null && authMethod.authLevel() == AuthLevel.NO_AUTH) {
             return true;
         }
-
         // 获取当前请求方法上的授权验证注解，并验证授权级别是否为开放级别，若是开放，则直接返回，不在继续验证
         TokenAuthentication authClass = (TokenAuthentication)this.getClassAnnotation(reqClass, TokenAuthentication.class);
         if (authClass != null && authClass.authLevel() == AuthLevel.NO_AUTH) {
@@ -116,7 +115,7 @@ public class MyTokenInterceptor implements HandlerInterceptor {
         String token = request.getHeader(jwtAuthorizedProperties.getTokenHeaderKey());
         if (StrUtil.isEmpty(token)) {
             // 构建错误响应结果报文
-            this.buildErrorResponse(response,"Token签名为空",null);
+            this.buildErrorResponse(response,"Token签名为空",JwtAuthorizedConstant.TOKEN_EXPIRED_RESPONSE_STATUS);
             return false;
         }
         if (token.equals("0000"))
@@ -137,14 +136,14 @@ public class MyTokenInterceptor implements HandlerInterceptor {
             // 验证是否存在token盗用情况
             if(!StrUtil.equals(thisAudience,audience)) {
                 // 构建错误响应结果报文
-                this.buildErrorResponse(response,"Token签名验证错误",null);
+                this.buildErrorResponse(response,"Token签名验证错误",JwtAuthorizedConstant.TOKEN_EXPIRED_RESPONSE_STATUS);
                 return false;
             }
 
             return true;
         } catch (TokenErrorException ten) {
             // 构建错误响应结果报文
-            this.buildErrorResponse(response,ten.getMessage(),null);
+            this.buildErrorResponse(response,ten.getMessage(),JwtAuthorizedConstant.TOKEN_EXPIRED_RESPONSE_STATUS);
             return false;
 
             // 签名过期
@@ -168,7 +167,7 @@ public class MyTokenInterceptor implements HandlerInterceptor {
         String token = request.getHeader("Authorization");
         if (StringUtils.isEmpty(token))
         {
-            this.buildErrorResponse(response,"用户信息失效",null);
+            this.buildErrorResponse(response,"用户信息失效",JwtAuthorizedConstant.TOKEN_EXPIRED_RESPONSE_STATUS);
             return false;
         }
 
@@ -221,7 +220,7 @@ public class MyTokenInterceptor implements HandlerInterceptor {
         catch (Exception e)
         {
             // 构建错误响应结果报文
-            this.buildErrorResponse(response,"当前信息失效，请重新登录",null);
+            this.buildErrorResponse(response,"当前信息失效，请重新登录",JwtAuthorizedConstant.TOKEN_EXPIRED_RESPONSE_STATUS);
             return false;
         }
 

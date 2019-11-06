@@ -51,7 +51,7 @@ public class OperateDelLogAspect {
 
     }
 
-    @Around("controllerPiontcout()")
+//    @Around("controllerPiontcout()")
     public Object around(ProceedingJoinPoint point) {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         JSONObject logJson = new JSONObject();
