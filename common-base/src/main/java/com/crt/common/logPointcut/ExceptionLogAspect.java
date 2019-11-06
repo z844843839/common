@@ -51,14 +51,14 @@ public class ExceptionLogAspect {
 
 
     /**
-     * 设置操作异常切入点记录异常日志 扫描所有rpc包下操作
+     * 设置操作异常切入点记录异常日志 扫描所有service包下操作
      */
-    @Pointcut("execution(public * com.crt..rpc..*.*(..))")
-    public void operExceptionLogRpcPoinCut() {
+    @Pointcut("execution(public * com.crt..service..*.*(..))")
+    public void operExceptionLogServicePoinCut() {
 
     }
 
-   @AfterThrowing(pointcut = "operExceptionLogRpcPoinCut()", throwing = "e")
+   @AfterThrowing(pointcut = "operExceptionLogServicePoinCut()", throwing = "e")
     public void doRpcAfterThrowing(JoinPoint joinPoint, Throwable e) {
         JSONObject logJson = new JSONObject();
         String logKey = "exceptionLog";
@@ -77,7 +77,7 @@ public class ExceptionLogAspect {
             //异常方法
             logJson.put("exceptionMethod", methodName);
             // 请求的参数
-            String params = Arrays.toString(joinPoint.getArgs());
+            String params = JSON.toJSONString(joinPoint.getArgs());
             //异常参数
             logJson.put("exceptionParam", params);
             //转换异常信息为字符串
