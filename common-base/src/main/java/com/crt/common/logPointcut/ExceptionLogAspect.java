@@ -186,6 +186,7 @@ public class ExceptionLogAspect {
             strbuff.append(stet + "\n");
         }
         String message = exceptionName + ":" + exceptionMessage + "\n\t" + strbuff.toString();
+        message=message.length()>1000?message.substring(0,1000):message;
         return message;
     }
 }
