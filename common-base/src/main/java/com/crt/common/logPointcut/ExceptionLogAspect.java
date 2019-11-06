@@ -64,6 +64,22 @@ public class ExceptionLogAspect {
         String logKey = "exceptionLog";
         logJson.put("logType", logKey);
         try {
+
+            try {
+                // 获取RequestAttributes
+                RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
+                // 从获取RequestAttributes中获取HttpServletRequest的信息
+                HttpServletRequest request = (HttpServletRequest) requestAttributes.resolveReference(RequestAttributes.REFERENCE_REQUEST);
+                //异常请求
+                String exceptionUrl = request.getRequestURL().toString();
+                logJson.put("exceptionUrl", exceptionUrl);
+                //异常模块
+                String module = request.getRequestURI();
+                module = module.substring(1, module.length());
+                module = module.substring(0, module.indexOf("/"));
+                logJson.put("exceptionModule", module);
+            } catch (Exception e1) {}
+
             // 从切面织入点处通过反射机制获取织入点处的方法
             MethodSignature signature = (MethodSignature) joinPoint.getSignature();
             // 获取切入点所在的方法
@@ -84,6 +100,19 @@ public class ExceptionLogAspect {
             String exceptionMsg = stackTraceToString(e.getClass().getName(), e.getMessage(), e.getStackTrace());
             //异常信息
             logJson.put("exceptionMsg", exceptionMsg);
+
+            try {
+                //当前操作用户编码
+                logJson.put("operaterCode", UserInfoUtil.getLoginUserCode().toString());
+                //当前操作用户姓名
+                logJson.put("operaterName", UserInfoUtil.getLoginUserRealName());
+            } catch (Exception e1) {
+                //当前操作用户编码
+                logJson.put("operaterCode", "0");
+                //当前操作用户姓名
+                logJson.put("operaterName", "系统管理");
+            }
+
             //当前操作时间
             logJson.put("createdAt", new Date());
             /*==========数据库日志=========*/
@@ -102,7 +131,7 @@ public class ExceptionLogAspect {
     /**
      * @Description 异常通知 用于拦截service层记录异常日志
      */
-    @AfterThrowing(pointcut = "operExceptionLogPoinCut()", throwing = "e")
+   // @AfterThrowing(pointcut = "operExceptionLogPoinCut()", throwing = "e")
     public void doAfterThrowing(JoinPoint joinPoint, Throwable e) {
         // 获取RequestAttributes
         RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
@@ -186,7 +215,7 @@ public class ExceptionLogAspect {
             strbuff.append(stet + "\n");
         }
         String message = exceptionName + ":" + exceptionMessage + "\n\t" + strbuff.toString();
-        message=message.length()>1000?message.substring(0,1000):message;
+        message=message.length()>2000?message.substring(0,2000):message;
         return message;
     }
 }
