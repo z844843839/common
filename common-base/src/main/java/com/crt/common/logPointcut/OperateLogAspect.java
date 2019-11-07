@@ -49,7 +49,8 @@ public class OperateLogAspect {
      * 切点， 切所有的Controller所有的写入方法， 包括新增、更新
      * TODO  把这个切点动态化
      */
-    @Pointcut("execution(public * com.crt..*Controller.*(..))")
+    @Pointcut("execution(public * com.crt..*Controller.*(..)) " +
+            "|| execution(public * com.crt..web.*Controller.*(..)) ")
     private void controllerPiontcout() {
 
     }
