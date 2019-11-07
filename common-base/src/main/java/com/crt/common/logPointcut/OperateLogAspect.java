@@ -50,7 +50,8 @@ public class OperateLogAspect {
      * TODO  把这个切点动态化
      */
     @Pointcut("execution(public * com.crt..*Controller.*(..)) " +
-            "|| execution(public * com.crt..web.*Controller.*(..)) ")
+            "|| execution(public * com.crt..web.*Controller.*(..)) " +
+            "|| execution(public * com.crt.*.*.*.*.*Controller.*(..)) ")
     private void controllerPiontcout() {
 
     }
