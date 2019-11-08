@@ -112,9 +112,11 @@ public class OperateLogAspect {
                 logJson.put("operateContent",api.value());
                 //获取方法上注解
                 TokenAuthentication auth = targetMethod.getAnnotation(TokenAuthentication.class);
-                if (null == auth || !AuthLevel.NO_AUTH.equals(auth.authLevel())){
-                    //当前操作用户
+                //当前操作用户信息
+                if (null != UserInfoUtil.getLoginUserCode()){
                     logJson.put("operaterCode",UserInfoUtil.getLoginUserCode());
+                }
+                if (null != UserInfoUtil.getLoginUserRealName()){
                     logJson.put("operaterName",UserInfoUtil.getLoginUserRealName());
                 }
                 logJson.put("createdAt",new Date());
