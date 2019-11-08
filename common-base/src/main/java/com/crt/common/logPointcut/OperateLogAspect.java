@@ -98,6 +98,8 @@ public class OperateLogAspect {
                 //操作方法
                 String operateMethod = target.getClass().getName() +"."+ point.getSignature().getName() +"()";
                 logJson.put("operateMethod",operateMethod);
+                //操作人IP
+                logJson.put("operateIp",request.getRemoteAddr());
                 //操作请求
                 logJson.put("operateUrl",request.getRequestURL().toString());
                 //操作内容
