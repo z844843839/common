@@ -674,4 +674,28 @@ public class DateUtils {
         String str = sdf.format(date);
         return str;
     }
+
+    /**
+     * 年月日时分秒毫秒
+     * @return
+     */
+    public static String getStringDate() {
+        Date currentTime = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+        String dateString = formatter.format(currentTime);
+        return dateString;
+    }
+
+    /**
+     * 由年月日时分秒毫秒+3位随机数
+     * 生成流水号
+     * @return
+     */
+    public static String generateSerialNum() {
+        String t = getStringDate();
+        int x = (int) (Math.random() * 900) + 100;
+        String serial = t + x;
+        return serial;
+    }
+
 }
