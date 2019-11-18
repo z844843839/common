@@ -58,7 +58,7 @@ public class JwtAuthorized {
 
         } catch (ExpiredJwtException eje) {
             logger.error("Token签名已过期");
-            throw new TokenExpiredException("Token签名已过期");
+            throw new TokenExpiredException("用户信息已失效，请重新登陆!");
         } catch (UnsupportedJwtException uje) {
             logger.error("Token格式错误");
             throw new TokenErrorException("Token格式错误");
@@ -100,7 +100,7 @@ public class JwtAuthorized {
 
         } catch (ExpiredJwtException eje) {
             logger.error("Token签名已过期");
-            throw new TokenExpiredException("Token签名已过期");
+            throw new TokenExpiredException("用户信息已失效，请重新登陆!");
         } catch (UnsupportedJwtException uje) {
             logger.error("Token格式错误");
             throw new TokenErrorException("Token格式错误");
