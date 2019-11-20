@@ -63,6 +63,10 @@ public class MyTokenInterceptor implements HandlerInterceptor {
          * 这里打端点，页面访问swagger页面看看请求的什么路径
          */
         String url = request.getRequestURI();
+        /**
+         * 当URL未在白名单中，优先验证Token 返回影响HTTP状态
+         * 当URL在白名单中，异常检查代码，反应影响Code
+         */
         if (url.contains("bpm") || url.contains("MIDDLE-COMMON-FILEUPLOAD") || url.contains("MIDDLE-COMM-MSG"))
         {
             return true;
