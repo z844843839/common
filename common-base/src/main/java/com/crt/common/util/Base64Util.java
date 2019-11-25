@@ -2,7 +2,9 @@ package com.crt.common.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sun.misc.BASE64Decoder;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Base64;
 
@@ -38,10 +40,13 @@ public class Base64Util {
      */
     public static String base64Decode(String source) {
         String decodedText = "";
-        Base64.Decoder decoder = Base64.getDecoder();
         try {
-            decodedText = new String(decoder.decode(source), "UTF-8");
+            BASE64Decoder decoder = new BASE64Decoder();
+            byte[] bytes = decoder.decodeBuffer(source);
+            decodedText = new String(bytes);
         } catch (UnsupportedEncodingException e) {
+            logger.error("base64 encode exception",e);
+        } catch (IOException e){
             logger.error("base64 encode exception",e);
         }
         return decodedText;

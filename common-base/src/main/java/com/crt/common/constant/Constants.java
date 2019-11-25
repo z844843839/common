@@ -434,6 +434,10 @@ public class Constants {
      */
     public static Integer STATUS_CODE_SUCCESS = 200;
     /**
+     * 查询无错误，返回无结果
+     */
+    public static Integer STATUS_NO_RESULT = 304;
+    /**
      * 返回状态500 内部错误
      */
     public static Integer INTERNAL_SERVER_ERROR = 500;
