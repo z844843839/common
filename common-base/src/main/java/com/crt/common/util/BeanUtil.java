@@ -64,7 +64,12 @@ public class BeanUtil {
 		Map<String, T> map = new HashMap<String, T>(list.size());
 		try {
 			for (T li : list) {
-				Field f = li.getClass().getDeclaredField(fieldName);
+				Field f;
+				if ("id".equals(fieldName)) {
+					f = li.getClass().getSuperclass().getDeclaredField(fieldName);
+				}else {
+					f = li.getClass().getDeclaredField(fieldName);
+				}
 				f.setAccessible(true);
 				map.put(f.get(li).toString(), li);
 			}
