@@ -86,7 +86,12 @@
             <!--<version>1.0.0-SNAPSHOT</version>-->
             <!--<scope>compile</scope>-->
         <!--</dependency>-->
-
+        <!--利用 druid 的 sql parser 模块解析 sql 语句-->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid</artifactId>
+            <version>1.0.19</version>
+        </dependency>
         <dependency>
             <groupId>org.mybatis.spring.boot</groupId>
             <artifactId>mybatis-spring-boot-starter</artifactId>
