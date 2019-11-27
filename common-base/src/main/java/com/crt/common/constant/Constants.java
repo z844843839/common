@@ -434,6 +434,10 @@ public class Constants {
      */
     public static Integer STATUS_CODE_SUCCESS = 200;
     /**
+     * 查询无错误，返回无结果
+     */
+    public static Integer STATUS_NO_RESULT = 304;
+    /**
      * 返回状态500 内部错误
      */
     public static Integer INTERNAL_SERVER_ERROR = 500;
@@ -449,4 +453,27 @@ public class Constants {
      * 操作结果2 未知
      */
     public static int RESULT_UNKNOWN = 2;
+
+    /**
+     * 行级权限内置变量1 当前用户ID
+     */
+    public static String BUILT_IN_VARIABLES1 = "当前用户ID";
+    /**
+     * 行级权限内置变量2 当前用户上级ID
+     */
+    public static String BUILT_IN_VARIABLES2 = "当前用户上级ID";
+    /**
+     * 行级权限内置变量3 当前用户所属专业公司ID
+     */
+    public static String BUILT_IN_VARIABLES3 = "当前用户所属专业公司ID";
+    /**
+     * 行级权限内置变量4 当前用户所属区域公司ID
+     */
+    public static String BUILT_IN_VARIABLES4 = "当前用户所属区域公司ID";
+    /**
+     * 行级权限内置变量5 当前用户所属部门ID
+     */
+    public static String BUILT_IN_VARIABLES5 = "当前用户所属部门ID";
+
+
 }

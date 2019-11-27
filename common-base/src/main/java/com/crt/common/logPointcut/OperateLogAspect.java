@@ -26,6 +26,8 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Date;
 import java.util.concurrent.ExecutorService;
 
@@ -49,7 +51,9 @@ public class OperateLogAspect {
      * 切点， 切所有的Controller所有的写入方法， 包括新增、更新
      * TODO  把这个切点动态化
      */
-    @Pointcut("execution(public * com.crt..*Controller.*(..))")
+    @Pointcut("execution(public * com.crt..*Controller.*(..)) " +
+            "|| execution(public * com.crt..web.*Controller.*(..)) " +
+            "|| execution(public * com.crt.*.*.*.*.*Controller.*(..)) ")
     private void controllerPiontcout() {
 
     }
@@ -63,74 +67,133 @@ public class OperateLogAspect {
         String msg;
         try {
             log.error("<============ 进入环绕通知 ============>");
-            Object target = point.getTarget();
-            Object[] args = point.getArgs();
-            Object param = null;
-            if (args != null && args.length > 0){
-                for (int k = 0; k < args.length; k++) {
-                    Object arg = args[k];
-                    // 获取对象类型
-                    String typeName = arg.getClass().getTypeName();
-                    for (String t : Constants.BASIC_TYPES) {
-                        //1 判断是否是基础类型
-                        if (!t.equals(typeName)) {
-                            //Controller 入参的PO
-                            param = arg;
+            Object target = null;
+            try {
+                target = point.getTarget();
+                Object[] args = point.getArgs();
+                Object param = null;
+                if (args != null && args.length > 0){
+                    for (int k = 0; k < args.length; k++) {
+                        Object arg = args[k];
+                        // 获取对象类型
+                        String typeName = arg.getClass().getTypeName();
+                        for (String t : Constants.BASIC_TYPES) {
+                            //1 判断是否是基础类型
+                            if (!t.equals(typeName)) {
+                                //Controller 入参的PO
+                                param = arg;
+                            }
                         }
                     }
                 }
-            }
-            //操作类型 默认为空
-            logJson.put("operateType","");
+                //操作类型 默认为空
+                logJson.put("operateType","");
+            } catch (Exception e) {}
             //执行原方法
             Object operateResult = point.proceed();
-            //操作模块
-            String module = request.getRequestURI();
-            module = module.substring(1,module.length());
-            module = module.substring(0,module.indexOf("/"));
-            logJson.put("operateModule",module);
-            //操作方法
-            String operateMethod = target.getClass().getName() +"."+ point.getSignature().getName() +"()";
-            logJson.put("operateMethod",operateMethod);
-            //操作请求
-            logJson.put("operateUrl",request.getRequestURL().toString());
-            //操作内容
-            Signature signature = point.getSignature();
-            MethodSignature methodSignature = (MethodSignature)signature;
-            //获取方法对象
-            Method targetMethod = methodSignature.getMethod();
-            //获取方法上注解
-            ApiOperation api = targetMethod.getAnnotation(ApiOperation.class);
-            logJson.put("operateContent",api.value());
-            //获取方法上注解
-            TokenAuthentication auth = targetMethod.getAnnotation(TokenAuthentication.class);
-            if (null == auth || !AuthLevel.NO_AUTH.equals(auth.authLevel())){
-                //当前操作用户
-                logJson.put("operaterCode",UserInfoUtil.getLoginUserCode());
-                logJson.put("operaterName",UserInfoUtil.getLoginUserRealName());
-            }
-            logJson.put("createdAt",new Date());
-            Integer operaterResult = Constants.RESULT_UNKNOWN;
-            if (null != operateResult){
-                E6Wrapper e6 = (E6Wrapper)operateResult;
-                if (Constants.STATUS_CODE_SUCCESS.equals(e6.getCode())){
-                    operaterResult = Constants.RESULT_SUCCESS;
-                }else {
-                    operaterResult = Constants.RESULT_FAIL;
-                }
-                logJson.put("result",operaterResult);
-            }
             try {
-                executorService.execute(new MqRunnable(messageQueueService,logJson.toJSONString()));
-            }catch (Exception e){
-                log.error("MQ调用异常{}", e.getMessage());
-            }
+                //操作模块
+                String module = request.getRequestURI();
+                module = module.substring(1,module.length());
+                module = module.substring(0,module.indexOf("/"));
+                if("MIDDLE-LOG-OPERATE".equals(module)){//日志模块不记录
+                    return operateResult;
+                }
+                logJson.put("operateModule",module);
+                //操作方法
+                String operateMethod = target.getClass().getName() +"."+ point.getSignature().getName() +"()";
+                logJson.put("operateMethod",operateMethod);
+                //操作人IP
+                logJson.put("operateIp",getIpAddress(request));
+                //操作请求
+                logJson.put("operateUrl",request.getRequestURL().toString());
+                //操作内容
+                Signature signature = point.getSignature();
+                MethodSignature methodSignature = (MethodSignature)signature;
+                //获取方法对象
+                Method targetMethod = methodSignature.getMethod();
+                //获取方法上注解
+                ApiOperation api = targetMethod.getAnnotation(ApiOperation.class);
+                logJson.put("operateContent",api.value());
+                //获取方法上注解
+                TokenAuthentication auth = targetMethod.getAnnotation(TokenAuthentication.class);
+                //当前操作用户信息
+                if (null != UserInfoUtil.getLoginUserCode()){
+                    logJson.put("operaterCode",UserInfoUtil.getLoginUserCode());
+                }
+                if (null != UserInfoUtil.getLoginUserRealName()){
+                    logJson.put("operaterName",UserInfoUtil.getLoginUserRealName());
+                }
+                logJson.put("createdAt",new Date());
+                Integer operaterResult = Constants.RESULT_UNKNOWN;
+                if (null != operateResult){
+                    E6Wrapper e6 = (E6Wrapper)operateResult;
+                    if (Constants.STATUS_CODE_SUCCESS.equals(e6.getCode())){
+                        operaterResult = Constants.RESULT_SUCCESS;
+                    }else {
+                        operaterResult = Constants.RESULT_FAIL;
+                    }
+                    logJson.put("result",operaterResult);
+                }
+                try {
+                    executorService.execute(new MqRunnable(messageQueueService,logJson.toJSONString()));
+                }catch (Exception e){
+                    log.error("MQ调用异常{}", e.getMessage());
+                }
+            } catch (Exception e) {}
             return operateResult;
         } catch (Throwable throwable) {
-            throwable.getMessage();
+            String ex_msg= stackTraceToString(throwable.getClass().getName(), throwable.getMessage(), throwable.getStackTrace());
+            log.error("异常信息:"+ex_msg);
             msg = "系统繁忙，请稍后重试";
             return E6WrapperUtil.ok(Constants.INTERNAL_SERVER_ERROR,msg,null);
         }
+    }
+
+    /**
+     * 获取用户真实IP地址，不使用request.getRemoteAddr();的原因是有可能用户使用了代理软件方式避免真实IP地址。
+     * 可是，如果通过了多级反向代理的话，X-Forwarded-For的值并不止一个，而是一串IP值，究竟哪个才是真正的用户端的真实IP呢？
+     * 答案是取X-Forwarded-For中第一个非unknown的有效IP字符串
+     * @param request
+     * @return
+     */
+    private static String getIpAddress(HttpServletRequest request) {
+        String ip = request.getHeader("x-forwarded-for");
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("Proxy-Client-IP");
+        }
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("WL-Proxy-Client-IP");
+        }
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("HTTP_CLIENT_IP");
+        }
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("HTTP_X_FORWARDED_FOR");
+        }
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getRemoteAddr();
+            if("127.0.0.1".equals(ip)||"0:0:0:0:0:0:0:1".equals(ip)){
+                //根据网卡取本机配置的IP
+                InetAddress inet=null;
+                try {
+                    inet = InetAddress.getLocalHost();
+                } catch (UnknownHostException e) {
+                    e.printStackTrace();
+                }
+                ip= inet.getHostAddress();
+            }
+        }
+        return ip;
+    }
+
+    public String stackTraceToString(String exceptionName, String exceptionMessage, StackTraceElement[] elements) {
+        StringBuffer strbuff = new StringBuffer();
+        for (StackTraceElement stet : elements) {
+            strbuff.append(stet + "\n");
+        }
+        String message = exceptionName + ":" + exceptionMessage + "\n\t" + strbuff.toString();
+        return message;
     }
 
     class MqRunnable implements Runnable {

@@ -1,6 +1,8 @@
 package com.crt.common.sqlInterceptor;
 
 
+import com.alibaba.druid.sql.SQLUtils;
+import com.alibaba.druid.util.JdbcConstants;
 import com.crt.common.constant.Constants;
 import com.crt.common.util.UserInfoUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -55,27 +57,27 @@ public class DataAuthInterceptor implements Interceptor {
                 InterceptAnnotation interceptorAnnotation = method.getAnnotation(InterceptAnnotation.class);
                 boolean totalFlag = false;
                 String tableAlias = null;
-                String countStart = "SELECT count(1) FROM";
-                String countEnd = "AS total";
-                sql = cleanSqlSpace(sql);
+                String countStart = "SELECT count(1)\n FROM (";
+                String countEnd = ") total";
+//                sql = cleanSqlSpace(sql);
+                sql = SQLUtils.format(sql,  JdbcConstants.MYSQL);
                 if (interceptorAnnotation.queryType() == InterceptAnnotation.QueryAuthSqlType.QUERY_COUNT) {
                     sql = sql.substring(sql.indexOf(countStart) + countStart.length(), sql.length());
                     sql = sql.substring(0, sql.indexOf(countEnd));
-                    sql = sql.substring(sql.indexOf("(") + 1, sql.lastIndexOf(")") - 1).trim();
                     totalFlag = true;
                 }
                 tableAlias = sql.substring(sql.indexOf("SELECT") + 7, sql.indexOf("."));
-                String rowSql = UserInfoUtil.getRowDataAuthSQL(null, tableAlias);
+//                String rowSql = UserInfoUtil.getRowDataAuthSQL(null, tableAlias);
+                String rowSql = UserInfoUtil.getRowDataAuthSQL();
+
                 if (interceptorAnnotation.flag() && StringUtils.isNotEmpty(rowSql)) {
                     mSql = interceptSQL(sql, tableAlias, rowSql);
                     if (totalFlag) {
-                        StringBuffer sbff = new StringBuffer();
-                        sbff.append(countStart).append(Constants.SPACE);
-                        sbff.append(Constants.LEFT_PARENTHESES).append(Constants.SPACE);
-                        sbff.append(mSql);
-                        sbff.append(Constants.SPACE).append(Constants.RIGHT_PARENTHESES);
-                        sbff.append(Constants.SPACE).append(countEnd);
-                        mSql = sbff.toString();
+                        StringBuffer sb = new StringBuffer();
+                        sb.append(countStart).append(Constants.SPACE);
+                        sb.append(mSql);
+                        sb.append(Constants.SPACE).append(countEnd);
+                        mSql = sb.toString();
                     }
                 }
             }
@@ -122,9 +124,8 @@ public class DataAuthInterceptor implements Interceptor {
      * @return String
      */
     private static String interceptSQL(String sql, String alias, String rowSql) {
-        String moreThan = "";
-        String cutPoint = "AS" + Constants.SPACE + alias.trim();
-        moreThan = sql.substring(sql.lastIndexOf(cutPoint) + (cutPoint.length()), sql.length()).trim();
+        String cutPoint = Constants.RIGHT_PARENTHESES + Constants.SPACE + alias.trim();
+        String moreThan = sql.substring(sql.lastIndexOf(cutPoint) + (cutPoint.length()), sql.length()).trim();
         sql = sql.substring(0, sql.lastIndexOf(cutPoint) + (cutPoint.length()));
         if (moreThan.indexOf("WHERE") >= 0) {
             moreThan = moreThan.substring(moreThan.indexOf("WHERE") + 5, moreThan.length()).trim();

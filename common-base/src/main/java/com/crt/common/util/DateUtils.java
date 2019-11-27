@@ -104,6 +104,29 @@ public class DateUtils {
     }
 
     /**
+     * 获得指定日期的后一天
+     *
+     * @param specifiedDay
+     * @param format
+     * @return
+     */
+    public static String getSpecifiedDayAfter(String specifiedDay,String format) {
+        Calendar c = Calendar.getInstance();
+        Date date = null;
+        try {
+            date = new SimpleDateFormat(format).parse(specifiedDay);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        c.setTime(date);
+        int day = c.get(Calendar.DATE);
+        c.set(Calendar.DATE, day + 1);
+
+        String dayAfter = new SimpleDateFormat(format).format(c.getTime());
+        return dayAfter;
+    }
+
+    /**
      * 获得指定日期的前一天
      *
      * @param specifiedDay
@@ -674,4 +697,200 @@ public class DateUtils {
         String str = sdf.format(date);
         return str;
     }
+
+    /**
+     * 年月日时分秒毫秒
+     * @return
+     */
+    public static String getStringDate() {
+        Date currentTime = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+        String dateString = formatter.format(currentTime);
+        return dateString;
+    }
+
+    /**
+     * 由年月日时分秒毫秒+3位随机数
+     * 生成流水号
+     * @return
+     */
+    public static String generateSerialNum() {
+        String t = getStringDate();
+        int x = (int) (Math.random() * 900) + 100;
+        String serial = t + x;
+        return serial;
+    }
+
+//    /**
+//     * 获取指定日期之后的n个工作日(遇节假日、周末顺延)
+//     * @param bDay 指定的日期（yyyy-MM-dd）
+//     * @param number
+//     * @return 工作日集合
+//     */
+//    public static List<String> getWorkDays(String bDay, Integer number, List<HolidayPo> holidays){
+//        List<String> workDays = new ArrayList<>();
+//        if (null != number && number > 0){
+//            try {
+//                String tomorrow = null;
+//                int delay = 1;
+//                //获取公休假期集合
+//                List<String> holidayList = getHolidayOrDayoff(holidays,"holiday");
+//                //获取调休日期集合
+//                List<String> offDayArray = getHolidayOrDayoff(holidays,"tx");
+//                while(delay <= number){
+//                    tomorrow = getSpecifiedDayAfter(bDay);
+//                    //判断当前日期+1即tomorrow是否为公休假期
+//                    if(!isHoliday(tomorrow,holidayList)){
+//                        //判断当前日期+1即tomorrow是为正常周末
+//                        if (!isWeekend(tomorrow,offDayArray)){
+//                            delay++;
+//                            bDay = tomorrow;
+//                            workDays.add(bDay);
+//                        }else {
+//                            bDay = tomorrow;
+//                        }
+//                    }else {
+//                        bDay = tomorrow;
+//                    }
+//                }
+//            }catch (ParseException e){
+//
+//            }
+//        }else {
+//            workDays.add(bDay);
+//        }
+//        return workDays;
+//    }
+//
+//    /**
+//     * 获取公休假期或调休日期集合
+//     * @param holidayPos
+//     * @return
+//     */
+//    public static List<String> getHolidayOrDayoff(List<HolidayPo> holidayPos,String dayType){
+//        List<String> list = null;
+//        if (null != holidayPos && holidayPos.size() > 0){
+//            list = new ArrayList<>();
+//            for (HolidayPo day : holidayPos) {
+//                if ("holiday".equals(dayType)){
+//                    if (day.getDays() > 0){
+//                        String dayOff = day.getStartDate();
+//                        list.add(dayOff);
+//                        for (int i=1;i<day.getDays();i++){
+//                            dayOff = getSpecifiedDayAfter(dayOff);
+//                            list.add(dayOff);
+//                        }
+//                    }
+//                }else {
+//                    if (StringUtils.isNotEmpty(day.getOffDate())){
+//                        String[] offDayArray = day.getOffDate().split(",");
+//                        List<String> offDayList = Arrays.asList(offDayArray);
+//                        list.addAll(offDayList);
+//                    }
+//                }
+//            }
+//        }
+//        return list;
+//    }
+//
+//    /**
+//     * 判断是否是holiday
+//     *
+//     * @param sdate
+//     * @param list
+//     * @return
+//     * @throws ParseException
+//     */
+//    public static boolean isHoliday(String sdate, List<String> list) throws ParseException {
+//        if(list.size() > 0){
+//            for(int i = 0; i < list.size(); i++){
+//                if(sdate.equals(list.get(i))){
+//                    return true;
+//                }
+//            }
+//        }
+//        return false;
+//    }
+//
+//    /**
+//     * 判断是否是weekend
+//     *
+//     * @param sdate
+//     * @return
+//     * @throws ParseException
+//     */
+//    public static boolean isWeekend(String sdate,List<String> list) throws ParseException {
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+//        Date date = sdf.parse(sdate);
+//        Calendar cal = Calendar.getInstance();
+//        cal.setTime(date);
+//        if(cal.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY || cal.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY){
+//            //此处传入的为调休日期集合，isHoliday()返回true则为工作日 false则为休息日
+//            if (isHoliday(sdate,list)){
+//                //故返回false 表示要照常上班的周末
+//                return false;
+//            }else {
+//                //正常周末
+//                return true;
+//            }
+//        } else{
+//            return false;
+//        }
+//    }
+
+//    public static void main(String[] args) throws ParseException {
+//        //List<String> getWorkDays(String bDay, Integer number, List<HolidayPo> holidays){
+//        List<HolidayPo> holidays = new ArrayList<>();
+//        HolidayPo yd =new HolidayPo();
+//        yd.setDays(3);
+//        yd.setStartDate("2018-12-30");
+//        yd.setEndDate("2019-01-01");
+//        yd.setOffDate("2018-12-29");
+//        holidays.add(yd);
+//        HolidayPo cj =new HolidayPo();
+//        cj.setDays(7);
+//        cj.setStartDate("2019-02-04");
+//        cj.setEndDate("2019-02-10");
+//        cj.setOffDate("2019-02-02,2019-02-03");
+//        holidays.add(cj);
+//        HolidayPo qm =new HolidayPo();
+//        qm.setDays(3);
+//        qm.setStartDate("2019-04-05");
+//        qm.setEndDate("2019-04-07");
+//        qm.setOffDate("");
+//        holidays.add(qm);
+//        HolidayPo ld =new HolidayPo();
+//        ld.setDays(4);
+//        ld.setStartDate("2019-05-01");
+//        ld.setEndDate("2019-05-04");
+//        ld.setOffDate("2019-04-28,2019-05-05");
+//        holidays.add(ld);
+//        HolidayPo dw =new HolidayPo();
+//        dw.setDays(3);
+//        dw.setStartDate("2019-06-07");
+//        dw.setEndDate("2019-06-09");
+//        dw.setOffDate("");
+//        holidays.add(dw);
+//        HolidayPo zq =new HolidayPo();
+//        zq.setDays(3);
+//        zq.setStartDate("2019-09-13");
+//        zq.setEndDate("2019-09-15");
+//        zq.setOffDate("");
+//        holidays.add(zq);
+//        HolidayPo gq =new HolidayPo();
+//        gq.setDays(7);
+//        gq.setStartDate("2019-10-01");
+//        gq.setEndDate("2019-10-07");
+//        gq.setOffDate("2019-09-29,2019-10-12");
+//        holidays.add(gq);
+////        List<String> list = getWorkDays("2019-12-30",5,holidays);
+//        List<String> list = new ArrayList<>();
+//        list.add("123");
+//        list.add("234");
+//        list.add("345");
+//        System.out.println(list.toString());
+//
+//
+//    }
+
 }
