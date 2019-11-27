@@ -453,4 +453,30 @@ public class Constants {
      * 操作结果2 未知
      */
     public static int RESULT_UNKNOWN = 2;
+
+    /**
+     * 行级权限内置变量1 当前用户ID
+     */
+    public static String BUILT_IN_VARIABLES1 = "当前用户ID";
+    /**
+     * 行级权限内置变量2 当前用户上级ID
+     */
+    public static String BUILT_IN_VARIABLES2 = "当前用户上级ID";
+    /**
+     * 行级权限内置变量3 当前用户所属专业公司ID
+     */
+    public static String BUILT_IN_VARIABLES3 = "当前用户所属专业公司ID";
+    /**
+     * 行级权限内置变量4 当前用户所属区域公司ID
+     */
+    public static String BUILT_IN_VARIABLES4 = "当前用户所属区域公司ID";
+    /**
+     * 行级权限内置变量5 当前用户所属部门ID
+     */
+    public static String BUILT_IN_VARIABLES5 = "当前用户所属部门ID";
+    /**
+     * 行级权限内置变量6 我参与的
+     */
+    public static String BUILT_IN_VARIABLES6 = "我参与的";
+
 }

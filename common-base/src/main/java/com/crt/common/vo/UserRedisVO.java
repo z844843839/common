@@ -155,6 +155,13 @@ public class UserRedisVO{
      * 角色名称
      */
     private String roleName;
-
+    /**
+     * 所属专业公司ID
+     */
+    private Integer attrInt1;
+    /**
+     * 所属区域公司ID
+     */
+    private Integer attrInt2;
 
 }
