@@ -63,7 +63,7 @@ public class MyTokenInterceptor implements HandlerInterceptor {
          * 这里打端点，页面访问swagger页面看看请求的什么路径
          */
         String url = request.getRequestURI();
-        if (url.contains("bpm") || url.contains("MIDDLE-COMMON-FILEUPLOAD") || url.contains("MIDDLE-COMM-MSG"))
+        if (url.contains("bpm") || url.contains("MIDDLE-COMMON-FILEUPLOAD") || url.contains("MIDDLE-COMM-MSG") || url.contains("jialiFreezer"))
         {
             return true;
         }
