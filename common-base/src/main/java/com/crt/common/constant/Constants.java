@@ -474,9 +474,6 @@ public class Constants {
      * 行级权限内置变量5 当前用户所属部门ID
      */
     public static String BUILT_IN_VARIABLES5 = "当前用户所属部门ID";
-    /**
-     * 行级权限内置变量6 我参与的
-     */
-    public static String BUILT_IN_VARIABLES6 = "我参与的";
+
 
 }
