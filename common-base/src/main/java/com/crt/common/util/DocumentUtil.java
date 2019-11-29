@@ -205,22 +205,6 @@ public class DocumentUtil {
     public static void exportExcelMap(HttpServletResponse response, LinkedHashMap<String, String> headAlias, List<Map<String, String>> result, String fileName) throws IllegalAccessException, IOException {
     	// 创建excel工作簿 SXSSFWorkbook 是专门用于大数据了的导出　　
         Workbook wb = new XSSFWorkbook();
-//        // 创建两种单元格格式
-//        CellStyle cs = wb.createCellStyle();
-//        CellStyle cs2 = wb.createCellStyle();
-//        // 创建两种字体
-//        Font f = wb.createFont();
-//        Font f2 = wb.createFont();
-//        // 创建第一种字体样式（用于列名）
-//        f.setFontHeightInPoints((short) 10);
-//        f.setColor(IndexedColors.BLACK.getIndex());
-//        // 创建第二种字体样式（用于值）
-//        f2.setFontHeightInPoints((short) 10);
-//        f2.setColor(IndexedColors.BLACK.getIndex());
-//        // 设置第一种单元格的样式（用于列名）
-//        cs.setFont(f);
-//        // 设置第二种单元格的样式（用于值）
-//        cs2.setFont(f2);
         // 创建sheet
         Sheet sheet = wb.createSheet();
         //设置Excel标题
@@ -264,7 +248,6 @@ public class DocumentUtil {
         // 设置Excel内容
         if (null != result && result.size() > 0) {
             //将List<T> 转换为 List<Map<String,Object>>
-//            List<Map<String, Object>> list = beanToMapList(result);
             for (int i = 0; i < result.size(); i++) {
                 // Row 行,Cell 方格 , Row 和 Cell 都是从0开始计数的
                 // 创建一行，在页sheet上
@@ -274,16 +257,7 @@ public class DocumentUtil {
                 int j = 0;
                 for (Map.Entry<String, String> entry : headAlias.entrySet()) {
                     Cell cell = row1.createCell(j);
-//                    if ("createdAt".equals(entry.getKey()) || "modifiedAt".equals(entry.getKey())){
-//                        String dateStr = "";
-//                        if (null != result.get(i).get(entry.getKey())){
-//                            dateStr =  DateUtils.dateStr((Date) result.get(i).get(entry.getKey()));
-//                        }
-//                        cell.setCellValue(dateStr);
-//                    }else {
-                    	System.out.println(entry.getKey());
-                        cell.setCellValue(result.get(i).get(entry.getKey()) + "");
-//                    }
+                    cell.setCellValue(result.get(i).get(entry.getKey())==null?"":""+result.get(i).get(entry.getKey()));
                     j++;
                 }
             }
