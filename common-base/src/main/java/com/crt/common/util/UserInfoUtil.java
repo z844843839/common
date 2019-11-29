@@ -3,10 +3,7 @@ package com.crt.common.util;
 import com.crt.common.config.UacCookieProperties;
 import com.crt.common.constant.Constants;
 import com.crt.common.redis.RedisUtil;
-import com.crt.common.vo.E6Wrapper;
-import com.crt.common.vo.E6WrapperUtil;
-import com.crt.common.vo.RowAuthVO;
-import com.crt.common.vo.UserRedisVO;
+import com.crt.common.vo.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -125,6 +122,36 @@ public class UserInfoUtil {
     }
 
     /**
+     * 获取登陆用户专业公司ID
+     * redis里面存储的用户信息
+     *
+     * @return Integer
+     */
+    public static Integer getLongUserFirmId() {
+        E6Wrapper<UserRedisVO> e6Wrapper = getUserInfo();
+        if (e6Wrapper.success()) {
+            UserRedisVO loginUser = e6Wrapper.getResult();
+            return loginUser.getAttrInt1();
+        }
+        return null;
+    }
+
+    /**
+     * 获取登陆用户区域公司ID
+     * redis里面存储的用户信息
+     *
+     * @return Integer
+     */
+    public static Integer getLongUserAreaId() {
+        E6Wrapper<UserRedisVO> e6Wrapper = getUserInfo();
+        if (e6Wrapper.success()) {
+            UserRedisVO loginUser = e6Wrapper.getResult();
+            return loginUser.getAttrInt2();
+        }
+        return null;
+    }
+
+    /**
      * 获取登陆用户所属组织名称
      * redis里面存储的用户信息
      *
@@ -170,13 +197,11 @@ public class UserInfoUtil {
     }
 
     /**
-     * 根据当前请求路径 返回行级权限SQL
-     *
-     * @param currentPath 分页查询请求路径
-     * @param tableAlias  表别名 【选填】 为null时 别名为原表名
-     * @return String
-     */
-    public static String getRowDataAuthSQL(String currentPath, String tableAlias) {
+      * 根据当前请求路径 返回行级权限SQL
+      *
+      * @return String
+      */
+    public static String getRowDataAuthSQL() {
         StringBuffer sql = new StringBuffer();
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         String token = request.getHeader("Authorization");
@@ -185,95 +210,167 @@ public class UserInfoUtil {
         }
         if (StringUtils.isEmpty(token)) {
             return null;
-        } else {
-            if (StringUtils.isEmpty(currentPath)) {
-                String url = request.getServletPath();
-                String uri = url.substring(url.substring(url.indexOf("/") + 1).indexOf("/") + 2);
-                if (uri.contains(Constants.CONTAINSTR)) {
-                    uri = uri.substring(0, uri.indexOf(Constants.CONTAINSTR));
-                }
-                currentPath = uri;
+        }else {
+            String url = request.getServletPath();
+            String uri = url.substring(url.substring(url.indexOf("/") + 1).indexOf("/") + 2);
+            if (uri.contains(Constants.CONTAINSTR)) {
+                uri = uri.substring(0, uri.indexOf(Constants.CONTAINSTR));
             }
             if (userCache.get(token).containsKey("rowAuth")) {
-                List<RowAuthVO> rowAuthList = (List<RowAuthVO>) userCache.get(token).get("rowAuth");
+                List<RowDataAuthVo> rowAuthList = (List<RowDataAuthVo>) userCache.get(token).get("rowAuth");
                 if (null != rowAuthList && rowAuthList.size() > 0) {
-                    List<RowAuthVO> currentRowAuthList = new ArrayList<>();
-                    for (RowAuthVO rav : rowAuthList) {
-                        if (rav.getUrl().equals(currentPath)) {
+                    List<RowDataAuthVo> currentRowAuthList = new ArrayList<>();
+                    for (RowDataAuthVo rav : rowAuthList) {
+                        if (rav.getUrl().equals(uri)) {
                             currentRowAuthList.add(rav);
                         }
                     }
                     if (currentRowAuthList.size() > 0) {
-                        Collections.sort(currentRowAuthList, new Comparator<RowAuthVO>() {
-                            @Override
-                            public int compare(RowAuthVO o1, RowAuthVO o2) {
-                                long diff = o1.getOrgRoleCode() - o2.getOrgRoleCode();
-                                if (diff > 0) {
-                                    return 1;
-                                } else if (diff < 0) {
-                                    return -1;
-                                }
-                                return 0;
-                            }
-                        }); // 按orgRoleCode排序
-                        int count = 0;
-                        sql.append(Constants.LEFT_PARENTHESES);
-                        for (int i = 0; i < currentRowAuthList.size(); i++) {
-                            RowAuthVO rav = currentRowAuthList.get(i);
-                            if (count >= 1) {
-                                RowAuthVO lastRav = currentRowAuthList.get(i - 1);
-                                if (rav.getOrgRoleCode().equals(lastRav.getOrgRoleCode())) {
+                        for (int i=0;i<currentRowAuthList.size();i++){
+                            if (currentRowAuthList.size() == 1){
+                                String formula = currentRowAuthList.get(i).getFormulaSql();
+                                if (formula.indexOf(Constants.CONNECTOR_OR) >= 0){
                                     sql.append(Constants.SPACE);
-                                    sql.append(Constants.CONNECTOR_AND);
-                                    sql.append(Constants.SPACE);
-                                } else {
-                                    sql.append(Constants.SPACE);
+                                    sql.append(Constants.LEFT_PARENTHESES);
+                                    sql.append(formula);
                                     sql.append(Constants.RIGHT_PARENTHESES);
+                                    sql.append(Constants.SPACE);
+                                }else {
+                                    sql.append(Constants.SPACE);
+                                    sql.append(formula);
+                                    sql.append(Constants.SPACE);
+                                }
+                            }else {
+                                if (i == 0){
+                                    sql.append(Constants.LEFT_PARENTHESES);
+                                }
+                                if (i > 0){
                                     sql.append(Constants.SPACE);
                                     sql.append(Constants.CONNECTOR_OR);
                                     sql.append(Constants.SPACE);
-                                    sql.append(Constants.LEFT_PARENTHESES);
-                                    sql.append(Constants.SPACE);
+                                }
+                                sql.append(Constants.LEFT_PARENTHESES);
+                                sql.append(Constants.SPACE);
+                                sql.append(currentRowAuthList.get(i).getFormulaSql());
+                                sql.append(Constants.SPACE);
+                                sql.append(Constants.RIGHT_PARENTHESES);
+                                if ((i+1) == currentRowAuthList.size()){
+                                    sql.append(Constants.RIGHT_PARENTHESES);
                                 }
                             }
-                            //拼接SQL 表名.列名 操作符 值
-                            sql.append(Constants.SPACE);
-                            if (StringUtils.isNotEmpty(tableAlias)) {
-                                sql.append(tableAlias);
-                            } else {
-                                sql.append(rav.getSetTable());
-                            }
-                            sql.append(Constants.SPOT);
-                            if (StringUtils.isNotEmpty(rav.getColumnAlias())){
-                                sql.append(rav.getColumnAlias());
-                            }else {
-                                sql.append(rav.getSetColumn());
-                            }
-                            sql.append(Constants.SPACE);
-                            sql.append(rav.getSetOperator().toUpperCase());
-                            sql.append(Constants.SPACE);
-                            if (Constants.NUMBER_TEPY.indexOf(rav.getColumnType()) >= 0) {
-                                sql.append(rav.getSetValue());
-                            } else {
-                                sql.append(Constants.SINGLE_QUOTATION_MARK);
-                                sql.append(rav.getSetValue());
-                                if (Constants.FUZZY_QUERY_KEY.equals(rav.getSetOperator().toUpperCase())) {
-                                    sql.append(Constants.PERCENTAGE_MARK);
-                                }
-                                sql.append(Constants.SINGLE_QUOTATION_MARK);
-                            }
-                            sql.append(Constants.SPACE);
-                            count++;
                         }
-                        sql.append(Constants.RIGHT_PARENTHESES);
-                    } else {
-                        return null;
                     }
                 }
             }
+            return sql.toString();
         }
-        return sql.toString();
     }
+
+//    /**
+//     * 根据当前请求路径 返回行级权限SQL
+//     *
+//     * @param currentPath 分页查询请求路径
+//     * @param tableAlias  表别名 【选填】 为null时 别名为原表名
+//     * @return String
+//     */
+//    public static String getRowDataAuthSQL(String currentPath, String tableAlias) {
+//        StringBuffer sql = new StringBuffer();
+//        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+//        String token = request.getHeader("Authorization");
+//        if (StringUtils.isBlank(token)) {
+//            token = (String) request.getAttribute("Authorization");
+//        }
+//        if (StringUtils.isEmpty(token)) {
+//            return null;
+//        } else {
+//            if (StringUtils.isEmpty(currentPath)) {
+//                String url = request.getServletPath();
+//                String uri = url.substring(url.substring(url.indexOf("/") + 1).indexOf("/") + 2);
+//                if (uri.contains(Constants.CONTAINSTR)) {
+//                    uri = uri.substring(0, uri.indexOf(Constants.CONTAINSTR));
+//                }
+//                currentPath = uri;
+//            }
+//            if (userCache.get(token).containsKey("rowAuth")) {
+//                List<RowAuthVO> rowAuthList = (List<RowAuthVO>) userCache.get(token).get("rowAuth");
+//                if (null != rowAuthList && rowAuthList.size() > 0) {
+//                    List<RowAuthVO> currentRowAuthList = new ArrayList<>();
+//                    for (RowAuthVO rav : rowAuthList) {
+//                        if (rav.getUrl().equals(currentPath)) {
+//                            currentRowAuthList.add(rav);
+//                        }
+//                    }
+//                    if (currentRowAuthList.size() > 0) {
+//                        Collections.sort(currentRowAuthList, new Comparator<RowAuthVO>() {
+//                            @Override
+//                            public int compare(RowAuthVO o1, RowAuthVO o2) {
+//                                long diff = o1.getOrgRoleCode() - o2.getOrgRoleCode();
+//                                if (diff > 0) {
+//                                    return 1;
+//                                } else if (diff < 0) {
+//                                    return -1;
+//                                }
+//                                return 0;
+//                            }
+//                        }); // 按orgRoleCode排序
+//                        int count = 0;
+//                        sql.append(Constants.LEFT_PARENTHESES);
+//                        for (int i = 0; i < currentRowAuthList.size(); i++) {
+//                            RowAuthVO rav = currentRowAuthList.get(i);
+//                            if (count >= 1) {
+//                                RowAuthVO lastRav = currentRowAuthList.get(i - 1);
+//                                if (rav.getOrgRoleCode().equals(lastRav.getOrgRoleCode())) {
+//                                    sql.append(Constants.SPACE);
+//                                    sql.append(Constants.CONNECTOR_AND);
+//                                    sql.append(Constants.SPACE);
+//                                } else {
+//                                    sql.append(Constants.SPACE);
+//                                    sql.append(Constants.RIGHT_PARENTHESES);
+//                                    sql.append(Constants.SPACE);
+//                                    sql.append(Constants.CONNECTOR_OR);
+//                                    sql.append(Constants.SPACE);
+//                                    sql.append(Constants.LEFT_PARENTHESES);
+//                                    sql.append(Constants.SPACE);
+//                                }
+//                            }
+//                            //拼接SQL 表名.列名 操作符 值
+//                            sql.append(Constants.SPACE);
+//                            if (StringUtils.isNotEmpty(tableAlias)) {
+//                                sql.append(tableAlias);
+//                            } else {
+//                                sql.append(rav.getSetTable());
+//                            }
+//                            sql.append(Constants.SPOT);
+//                            if (StringUtils.isNotEmpty(rav.getColumnAlias())){
+//                                sql.append(rav.getColumnAlias());
+//                            }else {
+//                                sql.append(rav.getSetColumn());
+//                            }
+//                            sql.append(Constants.SPACE);
+//                            sql.append(rav.getSetOperator().toUpperCase());
+//                            sql.append(Constants.SPACE);
+//                            if (Constants.NUMBER_TEPY.indexOf(rav.getColumnType()) >= 0) {
+//                                sql.append(rav.getSetValue());
+//                            } else {
+//                                sql.append(Constants.SINGLE_QUOTATION_MARK);
+//                                sql.append(rav.getSetValue());
+//                                if (Constants.FUZZY_QUERY_KEY.equals(rav.getSetOperator().toUpperCase())) {
+//                                    sql.append(Constants.PERCENTAGE_MARK);
+//                                }
+//                                sql.append(Constants.SINGLE_QUOTATION_MARK);
+//                            }
+//                            sql.append(Constants.SPACE);
+//                            count++;
+//                        }
+//                        sql.append(Constants.RIGHT_PARENTHESES);
+//                    } else {
+//                        return null;
+//                    }
+//                }
+//            }
+//        }
+//        return sql.toString();
+//    }
 
 
 }

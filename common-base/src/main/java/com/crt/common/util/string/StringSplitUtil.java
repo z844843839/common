@@ -21,11 +21,13 @@ public class StringSplitUtil {
     public static String getDesiredStr(String str, String start, String end){
         int offset = start.length();
         int sindex = str.indexOf(start);
-        if(-1 == sindex)
+        if(-1 == sindex){
             return null;
+        }
         int eindex = str.indexOf(end, sindex+offset);
-        if(-1 == eindex)
+        if(-1 == eindex){
             return null;
+        }
         //FIXME: for jdk version < 1.7
         return str.substring(sindex+offset, eindex);
     }
@@ -46,29 +48,28 @@ public class StringSplitUtil {
 
         int strLen = str.length();
         int delimLen = delim.length();
-        if(firstLen + lastLen >= strLen)
+        if(firstLen + lastLen >= strLen){
             return list;
-
+        }
         int lastPos = strLen - lastLen;
         int index = str.indexOf(delim);
         if(-1 == index){
             list.add(str.substring(firstLen, lastPos));
             return list;
         }
-
         int pos = 0;
-        if(firstLen > 0)
+        if(firstLen > 0){
             pos += firstLen;
-
+        }
         while(index != -1){
             list.add(str.substring(pos, index+addLen));
             pos = index + delimLen;
             index = str.indexOf(delim, pos);
         }
 
-        if(pos < lastPos)
+        if(pos < lastPos){
             list.add(str.substring(pos, lastPos));
-
+        }
         return list;
     }
 }
