@@ -34,59 +34,60 @@ public class DataAuthInterceptor implements Interceptor {
 
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
-        StatementHandler statementHandler = (StatementHandler) invocation.getTarget();
-        MetaObject metaObject = MetaObject.forObject(statementHandler, SystemMetaObject.DEFAULT_OBJECT_FACTORY, SystemMetaObject.DEFAULT_OBJECT_WRAPPER_FACTORY, new DefaultReflectorFactory());
-        //先拦截到RoutingStatementHandler，里面有个StatementHandler类型的delegate变量，其实现类是BaseStatementHandler，然后就到BaseStatementHandler的成员变量mappedStatement
-        MappedStatement mappedStatement = (MappedStatement) metaObject.getValue("delegate.mappedStatement");
-        //id为执行的mapper方法的全路径名，如com.uv.dao.UserMapper.insertUser
-        String id = mappedStatement.getId();
-        //sql语句类型 select、delete、insert、update
-        String sqlCommandType = mappedStatement.getSqlCommandType().toString();
-        BoundSql boundSql = statementHandler.getBoundSql();
+        String rowSql = UserInfoUtil.getRowDataAuthSQL();
+        if (StringUtils.isNotEmpty(rowSql)){
+            StatementHandler statementHandler = (StatementHandler) invocation.getTarget();
+            MetaObject metaObject = MetaObject.forObject(statementHandler, SystemMetaObject.DEFAULT_OBJECT_FACTORY, SystemMetaObject.DEFAULT_OBJECT_WRAPPER_FACTORY, new DefaultReflectorFactory());
+            //先拦截到RoutingStatementHandler，里面有个StatementHandler类型的delegate变量，其实现类是BaseStatementHandler，然后就到BaseStatementHandler的成员变量mappedStatement
+            MappedStatement mappedStatement = (MappedStatement) metaObject.getValue("delegate.mappedStatement");
+            //id为执行的mapper方法的全路径名，如com.uv.dao.UserMapper.insertUser
+            String id = mappedStatement.getId();
+            //sql语句类型 select、delete、insert、update
+            String sqlCommandType = mappedStatement.getSqlCommandType().toString();
+            BoundSql boundSql = statementHandler.getBoundSql();
 
-        //获取到原始sql语句
-        String sql = boundSql.getSql();
-        String mSql = sql;
-        //TODO 修改位置
+            //获取到原始sql语句
+            String sql = boundSql.getSql();
+            String mSql = sql;
+            //TODO 修改位置
 
-        //注解逻辑判断  添加注解了才拦截
-        Class<?> classType = Class.forName(mappedStatement.getId().substring(0, mappedStatement.getId().lastIndexOf(".")));
-        String mName = mappedStatement.getId().substring(mappedStatement.getId().lastIndexOf(".") + 1, mappedStatement.getId().length());
-        for (Method method : classType.getDeclaredMethods()) {
-            if (method.isAnnotationPresent(InterceptAnnotation.class) && mName.equals(method.getName())) {
-                InterceptAnnotation interceptorAnnotation = method.getAnnotation(InterceptAnnotation.class);
-                boolean totalFlag = false;
-                String tableAlias = null;
-                String countStart = "SELECT count(1)\n FROM (";
-                String countEnd = ") total";
-//                sql = cleanSqlSpace(sql);
-                sql = SQLUtils.format(sql,  JdbcConstants.MYSQL);
-                if (interceptorAnnotation.queryType() == InterceptAnnotation.QueryAuthSqlType.QUERY_COUNT) {
-                    sql = sql.substring(sql.indexOf(countStart) + countStart.length(), sql.length());
-                    sql = sql.substring(0, sql.indexOf(countEnd));
-                    totalFlag = true;
-                }
-                tableAlias = sql.substring(sql.indexOf("SELECT") + 7, sql.indexOf("."));
-//                String rowSql = UserInfoUtil.getRowDataAuthSQL(null, tableAlias);
-                String rowSql = UserInfoUtil.getRowDataAuthSQL();
-
-                if (interceptorAnnotation.flag() && StringUtils.isNotEmpty(rowSql)) {
-                    mSql = interceptSQL(sql, tableAlias, rowSql);
-                    if (totalFlag) {
-                        StringBuffer sb = new StringBuffer();
-                        sb.append(countStart).append(Constants.SPACE);
-                        sb.append(mSql);
-                        sb.append(Constants.SPACE).append(countEnd);
-                        mSql = sb.toString();
+            //注解逻辑判断  添加注解了才拦截
+            Class<?> classType = Class.forName(mappedStatement.getId().substring(0, mappedStatement.getId().lastIndexOf(".")));
+            String mName = mappedStatement.getId().substring(mappedStatement.getId().lastIndexOf(".") + 1, mappedStatement.getId().length());
+            for (Method method : classType.getDeclaredMethods()) {
+                if (method.isAnnotationPresent(InterceptAnnotation.class) && mName.equals(method.getName())) {
+                    InterceptAnnotation interceptorAnnotation = method.getAnnotation(InterceptAnnotation.class);
+                    boolean totalFlag = false;
+                    String tableAlias = null;
+                    String countStart = "SELECT count(1)\n FROM (";
+                    String countEnd = ") total";
+    //                sql = cleanSqlSpace(sql);
+                    sql = SQLUtils.format(sql,  JdbcConstants.MYSQL);
+                    if (interceptorAnnotation.queryType() == InterceptAnnotation.QueryAuthSqlType.QUERY_COUNT) {
+                        sql = sql.substring(sql.indexOf(countStart) + countStart.length(), sql.length());
+                        sql = sql.substring(0, sql.indexOf(countEnd));
+                        totalFlag = true;
+                    }
+                    tableAlias = sql.substring(sql.indexOf("SELECT") + 7, sql.indexOf("."));
+    //                String rowSql = UserInfoUtil.getRowDataAuthSQL(null, tableAlias);
+                    if (interceptorAnnotation.flag()) {
+                        mSql = interceptSQL(sql, tableAlias, rowSql);
+                        if (totalFlag) {
+                            StringBuffer sb = new StringBuffer();
+                            sb.append(countStart).append(Constants.SPACE);
+                            sb.append(mSql);
+                            sb.append(Constants.SPACE).append(countEnd);
+                            mSql = sb.toString();
+                        }
                     }
                 }
             }
-        }
 
-        //通过反射修改sql语句
-        Field field = boundSql.getClass().getDeclaredField("sql");
-        field.setAccessible(true);
-        field.set(boundSql, mSql);
+            //通过反射修改sql语句
+            Field field = boundSql.getClass().getDeclaredField("sql");
+            field.setAccessible(true);
+            field.set(boundSql, mSql);
+        }
         return invocation.proceed();
     }
 
@@ -131,11 +132,15 @@ public class DataAuthInterceptor implements Interceptor {
             moreThan = moreThan.substring(moreThan.indexOf("WHERE") + 5, moreThan.length()).trim();
         }
         if (moreThan.indexOf(alias.trim() + Constants.SPOT) >= 0) {
-            moreThan = Constants.CONNECTOR_AND + Constants.SPACE + moreThan.trim();
+            if (moreThan.indexOf("ORDER BY") == 0 || moreThan.indexOf("GROUP BY") == 0){
+                moreThan = moreThan.trim();
+            }else {
+                moreThan = Constants.CONNECTOR_AND + Constants.SPACE + moreThan.trim();
+            }
         }
-        StringBuffer sbuffer = new StringBuffer(sql);
-        sbuffer.append(Constants.SPACE).append("WHERE");
-        sql = sbuffer.toString();
+        StringBuffer sb = new StringBuffer(sql);
+        sb.append(Constants.SPACE).append("WHERE");
+        sql = sb.toString();
         String finalSql = sql + Constants.SPACE + rowSql + Constants.SPACE + moreThan;
         return finalSql;
     }

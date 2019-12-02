@@ -261,8 +261,11 @@ public class UserInfoUtil {
                         }
                     }
                 }
+                return sql.toString();
+            }else {
+                return null;
             }
-            return sql.toString();
+
         }
     }
 
