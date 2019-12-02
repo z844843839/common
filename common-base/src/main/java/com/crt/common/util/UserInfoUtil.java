@@ -203,69 +203,73 @@ public class UserInfoUtil {
       */
     public static String getRowDataAuthSQL() {
         StringBuffer sql = new StringBuffer();
-        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-        String token = request.getHeader("Authorization");
-        if (StringUtils.isBlank(token)) {
-            token = (String) request.getAttribute("Authorization");
-        }
-        if (StringUtils.isEmpty(token)) {
-            return null;
-        }else {
-            String url = request.getServletPath();
-            String uri = url.substring(url.substring(url.indexOf("/") + 1).indexOf("/") + 2);
-            if (uri.contains(Constants.CONTAINSTR)) {
-                uri = uri.substring(0, uri.indexOf(Constants.CONTAINSTR));
+        try{
+            HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+            String token = request.getHeader("Authorization");
+            if (StringUtils.isBlank(token)) {
+                token = (String) request.getAttribute("Authorization");
             }
-            if (userCache.get(token).containsKey("rowAuth")) {
-                List<RowDataAuthVo> rowAuthList = (List<RowDataAuthVo>) userCache.get(token).get("rowAuth");
-                if (null != rowAuthList && rowAuthList.size() > 0) {
-                    List<RowDataAuthVo> currentRowAuthList = new ArrayList<>();
-                    for (RowDataAuthVo rav : rowAuthList) {
-                        if (rav.getUrl().equals(uri)) {
-                            currentRowAuthList.add(rav);
+            if (StringUtils.isEmpty(token)) {
+                return null;
+            }else {
+                String url = request.getServletPath();
+                String uri = url.substring(url.substring(url.indexOf("/") + 1).indexOf("/") + 2);
+                if (uri.contains(Constants.CONTAINSTR)) {
+                    uri = uri.substring(0, uri.indexOf(Constants.CONTAINSTR));
+                }
+                if (userCache.get(token).containsKey("rowAuth")) {
+                    List<RowDataAuthVo> rowAuthList = (List<RowDataAuthVo>) userCache.get(token).get("rowAuth");
+                    if (null != rowAuthList && rowAuthList.size() > 0) {
+                        List<RowDataAuthVo> currentRowAuthList = new ArrayList<>();
+                        for (RowDataAuthVo rav : rowAuthList) {
+                            if (rav.getUrl().equals(uri)) {
+                                currentRowAuthList.add(rav);
+                            }
                         }
-                    }
-                    if (currentRowAuthList.size() > 0) {
-                        for (int i=0;i<currentRowAuthList.size();i++){
-                            if (currentRowAuthList.size() == 1){
-                                String formula = currentRowAuthList.get(i).getFormulaSql();
-                                if (formula.indexOf(Constants.CONNECTOR_OR) >= 0){
-                                    sql.append(Constants.SPACE);
-                                    sql.append(Constants.LEFT_PARENTHESES);
-                                    sql.append(formula);
-                                    sql.append(Constants.RIGHT_PARENTHESES);
-                                    sql.append(Constants.SPACE);
+                        if (currentRowAuthList.size() > 0) {
+                            for (int i=0;i<currentRowAuthList.size();i++){
+                                if (currentRowAuthList.size() == 1){
+                                    String formula = currentRowAuthList.get(i).getFormulaSql();
+                                    if (formula.indexOf(Constants.CONNECTOR_OR) >= 0){
+                                        sql.append(Constants.SPACE);
+                                        sql.append(Constants.LEFT_PARENTHESES);
+                                        sql.append(formula);
+                                        sql.append(Constants.RIGHT_PARENTHESES);
+                                        sql.append(Constants.SPACE);
+                                    }else {
+                                        sql.append(Constants.SPACE);
+                                        sql.append(formula);
+                                        sql.append(Constants.SPACE);
+                                    }
                                 }else {
-                                    sql.append(Constants.SPACE);
-                                    sql.append(formula);
-                                    sql.append(Constants.SPACE);
-                                }
-                            }else {
-                                if (i == 0){
+                                    if (i == 0){
+                                        sql.append(Constants.LEFT_PARENTHESES);
+                                    }
+                                    if (i > 0){
+                                        sql.append(Constants.SPACE);
+                                        sql.append(Constants.CONNECTOR_OR);
+                                        sql.append(Constants.SPACE);
+                                    }
                                     sql.append(Constants.LEFT_PARENTHESES);
-                                }
-                                if (i > 0){
                                     sql.append(Constants.SPACE);
-                                    sql.append(Constants.CONNECTOR_OR);
+                                    sql.append(currentRowAuthList.get(i).getFormulaSql());
                                     sql.append(Constants.SPACE);
-                                }
-                                sql.append(Constants.LEFT_PARENTHESES);
-                                sql.append(Constants.SPACE);
-                                sql.append(currentRowAuthList.get(i).getFormulaSql());
-                                sql.append(Constants.SPACE);
-                                sql.append(Constants.RIGHT_PARENTHESES);
-                                if ((i+1) == currentRowAuthList.size()){
                                     sql.append(Constants.RIGHT_PARENTHESES);
+                                    if ((i+1) == currentRowAuthList.size()){
+                                        sql.append(Constants.RIGHT_PARENTHESES);
+                                    }
                                 }
                             }
                         }
                     }
+                    return sql.toString();
+                }else {
+                    return null;
                 }
-                return sql.toString();
-            }else {
-                return null;
-            }
 
+            }
+        }catch (Exception e){
+            return null;
         }
     }
 
