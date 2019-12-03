@@ -70,7 +70,7 @@ public class DocumentUtil {
             // 获取实体类的所有属性
             field = clazz.getDeclaredFields();
         }
-        if (heads.size() >= field.length) {
+        if (field.length >= heads.size()) {
             for (int i = 0; i < heads.size(); i++) {
                 readerMode.addHeaderAlias(heads.get(i).toString(), field[i].getName());
             }
