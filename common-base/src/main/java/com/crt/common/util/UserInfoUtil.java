@@ -77,6 +77,21 @@ public class UserInfoUtil {
     }
 
     /**
+     * 获取登陆用户账号
+     * redis里面存储的用户信息
+     *
+     * @return String
+     */
+    public static String getLoginAccount() {
+        E6Wrapper<UserRedisVO> e6Wrapper = getUserInfo();
+        if (e6Wrapper.success()) {
+            UserRedisVO loginUser = e6Wrapper.getResult();
+            return loginUser.getAccountNumber();
+        }
+        return null;
+    }
+
+    /**
      * 获取登陆用户真实姓名
      * redis里面存储的用户信息
      *
