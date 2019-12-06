@@ -699,6 +699,34 @@ public class DateUtils {
     }
 
     /**
+     * 时间格式化
+     * @param date 时间
+     * @param format 时间格式
+     * @return String
+     */
+    public static String getDateByFormat(Date date,String format){
+        SimpleDateFormat sdf =new SimpleDateFormat(format );
+        String str = sdf.format(date);
+        return str;
+    }
+
+    /**
+     * 根据传入时间获取时间间隔时间
+     * @param date 日期
+     * @param interval 时间间隔（月） 正数 往后 负数往前
+     * @return
+     */
+    public static Date getTimeInterval(Date date,int interval){
+        Calendar calendar = Calendar.getInstance();
+        //把当前时间赋给日历
+        calendar.setTime(date);
+        calendar.add(Calendar.MONTH, interval);
+        //得到间隔的时间
+        Date dateInterval = calendar.getTime();
+        return dateInterval;
+    }
+
+    /**
      * 年月日时分秒毫秒
      * @return
      */
