@@ -257,7 +257,8 @@ public class DocumentUtil {
                 int j = 0;
                 for (Map.Entry<String, String> entry : headAlias.entrySet()) {
                     Cell cell = row1.createCell(j);
-                    cell.setCellValue(result.get(i).get(entry.getKey())==null?"":""+result.get(i).get(entry.getKey()));
+                    cell.setCellValue(result.get(i).get(entry.getKey())==null||
+                    		result.get(i).get(entry.getKey())=="null"?"":""+result.get(i).get(entry.getKey()));
                     j++;
                 }
             }
