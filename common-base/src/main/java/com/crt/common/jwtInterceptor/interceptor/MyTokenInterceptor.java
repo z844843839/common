@@ -67,6 +67,9 @@ public class MyTokenInterceptor implements HandlerInterceptor {
         {
             return true;
         }
+        if(!(handler instanceof HandlerMethod)){
+            return true;
+        }
         // 当前请求方法、请求类
         Method reqMethod = ((HandlerMethod) handler).getMethod();
         Class reqClass = reqMethod.getDeclaringClass();
