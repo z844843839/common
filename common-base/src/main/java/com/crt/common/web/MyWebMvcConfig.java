@@ -10,11 +10,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.reactive.CorsWebFilter;
-import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import org.springframework.web.util.pattern.PathPatternParser;
 
 import java.util.Collections;
 
@@ -55,7 +55,7 @@ public class MyWebMvcConfig implements WebMvcConfigurer {
         return new HttpMessageConverters(converter);
     }
 
-    @Bean
+/*    @Bean
     public CorsWebFilter corsFilter() {
         CorsConfiguration config = new CorsConfiguration();
         config.addAllowedMethod("*");
@@ -66,6 +66,49 @@ public class MyWebMvcConfig implements WebMvcConfigurer {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource(new PathPatternParser());
         source.registerCorsConfiguration("/**", config);
         return new CorsWebFilter(source);
+    }*/
+
+    /**
+     * 跨越配置
+     */
+    @Bean
+    public CorsFilter corsFilter() {
+        CorsConfiguration config = new CorsConfiguration();
+        // 设置允许跨域请求的域名
+        config.addAllowedOrigin("*");
+        // 是否允许证书 不再默认开启
+        // config.setAllowCredentials(true);
+        // 设置允许的方法
+        config.addAllowedMethod("*");
+        // 允许任何头
+        config.addAllowedHeader("*");
+        config.addExposedHeader("Authorization");
+        UrlBasedCorsConfigurationSource configSource = new UrlBasedCorsConfigurationSource();
+        configSource.registerCorsConfiguration("/**", config);
+        return new CorsFilter(configSource);
     }
 
+
+    /**
+     * 跨越配置
+     *
+     * @param registry
+     */
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        // 设置允许跨域的路径
+        registry.addMapping("/**")
+                // 是否允许证书 不再默认开启
+                .allowCredentials(true)
+                // 允许任何头
+                .allowedHeaders("*")
+                // 设置允许跨域请求的域名
+                .allowedOrigins("*")
+                // 设置允许的方法
+                .allowedMethods("*")
+                // 跨域允许时间
+                .maxAge(3600)
+                .allowedMethods("GET", "HEAD", "POST","PUT", "DELETE", "OPTIONS")
+                .exposedHeaders("Authorization");
+    }
 }
