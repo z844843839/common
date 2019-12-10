@@ -9,8 +9,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.reactive.CorsWebFilter;
+import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.util.pattern.PathPatternParser;
 
 import java.util.Collections;
 
@@ -49,6 +53,19 @@ public class MyWebMvcConfig implements WebMvcConfigurer {
         fastConverter.setFastJsonConfig(fastJsonConfig);
         HttpMessageConverter<?> converter = fastConverter;
         return new HttpMessageConverters(converter);
+    }
+
+    @Bean
+    public CorsWebFilter corsFilter() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.addAllowedMethod("*");
+        config.addAllowedOrigin("*");
+        config.addAllowedHeader("*");
+        config.setMaxAge(18000L);
+        config.setAllowCredentials(Boolean.TRUE);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource(new PathPatternParser());
+        source.registerCorsConfiguration("/**", config);
+        return new CorsWebFilter(source);
     }
 
 }
