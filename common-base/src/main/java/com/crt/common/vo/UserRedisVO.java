@@ -20,6 +20,10 @@ public class UserRedisVO{
      */
     private Long userCode;
     /**
+     * 用户昵称
+     */
+    private String nickName;
+    /**
      * 真实姓名
      */
     private String realName;

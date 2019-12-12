@@ -128,21 +128,18 @@ public class MyTokenInterceptor implements HandlerInterceptor {
         try {
             // 解析token
             Map<String,Object> resultMap = jwtAuthorized.parseJwtToken(token);
-
-            // 获取受签用户
-            String tokenUsername = resultMap.get("username") != null ? resultMap.get("username").toString():"";
-            // 获取签名接收者
-            String audience = resultMap.get("audience") != null ? resultMap.get("audience").toString():"";
-            // 当前请求受签用户
-            String thisAudience = tokenUsername+" "+request.getHeader("User-Agent");
-
-            // 验证是否存在token盗用情况
-            if(!StrUtil.equals(thisAudience,audience)) {
-                // 构建错误响应结果报文
-                this.buildErrorResponse(response,"Token签名验证错误",JwtAuthorizedConstant.TOKEN_EXPIRED_RESPONSE_STATUS);
-                return false;
-            }
-
+//            // 获取受签用户
+//            String tokenUsername = resultMap.get("username") != null ? resultMap.get("username").toString():"";
+//            // 获取签名接收者
+//            String audience = resultMap.get("audience") != null ? resultMap.get("audience").toString():"";
+//            // 当前请求受签用户
+//            String thisAudience = tokenUsername+" "+request.getHeader("User-Agent");
+//            // 验证是否存在token盗用情况
+//            if(!StrUtil.equals(thisAudience,audience)) {
+//                // 构建错误响应结果报文
+//                this.buildErrorResponse(response,"Token签名验证错误",JwtAuthorizedConstant.TOKEN_EXPIRED_RESPONSE_STATUS);
+//                return false;
+//            }
             return true;
         } catch (TokenErrorException ten) {
             // 构建错误响应结果报文
