@@ -62,7 +62,13 @@ public class DataAuthInterceptor implements Interceptor {
                     String countStart = "SELECT count(1)\n FROM (";
                     String countEnd = ") total";
     //                sql = cleanSqlSpace(sql);
-                    sql = SQLUtils.format(sql,  JdbcConstants.MYSQL);
+                    /**
+                     * SQL格式化
+                     * @param sql 查询sql语句
+                     * @param 数据库类型
+                     * @param 关键字大写
+                     */
+                    sql = SQLUtils.format(sql,JdbcConstants.MYSQL,SQLUtils.DEFAULT_FORMAT_OPTION);
                     if (interceptorAnnotation.queryType() == InterceptAnnotation.QueryAuthSqlType.QUERY_COUNT) {
                         sql = sql.substring(sql.indexOf(countStart) + countStart.length(), sql.length());
                         sql = sql.substring(0, sql.indexOf(countEnd));
