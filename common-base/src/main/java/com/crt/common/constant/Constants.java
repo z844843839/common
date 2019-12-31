@@ -258,9 +258,9 @@ public class Constants {
     //结算方式
     public final static int SETTLEMENT_METHOD = 299;
     //归属公司
-    public final static int Ownership_Company = 298;
+    public final static int OWNERSHIP_COMPANY = 298;
     //付款方式
-    public final static int Payment_WAY = 297;
+    public final static int PAYMENT_WAY = 297;
     //全程客户类型
     public final static int WHOLE_CUSTOMER_TYPE = 296;
     //应收结算单
