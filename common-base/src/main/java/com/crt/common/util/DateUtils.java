@@ -705,7 +705,7 @@ public class DateUtils {
      * @return String
      */
     public static String getDateByFormat(Date date,String format){
-        SimpleDateFormat sdf =new SimpleDateFormat(format );
+        SimpleDateFormat sdf =new SimpleDateFormat(format);
         String str = sdf.format(date);
         return str;
     }
