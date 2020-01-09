@@ -44,10 +44,10 @@ public interface BaseService<T extends BaseEntity> {
 
     /**
      * 删除前附加操作
-     * @param entity
+     * @param id
      * @return
      */
-    E6Wrapper beforeDelete(T entity);
+    E6Wrapper beforeDelete(Integer id);
 
     /**
      * 根据d删除

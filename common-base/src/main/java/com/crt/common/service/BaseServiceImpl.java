@@ -97,12 +97,14 @@ public class BaseServiceImpl<D extends JpaRepository<T, Integer>, T extends Base
 
     /**
      * 删除前附加操作
-     * @param entity
+     * @param id
      * @return
      */
     @Override
     @Transactional(rollbackOn = Exception.class)
-    public E6Wrapper beforeDelete(T entity) {
+    public E6Wrapper beforeDelete(Integer id) {
+        Optional<T> optional = dao.findById(id);
+        T entity = optional.get();
         return E6WrapperUtil.ok(entity);
     }
 
@@ -121,7 +123,7 @@ public class BaseServiceImpl<D extends JpaRepository<T, Integer>, T extends Base
         }
         T entity = optional.get();
         //删除前，若有其他操作，在 beforeDelete()方法中添加
-        E6Wrapper before = beforeDelete(entity);
+        E6Wrapper before = beforeDelete(entity.getId());
         if(before.success()){
             entity = (T) before.getResult();
         }else{
