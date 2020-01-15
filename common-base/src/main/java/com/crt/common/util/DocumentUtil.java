@@ -104,22 +104,6 @@ public class DocumentUtil {
     public static <T> void exportExcel(HttpServletResponse response, LinkedHashMap<String, String> headAlias, List<T> result, String fileName) throws IllegalAccessException, IOException {
         // 创建excel工作簿 SXSSFWorkbook 是专门用于大数据了的导出　　
         Workbook wb = new XSSFWorkbook();
-//        // 创建两种单元格格式
-//        CellStyle cs = wb.createCellStyle();
-//        CellStyle cs2 = wb.createCellStyle();
-//        // 创建两种字体
-//        Font f = wb.createFont();
-//        Font f2 = wb.createFont();
-//        // 创建第一种字体样式（用于列名）
-//        f.setFontHeightInPoints((short) 10);
-//        f.setColor(IndexedColors.BLACK.getIndex());
-//        // 创建第二种字体样式（用于值）
-//        f2.setFontHeightInPoints((short) 10);
-//        f2.setColor(IndexedColors.BLACK.getIndex());
-//        // 设置第一种单元格的样式（用于列名）
-//        cs.setFont(f);
-//        // 设置第二种单元格的样式（用于值）
-//        cs2.setFont(f2);
         // 创建sheet
         Sheet sheet = wb.createSheet();
         //设置Excel标题
@@ -202,6 +186,117 @@ public class DocumentUtil {
             out.close();
         }
     }
+
+
+    /**
+     * 全量导出Excel
+     *
+     * @param response  必填
+     * @param headAlias 非必填，可为null
+     * @param result    非必填，可为null
+     *                  headAlias 为null 则 result 也为null 导出空Excel *
+     * @param fileName  必填
+     * @param <T>
+     * @throws IllegalAccessException
+     * @throws IOException
+     */
+    public static <T> void exportAllExcel(HttpServletResponse response, LinkedHashMap<String, String> headAlias, List<T> result, String fileName) throws IllegalAccessException, IOException {
+        // 创建excel工作簿 SXSSFWorkbook 是专门用于大数据了的导出　　
+        Workbook wb = new XSSFWorkbook();
+        // 创建sheet
+        Sheet sheet = wb.createSheet();
+        //设置Excel标题
+        //标题别名设置为null，则按照实体属性全量导出
+        //标题别名为null result一定不能为null 否则导出空Excel
+        if (null != result && result.size() > 0) {
+            T entity = result.get(0);
+            Class c = entity.getClass();
+            Field[] fs = FieldUtils.getAllFields(c);
+            if (null == headAlias || headAlias.size() == 0) {
+                headAlias = new LinkedHashMap<>();
+                for (int i = 0; i < fs.length; i++) {
+                    //类中的成员变量为private,故必须进行此操作
+                    fs[i].setAccessible(true);
+                    headAlias.put(fs[i].getName(), "");
+                }
+            }
+        }
+        // 全表头处理
+        if (null != headAlias && headAlias.size() > 0) {
+            // 手动设置列宽。第一个参数表示要为第几列设；，第二个参数表示列的宽度，n为列高的像素数。
+            for (int i = 0; i < headAlias.size(); i++) {
+                sheet.setColumnWidth(i, (short) (35.7 * 300));
+            }
+            // 创建第一行
+            Row row = sheet.createRow(0);
+            int i = 0;
+            //设置标题内容，有别名显示别名
+            for (Map.Entry<String, String> entry : headAlias.entrySet()) {
+                if (i < headAlias.size()) {
+                    Cell cell = row.createCell(i);
+                    if (StringUtils.isEmpty(entry.getValue())) {
+                        cell.setCellValue(entry.getKey());
+                    } else {
+                        cell.setCellValue(entry.getValue());
+                    }
+                }
+                i++;
+            }
+        }
+        // 设置Excel内容
+        if (null != result && result.size() > 0) {
+            //将List<T> 转换为 List<Map<String,Object>>
+            List<Map<String, Object>> list = beanToMapList(result);
+            for (int i = 0; i < list.size(); i++) {
+                // Row 行,Cell 方格 , Row 和 Cell 都是从0开始计数的
+                // 创建一行，在页sheet上
+                // 内容行从1开始 0行为表头
+                Row row1 = sheet.createRow(i + 1);
+                // 在row行上创建一个方格
+                int j = 0;
+                for (Map.Entry<String, String> entry : headAlias.entrySet()) {
+                    Cell cell = row1.createCell(j);
+                    if ("createdAt".equals(entry.getKey()) || "modifiedAt".equals(entry.getKey())){
+                        String dateStr = "";
+                        if (null != list.get(i).get(entry.getKey())){
+                            dateStr =  DateUtils.dateStr((Date) list.get(i).get(entry.getKey()));
+                        }
+                        cell.setCellValue(dateStr);
+                    }else {
+                        cell.setCellValue(list.get(i).get(entry.getKey()) == null ? " " : list.get(i).get(entry.getKey()).toString());
+                    }
+                    j++;
+                }
+            }
+        }
+        // ----------- Excel创建完成 ---------------
+        // 开始设定下载参数
+//        fileName = new String((fileName+".xlsx").getBytes("gb2312"), "iso8859-1");
+        fileName = new String(java.net.URLEncoder.encode(fileName+".xlsx", "UTF-8"));
+        // 如果文件名是英文名不需要加编码格式，如果是中文名需要添加"iso-8859-1"防止乱码
+        response.setHeader("Content-Disposition", "attachment; filename=" + fileName);
+        response.setContentType("application/vnd.ms-excel;charset=utf-8");
+        // 开始处理下载的流
+        OutputStream out = response.getOutputStream();
+        wb.write(out);
+        out.flush();
+        wb.close();
+        if (out != null) {
+            out.close();
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
     public static void exportExcelMap(HttpServletResponse response, LinkedHashMap<String, String> headAlias, List<Map<String, String>> result, String fileName) throws IllegalAccessException, IOException {
     	// 创建excel工作簿 SXSSFWorkbook 是专门用于大数据了的导出　　
         Workbook wb = new XSSFWorkbook();
