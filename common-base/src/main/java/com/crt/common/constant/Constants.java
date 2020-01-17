@@ -380,6 +380,9 @@ public class Constants {
     public final static Integer NUMBER_EIGHTEEN = 18;
     public final static Integer NUMBER_NINETEEN = 19;
     public final static Integer NUMBER_TWENTY = 20;
+    public final static Integer NUMBER_THIRTY = 30;
+    /***闰年天数***/
+    public final static Integer LEAP_YEAR_DAYS = 366;
 
 
 

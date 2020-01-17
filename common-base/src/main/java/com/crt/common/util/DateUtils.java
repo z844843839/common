@@ -228,6 +228,8 @@ public class DateUtils {
         return localDate.lengthOfMonth();
     }
 
+
+
     /**
      * 根据日期获得星期
      *
@@ -637,6 +639,23 @@ public class DateUtils {
         return begin.toLocalDate().equals(end.toLocalDate());
     }
 
+    /**
+     * 比较两个LocalDateTime是否同一天
+     *
+     * @param beginTime
+     * @param endTime
+     * @return
+     */
+    public static boolean isTheSameDay(Date beginTime,Date endTime){
+        String beginDate = DateUtils.getDateByFormat(beginTime,"yyyy-MM-dd");
+        String endDate = DateUtils.getDateByFormat(endTime,"yyyy-MM-dd");
+        if (beginDate.equals(endDate)){
+            return true;
+        }else {
+            return false;
+        }
+    }
+
 
     /**
      * 判断当前时间是否在时间范围内
@@ -724,6 +743,46 @@ public class DateUtils {
         //得到间隔的时间
         Date dateInterval = calendar.getTime();
         return dateInterval;
+    }
+
+    /**
+     * 根据传入日期获取时间间隔时间
+     * @param date 日期
+     * @param diffDays 时间间隔（天） 正数 往后 负数往前
+     * @return
+     */
+    public static Date getTimeDayInterval(Date date,int diffDays){
+        Calendar calendar=Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.DATE, diffDays);
+        Date dateInterval =calendar.getTime();
+        return dateInterval;
+    }
+
+    /**
+     * 判断当前时间是否在[startTime, endTime]区间
+     * 注意时间格式要一致
+     * @param nowTime 当前时间
+     * @param startTime 开始时间
+     * @param endTime 结束时间
+     * @return boolean
+     */
+    public static boolean isEffectiveDate(Date nowTime, Date startTime, Date endTime) {
+        if (nowTime.getTime() == startTime.getTime()
+                || nowTime.getTime() == endTime.getTime()) {
+            return true;
+        }
+        Calendar date = Calendar.getInstance();
+        date.setTime(nowTime);
+        Calendar begin = Calendar.getInstance();
+        begin.setTime(startTime);
+        Calendar end = Calendar.getInstance();
+        end.setTime(endTime);
+        if (date.after(begin) && date.before(end)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
