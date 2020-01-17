@@ -104,22 +104,6 @@ public class DocumentUtil {
     public static <T> void exportExcel(HttpServletResponse response, LinkedHashMap<String, String> headAlias, List<T> result, String fileName) throws IllegalAccessException, IOException {
         // 创建excel工作簿 SXSSFWorkbook 是专门用于大数据了的导出　　
         Workbook wb = new XSSFWorkbook();
-//        // 创建两种单元格格式
-//        CellStyle cs = wb.createCellStyle();
-//        CellStyle cs2 = wb.createCellStyle();
-//        // 创建两种字体
-//        Font f = wb.createFont();
-//        Font f2 = wb.createFont();
-//        // 创建第一种字体样式（用于列名）
-//        f.setFontHeightInPoints((short) 10);
-//        f.setColor(IndexedColors.BLACK.getIndex());
-//        // 创建第二种字体样式（用于值）
-//        f2.setFontHeightInPoints((short) 10);
-//        f2.setColor(IndexedColors.BLACK.getIndex());
-//        // 设置第一种单元格的样式（用于列名）
-//        cs.setFont(f);
-//        // 设置第二种单元格的样式（用于值）
-//        cs2.setFont(f2);
         // 创建sheet
         Sheet sheet = wb.createSheet();
         //设置Excel标题
@@ -324,7 +308,7 @@ public class DocumentUtil {
         List<Map<String, Object>> result = new ArrayList<>();
         for (T entity : list) {
             Class c = entity.getClass();
-            Field[] fs = c.getDeclaredFields();
+            Field[] fs = FieldUtils.getAllFields(c);
             Map<String, Object> field = new LinkedHashMap<>();
             for (Field f : fs) {
                 f.setAccessible(true);
