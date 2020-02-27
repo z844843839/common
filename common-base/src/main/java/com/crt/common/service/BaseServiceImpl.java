@@ -155,7 +155,7 @@ public class BaseServiceImpl<D extends JpaRepository<T, Integer>, T extends Base
         if (null == entity) {
             return E6WrapperUtil.ok();
         }
-        //修改前，若有其他操作，在 beforeModify()方法中添加
+        //修改前，若有其他操作，在 beforeModify()方法中添加0
         E6Wrapper before = beforeModify(entity);
         if (before.success()) {
             entity = (T) before.getResult();

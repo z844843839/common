@@ -197,6 +197,21 @@ public class UserInfoUtil {
     }
 
     /**
+     * 获取登陆用户所属角色名称
+     * redis里面存储的用户信息
+     *
+     * @return Long
+     */
+    public static String getLoginUserRoleName() {
+        E6Wrapper<UserRedisVO> e6Wrapper = getUserInfo();
+        if (e6Wrapper.success()) {
+            UserRedisVO loginUser = e6Wrapper.getResult();
+            return loginUser.getRoleName();
+        }
+        return null;
+    }
+
+    /**
      * 获取浏览器head中的属性值
      *
      * @param propertyName 属性名称
