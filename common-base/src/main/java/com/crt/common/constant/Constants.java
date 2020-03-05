@@ -98,6 +98,21 @@ public class Constants {
     public static final String WORK_FLOW_DOC_TYPE_SIGN_OUT = "退箱管理";
 
     /**
+     * 工作流分类-应收结算单
+     */
+    public static final String WORK_FLOW_DOC_TYPE_AR_SETTLEMENT_BILL = "应收结算单";
+
+    /**
+     * 工作流分类-应收发票
+     */
+    public static final String WORK_FLOW_DOC_TYPE_AR_INVOICE = "应收发票";
+
+    /**
+     * 工作流分类-收款收据
+     */
+    public static final String WORK_FLOW_DOC_TYPE_AR_RECEIPT = "收款收据";
+
+    /**
      * 工作流标题的“申请”后缀
      */
     public static final String WORK_FLOW_TITLE_SUFFIX = "申请";
