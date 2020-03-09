@@ -1,12 +1,21 @@
 package com.crt.common.util;
 
-import org.apache.commons.lang3.StringUtils;
-
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import java.util.Map;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.validation.ValidationException;
+
+import org.apache.commons.collections4.BidiMap;
+import org.apache.commons.collections4.bidimap.TreeBidiMap;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @Description 验证码
@@ -79,43 +88,46 @@ public class VerifyUtil {
 		return color;
 	}
 
+
+	static Logger logger = LoggerFactory.getLogger(VerifyUtil.class);
+	static String baseCode = "0123456789ABCDEFGHJKLMNPQRTUWXY";
+	static char[] baseCodeArray = baseCode.toCharArray();
+	static int[] wi = { 1, 3, 9, 27, 19, 26, 16, 17, 20, 29, 25, 13, 8, 24, 10, 30, 28 };
+
 	/**
-	 * 营业执照 统一社会信用代码（18位）
-	 * 
-	 * @param license
-	 * @return
+	 *    * 较验社会统一信用代码    *    * @param unifiedCreditCode 统一社会信息代码    * @return 符合:
+	 * true    
 	 */
-	public static boolean isLicense18(String license) {
-		if (StringUtils.isEmpty(license)) {
-			return false;
-		}
-		if (license.length() != 18) {
+	public static boolean isLicense18(String unifiedCreditCode) {
+		if ((unifiedCreditCode.equals("")) || unifiedCreditCode.length() != 18) {
 			return false;
 		}
 
-		String regex = "^([159Y]{1})([1239]{1})([0-9ABCDEFGHJKLMNPQRTUWXY]{6})([0-9ABCDEFGHJKLMNPQRTUWXY]{9})([0-90-9ABCDEFGHJKLMNPQRTUWXY])$";
-		if (!license.matches(regex)) {
+		Map<Character, Integer> codes = new TreeBidiMap<>();
+		
+		for (int i = 0; i < baseCode.length(); i++) {
+			codes.put(baseCodeArray[i], i);
+		}
+		
+		int parityBit;
+		try {
+			char[] businessCodeArray = unifiedCreditCode.toCharArray();
+
+			int sum = 0;
+			for (int i = 0; i < 17; i++) {
+				char key = businessCodeArray[i];
+				if (baseCode.indexOf(key) == -1) {
+					throw new ValidationException("第" + String.valueOf(i + 1) + "位传入了非法的字符" + key);
+				}
+				sum += (codes.get(key) * wi[i]);
+			}
+			int result = 31 - sum % 31;
+			parityBit = (result == 31 ? 0 : result);
+		} catch (ValidationException e) {
 			return false;
 		}
-		String str = "0123456789ABCDEFGHJKLMNPQRTUWXY";
-		int[] ws = { 1, 3, 9, 27, 19, 26, 16, 17, 20, 29, 25, 13, 8, 24, 10, 30, 28 };
-		String[] codes = new String[2];
-		codes[0] = license.substring(0, license.length() - 1);
-		codes[1] = license.substring(license.length() - 1, license.length());
-		int sum = 0;
-		for (int i = 0; i < 17; i++) {
-			sum += str.indexOf(codes[0].charAt(i)) * ws[i];
-		}
-		int c18 = 31 - (sum % 31);
-		if (c18 == 31) {
-			c18 = 'Y';
-		} else if (c18 == 30) {
-//            c18 = '0';
-		}
-		if (str.charAt(c18) != codes[1].charAt(0)) {
-			return false;
-		}
-		return true;
+
+		return parityBit == codes.get(unifiedCreditCode.charAt(unifiedCreditCode.length() - 1));
 	}
 
 	/**
@@ -162,11 +174,11 @@ public class VerifyUtil {
 	 * @return: boolean
 	 */
 	public static boolean isPhone(final String str) {
-		Pattern p1 = null, p2 = null;
+		Pattern p1 = null , p2 = null;
 		Matcher m = null;
 		boolean b = false;
-		p1 = Pattern.compile("^[0][1-9]{2,3}-[0-9]{5,11}$"); // 验证带区号的
-		p2 = Pattern.compile("^[1-9]{1}[0-9]{5,8}$"); // 验证没有区号的
+		  p1 = Pattern.compile("^[0][1-9]{2,3}-[0-9]{5,10}$");  // 验证带区号的,中间有"-"
+         p2 = Pattern.compile("^[1-9]{1}[0-9]{5,8}$");  
 		if (str.length() > 9) {
 			m = p1.matcher(str);
 			b = m.matches();
@@ -176,61 +188,66 @@ public class VerifyUtil {
 		}
 		return b;
 	}
-	/**   
-	 * @Title: isQq   
+
+	public static void main(String[] args) {
+		System.out.println(isPhone("12345678"));
+	}
+	/**
+	 * @Title: isQq
 	 * @Description: 电话号码验证
 	 * @param str
-	 * @return     
-	 * @return: boolean      
-	 */ 
+	 * @return
+	 * @return: boolean
+	 */
 	public static boolean isQq(String str) {
 		boolean b = false;
 		Pattern p = Pattern.compile("[1-9][0-9]{4,14}"); // 验证手机号
 		Matcher m = p.matcher(str);
 		b = m.matches();
 		return b;
-		
-	}
-	
-    /**   
-     * @Title: isBankCard   
-     * @Description: 校验银行卡卡号   
-     * @param bankCard
-     * @return     
-     * @return: boolean      
-     */ 
-    public static boolean isBankCard(String bankCard) {  
-             if(bankCard.length() < 15 || bankCard.length() > 19) {
-                 return false;
-             }
-             char bit = getBankCardCheckCode(bankCard.substring(0, bankCard.length() - 1));  
-             if(bit == 'N'){  
-                 return false;  
-             }  
-             return bankCard.charAt(bankCard.length() - 1) == bit;  
-    }  
 
-    /** 
-     * 从不含校验位的银行卡卡号采用 Luhm 校验算法获得校验位 
-     * @param nonCheckCodeBankCard 
-     * @return 
-     */  
-    public static char getBankCardCheckCode(String nonCheckCodeBankCard){  
-        if(nonCheckCodeBankCard == null || nonCheckCodeBankCard.trim().length() == 0  
-                || !nonCheckCodeBankCard.matches("\\d+")) {  
-            //如果传的不是数据返回N  
-            return 'N';  
-        }  
-        char[] chs = nonCheckCodeBankCard.trim().toCharArray();  
-        int luhmSum = 0;  
-        for(int i = chs.length - 1, j = 0; i >= 0; i--, j++) {  
-            int k = chs[i] - '0';  
-            if(j % 2 == 0) {  
-                k *= 2;  
-                k = k / 10 + k % 10;  
-            }  
-            luhmSum += k;             
-        }  
-        return (luhmSum % 10 == 0) ? '0' : (char)((10 - luhmSum % 10) + '0');  
-    }  
+	}
+
+	/**
+	 * @Title: isBankCard
+	 * @Description: 校验银行卡卡号
+	 * @param bankCard
+	 * @return
+	 * @return: boolean
+	 */
+	public static boolean isBankCard(String bankCard) {
+		if (bankCard.length() < 15 || bankCard.length() > 19) {
+			return false;
+		}
+		char bit = getBankCardCheckCode(bankCard.substring(0, bankCard.length() - 1));
+		if (bit == 'N') {
+			return false;
+		}
+		return bankCard.charAt(bankCard.length() - 1) == bit;
+	}
+
+	/**
+	 * 从不含校验位的银行卡卡号采用 Luhm 校验算法获得校验位
+	 * 
+	 * @param nonCheckCodeBankCard
+	 * @return
+	 */
+	public static char getBankCardCheckCode(String nonCheckCodeBankCard) {
+		if (nonCheckCodeBankCard == null || nonCheckCodeBankCard.trim().length() == 0
+				|| !nonCheckCodeBankCard.matches("\\d+")) {
+			// 如果传的不是数据返回N
+			return 'N';
+		}
+		char[] chs = nonCheckCodeBankCard.trim().toCharArray();
+		int luhmSum = 0;
+		for (int i = chs.length - 1, j = 0; i >= 0; i--, j++) {
+			int k = chs[i] - '0';
+			if (j % 2 == 0) {
+				k *= 2;
+				k = k / 10 + k % 10;
+			}
+			luhmSum += k;
+		}
+		return (luhmSum % 10 == 0) ? '0' : (char) ((10 - luhmSum % 10) + '0');
+	}
 }
