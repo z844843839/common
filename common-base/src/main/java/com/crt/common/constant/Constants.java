@@ -152,11 +152,11 @@ public class Constants {
      */
     public static final String WORK_FLOW_BPM_DETAILS_URL = "bpm_details_url";
     /**
-     * 工作流发现部门id
+     * 工作流发起部门id
      */
     public static final String WORK_FLOW_ORG_ID = "work_flow_org_id";
     /**
-     * 工作流发现部门名称
+     * 工作流发起部门名称
      */
     public static final String WORK_FLOW_ORG_NAME = "work_flow_org_name";
     /**
