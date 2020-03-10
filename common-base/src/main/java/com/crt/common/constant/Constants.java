@@ -163,6 +163,14 @@ public class Constants {
      * 单据号
      */
     public static final String WORK_FLOW_DOCUMENT_NO = "work_flow_document_no";
+    /**
+     * 合作伙伴id  客户id/箱修厂id
+     */
+    public static final String WORK_FLOW_PARTNER_ID = "work_flow_partner_id";
+    /**
+     * 合作伙伴  客户名称/箱修厂名称
+     */
+    public static final String WORK_FLOW_PARTNER_NAME = "work_flow_partner_name";
 
     /**
      * 菜单
