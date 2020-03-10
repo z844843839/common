@@ -103,6 +103,11 @@ public class Constants {
     public static final String WORK_FLOW_DOC_TYPE_AR_SETTLEMENT_BILL = "应收结算单";
 
     /**
+     * 工作流分类-应收结算单业务收入
+     */
+    public static final String WORK_FLOW_DOC_TYPE_AR_SETTLEMENT_BILL_INCOME = "应收结算单业务收入";
+    
+    /**
      * 工作流分类-应收发票
      */
     public static final String WORK_FLOW_DOC_TYPE_AR_INVOICE = "应收发票";
@@ -301,6 +306,8 @@ public class Constants {
     public final static int WHOLE_CUSTOMER_TYPE = 296;
     //应收结算单
     public final static int ACCOUNTS_RECEIVABLE_BILL = 270;
+    //应收结算单业务收入
+    public final static int ACCOUNTS_RECEIVABLE_BILL_INCOME = 275;
     //销售合同
     public final static int SALES_CONTRACT = 260;
     //客户信用评估
