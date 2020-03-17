@@ -142,7 +142,7 @@ public class DataAuthInterceptor implements Interceptor {
         if (moreThan.indexOf("WHERE") >= Constants.NUMBER_ZERO) {
             moreThan = moreThan.substring(moreThan.indexOf("WHERE") + Constants.NUMBER_FIVE, moreThan.length()).trim();
         }else {
-            sql = sql.substring(0,sql.indexOf(moreThan) - Constants.NUMBER_SIX);
+            sql = sql.substring(0,sql.indexOf("WHERE"));
         }
         if (moreThan.indexOf(alias.trim() + Constants.SPOT) >= Constants.NUMBER_ZERO) {
             if (moreThan.indexOf("ORDER BY") == Constants.NUMBER_ZERO || moreThan.indexOf("GROUP BY") == Constants.NUMBER_ZERO){
