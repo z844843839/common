@@ -131,14 +131,21 @@ public class DataAuthInterceptor implements Interceptor {
      * @return String
      */
     private static String interceptSQL(String sql, String alias, String rowSql) {
-        String cutPoint = Constants.RIGHT_PARENTHESES + Constants.SPACE + alias.trim();
+        String cutPoint = "";
+        if (sql.contains(Constants.RIGHT_PARENTHESES)){
+            cutPoint = Constants.RIGHT_PARENTHESES + Constants.SPACE + alias.trim();
+        }else {
+            cutPoint = "WHERE";
+        }
         String moreThan = sql.substring(sql.lastIndexOf(cutPoint) + (cutPoint.length()), sql.length()).trim();
         sql = sql.substring(0, sql.lastIndexOf(cutPoint) + (cutPoint.length()));
-        if (moreThan.indexOf("WHERE") >= 0) {
-            moreThan = moreThan.substring(moreThan.indexOf("WHERE") + 5, moreThan.length()).trim();
+        if (moreThan.indexOf("WHERE") >= Constants.NUMBER_ZERO) {
+            moreThan = moreThan.substring(moreThan.indexOf("WHERE") + Constants.NUMBER_FIVE, moreThan.length()).trim();
+        }else {
+            sql = sql.substring(0,sql.indexOf(moreThan) - Constants.NUMBER_SIX);
         }
-        if (moreThan.indexOf(alias.trim() + Constants.SPOT) >= 0) {
-            if (moreThan.indexOf("ORDER BY") == 0 || moreThan.indexOf("GROUP BY") == 0){
+        if (moreThan.indexOf(alias.trim() + Constants.SPOT) >= Constants.NUMBER_ZERO) {
+            if (moreThan.indexOf("ORDER BY") == Constants.NUMBER_ZERO || moreThan.indexOf("GROUP BY") == Constants.NUMBER_ZERO){
                 moreThan = moreThan.trim();
             }else {
                 moreThan = Constants.CONNECTOR_AND + Constants.SPACE + moreThan.trim();

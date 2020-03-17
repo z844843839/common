@@ -106,7 +106,7 @@ public class Constants {
      * 工作流分类-应收结算单业务收入
      */
     public static final String WORK_FLOW_DOC_TYPE_AR_SETTLEMENT_BILL_INCOME = "应收结算单业务收入";
-    
+
     /**
      * 工作流分类-应收发票
      */
