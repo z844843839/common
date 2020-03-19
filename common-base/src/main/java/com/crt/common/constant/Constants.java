@@ -118,6 +118,11 @@ public class Constants {
     public static final String WORK_FLOW_DOC_TYPE_AR_RECEIPT = "收款收据";
 
     /**
+     * 工作流分类-付款申请
+     */
+    public static final String WORK_FLOW_DOC_TYPE_APPLICATION_PAYMENT = "付款申请";
+
+    /**
      * 工作流标题的“申请”后缀
      */
     public static final String WORK_FLOW_TITLE_SUFFIX = "申请";
