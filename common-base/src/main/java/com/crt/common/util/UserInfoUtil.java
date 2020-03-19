@@ -60,18 +60,22 @@ public class UserInfoUtil {
             return E6WrapperUtil.error("token不存在,用户信息获取失败");
         } else {
             UserRedisVO userRedisVO = new UserRedisVO();
-            Object result = userCache.get(token).get("userVO");
-            if (result == null) {
+            if (null != userCache.get(token)){
+                Object result = userCache.get(token).get("userVO");
+                if (result == null) {
 //                String userKey = token + "user";
 //                userRedisVO = CacheUtil.get(userKey, UserRedisVO.class);
-                return E6WrapperUtil.error("token错误,用户信息获取失败");
-            } else {
-                userRedisVO = (UserRedisVO) BeanUtil.Copy(userRedisVO, result, false);
-            }
-            if (null != userRedisVO) {
-                return E6WrapperUtil.ok(userRedisVO);
-            } else {
-                return E6WrapperUtil.error("token错误,用户信息获取失败");
+                    return E6WrapperUtil.error("token错误,用户信息获取失败");
+                } else {
+                    userRedisVO = (UserRedisVO) BeanUtil.Copy(userRedisVO, result, false);
+                }
+                if (null != userRedisVO) {
+                    return E6WrapperUtil.ok(userRedisVO);
+                } else {
+                    return E6WrapperUtil.error("token错误,用户信息获取失败");
+                }
+            }else {
+                return E6WrapperUtil.error("该账户已在别处登陆,token已失效");
             }
         }
     }

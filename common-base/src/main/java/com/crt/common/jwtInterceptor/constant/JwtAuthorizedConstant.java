@@ -13,4 +13,6 @@ public class JwtAuthorizedConstant {
 
     /** JWT签名过期，响应结果状态定义*/
     public final static Integer TOKEN_EXPIRED_RESPONSE_STATUS = 299;
+
+
 }

@@ -177,44 +177,49 @@ public class MyTokenInterceptor implements HandlerInterceptor {
         }
 
         UserRedisVO userRedisVO = (UserRedisVO) UserInfoUtil.getUserInfo().getResult();
-        if (StringUtils.equals("super",userRedisVO.getAccountNumber()))
+        if (null != userRedisVO && StringUtils.equals("super",userRedisVO.getAccountNumber()))
         {
             return true;
         }
 
         try{
-            List<Map<String,Object>> auth = (List<Map<String,Object>> ) redisUtil.get(token).get("auth");
-            if (auth == null || auth.size() < 1)
-            {
-                this.buildErrorResponse(response,"获取权限信息失败,请联系管理员分配相关权限！",null);
-                return false;
-            }
-            else
-            {
-
-                List<String> list = new ArrayList<>();
-                for (int i = 0; i < auth.size(); i++)
+            if (null != redisUtil.get(token)){
+                List<Map<String,Object>> auth = (List<Map<String,Object>> ) redisUtil.get(token).get("auth");
+                if (auth == null || auth.size() < 1)
                 {
-                    list.add(String.valueOf(auth.get(i).get("url")));
-                }
-                //logger.error("用户总权限 {}",list.toString());
-                String url = request.getServletPath();
-                String uri = url.substring(url.substring(url.indexOf("/")+1).indexOf("/")+2);
-                if (uri.contains(Constants.CONTAINSTR))
-                {
-                    uri = uri.substring(0,uri.indexOf(Constants.CONTAINSTR));
-                }
-
-                logger.error("用户当前权限 {}",uri);
-                if (list.contains(uri))
-                {
-                    return true;
+                    this.buildErrorResponse(response,"获取权限信息失败,请联系管理员分配相关权限！",null);
+                    return false;
                 }
                 else
                 {
-                    this.buildErrorResponse(response,"当前用户无相关操作权限！",null);
-                    return false;
+
+                    List<String> list = new ArrayList<>();
+                    for (int i = 0; i < auth.size(); i++)
+                    {
+                        list.add(String.valueOf(auth.get(i).get("url")));
+                    }
+                    //logger.error("用户总权限 {}",list.toString());
+                    String url = request.getServletPath();
+                    String uri = url.substring(url.substring(url.indexOf("/")+1).indexOf("/")+2);
+                    if (uri.contains(Constants.CONTAINSTR))
+                    {
+                        uri = uri.substring(0,uri.indexOf(Constants.CONTAINSTR));
+                    }
+
+                    logger.error("用户当前权限 {}",uri);
+                    if (list.contains(uri))
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        this.buildErrorResponse(response,"当前用户无相关操作权限！",null);
+                        return false;
+                    }
                 }
+            }else {
+                this.buildErrorResponse(response,"当前用户已在别处登陆，请重新登录！",null);
+                return false;
             }
         }
         catch (Exception e)
