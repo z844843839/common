@@ -2,6 +2,8 @@ package com.crt.common.sqlInterceptor;
 
 
 import com.alibaba.druid.sql.SQLUtils;
+import com.alibaba.druid.sql.ast.SQLStatement;
+import com.alibaba.druid.sql.dialect.mysql.visitor.MySqlSchemaStatVisitor;
 import com.alibaba.druid.util.JdbcConstants;
 import com.crt.common.constant.Constants;
 import com.crt.common.util.UserInfoUtil;
@@ -18,6 +20,7 @@ import org.springframework.stereotype.Component;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.sql.Connection;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -132,27 +135,36 @@ public class DataAuthInterceptor implements Interceptor {
      */
     private static String interceptSQL(String sql, String alias, String rowSql) {
         String cutPoint = "";
-        if (sql.contains(Constants.RIGHT_PARENTHESES)){
+        if (sql.contains(Constants.RIGHT_PARENTHESES + Constants.SPACE + alias)){
             cutPoint = Constants.RIGHT_PARENTHESES + Constants.SPACE + alias.trim();
+        }else if(sql.contains(Constants.SQL_KEY_WHERE)) {
+            cutPoint = Constants.SQL_KEY_WHERE;
         }else {
-            cutPoint = "WHERE";
+            List<SQLStatement> stmtList = SQLUtils.parseStatements(sql, JdbcConstants.MYSQL);
+            SQLStatement stmt = stmtList.get(0);
+            MySqlSchemaStatVisitor visitor = new MySqlSchemaStatVisitor();
+            stmt.accept(visitor);
+            //获取表名称
+            String tableName = visitor.getCurrentTable();
+            cutPoint = Constants.SQL_KEY_FROM + Constants.SPACE + tableName + Constants.SPACE + alias;
         }
         String moreThan = sql.substring(sql.lastIndexOf(cutPoint) + (cutPoint.length()), sql.length()).trim();
         sql = sql.substring(0, sql.lastIndexOf(cutPoint) + (cutPoint.length()));
-        if (moreThan.indexOf("WHERE") >= Constants.NUMBER_ZERO) {
-            moreThan = moreThan.substring(moreThan.indexOf("WHERE") + Constants.NUMBER_FIVE, moreThan.length()).trim();
-        }else {
-            sql = sql.substring(0,sql.indexOf("WHERE"));
+        if (moreThan.indexOf(Constants.SQL_KEY_WHERE) >= Constants.NUMBER_ZERO) {
+            moreThan = moreThan.substring(moreThan.indexOf(Constants.SQL_KEY_WHERE) + Constants.NUMBER_FIVE, moreThan.length()).trim();
+        }
+        if (sql.indexOf(Constants.SQL_KEY_WHERE) >= 0){
+            sql = sql.substring(0,sql.indexOf(Constants.SQL_KEY_WHERE));
         }
         if (moreThan.indexOf(alias.trim() + Constants.SPOT) >= Constants.NUMBER_ZERO) {
-            if (moreThan.indexOf("ORDER BY") == Constants.NUMBER_ZERO || moreThan.indexOf("GROUP BY") == Constants.NUMBER_ZERO){
+            if (moreThan.indexOf(Constants.SQL_KEY_ORDER_BY) == Constants.NUMBER_ZERO || moreThan.indexOf(Constants.SQL_KEY_GROUP_BY) == Constants.NUMBER_ZERO){
                 moreThan = moreThan.trim();
             }else {
                 moreThan = Constants.CONNECTOR_AND + Constants.SPACE + moreThan.trim();
             }
         }
         StringBuffer sb = new StringBuffer(sql);
-        sb.append(Constants.SPACE).append("WHERE");
+        sb.append(Constants.SPACE).append(Constants.SQL_KEY_WHERE);
         sql = sb.toString();
         String finalSql = sql + Constants.SPACE + rowSql + Constants.SPACE + moreThan;
         return finalSql;

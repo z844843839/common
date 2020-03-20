@@ -384,6 +384,12 @@ public class Constants {
 
     public final static String SQL_KEY_WHERE = "WHERE";
 
+    public final static String SQL_KEY_FROM = "FROM";
+
+    public final static String SQL_KEY_GROUP_BY = "GROUP BY";
+
+    public final static String SQL_KEY_ORDER_BY = "ORDER BY";
+
     public final static String SQL_KEY_ON = "ON";
 
     /**
