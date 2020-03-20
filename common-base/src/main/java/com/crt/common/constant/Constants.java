@@ -123,6 +123,11 @@ public class Constants {
     public static final String WORK_FLOW_DOC_TYPE_APPLICATION_PAYMENT = "付款申请";
 
     /**
+     * 工作流分类-承兑汇票
+     */
+    public static final String WORK_FLOW_DOC_TYPE_ACCEPTANCE_BILL = "承兑汇票";
+
+    /**
      * 工作流标题的“申请”后缀
      */
     public static final String WORK_FLOW_TITLE_SUFFIX = "申请";
@@ -241,6 +246,8 @@ public class Constants {
     public final static int AR_INVOICE = 640;
     //付款申请
     public final static int APPLICATION_PAYMENT = 630;
+    //承兑汇票
+    public final static int ACCEPTANCE_BILL = 631;
     //付款单
     public final static int PAYMENT_SLIP = 620;
     //收据信息表
