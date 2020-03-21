@@ -153,7 +153,8 @@ public class DataAuthInterceptor implements Interceptor {
         if (moreThan.indexOf(Constants.SQL_KEY_WHERE) >= Constants.NUMBER_ZERO) {
             moreThan = moreThan.substring(moreThan.indexOf(Constants.SQL_KEY_WHERE) + Constants.NUMBER_FIVE, moreThan.length()).trim();
         }
-        if (sql.indexOf(Constants.SQL_KEY_WHERE) >= 0){
+        String noWhereSql = Constants.RIGHT_PARENTHESES + Constants.SPACE + alias + "\n\t" + Constants.SQL_KEY_WHERE;
+        if (sql.indexOf(noWhereSql) >= 0){
             sql = sql.substring(0,sql.lastIndexOf(Constants.SQL_KEY_WHERE));
         }
         if (moreThan.indexOf(alias.trim() + Constants.SPOT) >= Constants.NUMBER_ZERO) {
