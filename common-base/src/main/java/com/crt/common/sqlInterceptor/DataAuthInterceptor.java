@@ -154,7 +154,7 @@ public class DataAuthInterceptor implements Interceptor {
             moreThan = moreThan.substring(moreThan.indexOf(Constants.SQL_KEY_WHERE) + Constants.NUMBER_FIVE, moreThan.length()).trim();
         }
         if (sql.indexOf(Constants.SQL_KEY_WHERE) >= 0){
-            sql = sql.substring(0,sql.indexOf(Constants.SQL_KEY_WHERE));
+            sql = sql.substring(0,sql.lastIndexOf(Constants.SQL_KEY_WHERE));
         }
         if (moreThan.indexOf(alias.trim() + Constants.SPOT) >= Constants.NUMBER_ZERO) {
             if (moreThan.indexOf(Constants.SQL_KEY_ORDER_BY) == Constants.NUMBER_ZERO || moreThan.indexOf(Constants.SQL_KEY_GROUP_BY) == Constants.NUMBER_ZERO){
