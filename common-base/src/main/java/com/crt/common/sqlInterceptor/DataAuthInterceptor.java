@@ -135,13 +135,16 @@ public class DataAuthInterceptor implements Interceptor {
      */
     private static String interceptSQL(String sql, String alias, String rowSql) {
         String cutPoint = "";
-        String noWhereSql = "";
+        String noWhereSqlOne = "";
+        String noWhereSqlTwo = "";
         if (sql.contains(Constants.RIGHT_PARENTHESES + Constants.SPACE + alias)){
             cutPoint = Constants.RIGHT_PARENTHESES + Constants.SPACE + alias.trim();
-            noWhereSql = Constants.RIGHT_PARENTHESES + Constants.SPACE + alias + "\n\t" + Constants.SQL_KEY_WHERE;
+            noWhereSqlOne = Constants.RIGHT_PARENTHESES + Constants.SPACE + alias + "\n\t" + Constants.SQL_KEY_WHERE;
+            noWhereSqlTwo = Constants.RIGHT_PARENTHESES + Constants.SPACE + alias + "\n" + Constants.SQL_KEY_WHERE;
         }else if(sql.contains(Constants.SQL_KEY_WHERE)) {
             cutPoint = Constants.SQL_KEY_WHERE;
-            noWhereSql = Constants.SPACE + alias + "\n\t" + Constants.SQL_KEY_WHERE;
+            noWhereSqlOne = Constants.SPACE + alias + "\n\t" + Constants.SQL_KEY_WHERE;
+            noWhereSqlTwo = Constants.SPACE + alias + "\n" + Constants.SQL_KEY_WHERE;
         }else {
             List<SQLStatement> stmtList = SQLUtils.parseStatements(sql, JdbcConstants.MYSQL);
             SQLStatement stmt = stmtList.get(0);
@@ -156,7 +159,7 @@ public class DataAuthInterceptor implements Interceptor {
         if (moreThan.indexOf(Constants.SQL_KEY_WHERE) >= Constants.NUMBER_ZERO) {
             moreThan = moreThan.substring(moreThan.indexOf(Constants.SQL_KEY_WHERE) + Constants.NUMBER_FIVE, moreThan.length()).trim();
         }
-        if (StringUtils.isNotEmpty(noWhereSql) && sql.indexOf(noWhereSql) >= 0){
+        if ((StringUtils.isNotEmpty(noWhereSqlOne) || StringUtils.isNotEmpty(noWhereSqlTwo)) && (sql.contains(noWhereSqlOne) || sql.contains(noWhereSqlTwo))){
             sql = sql.substring(0,sql.lastIndexOf(Constants.SQL_KEY_WHERE));
         }
         if (moreThan.indexOf(alias.trim() + Constants.SPOT) >= Constants.NUMBER_ZERO) {
