@@ -135,10 +135,13 @@ public class DataAuthInterceptor implements Interceptor {
      */
     private static String interceptSQL(String sql, String alias, String rowSql) {
         String cutPoint = "";
+        String noWhereSql = "";
         if (sql.contains(Constants.RIGHT_PARENTHESES + Constants.SPACE + alias)){
             cutPoint = Constants.RIGHT_PARENTHESES + Constants.SPACE + alias.trim();
+            noWhereSql = Constants.RIGHT_PARENTHESES + Constants.SPACE + alias + "\n\t" + Constants.SQL_KEY_WHERE;
         }else if(sql.contains(Constants.SQL_KEY_WHERE)) {
             cutPoint = Constants.SQL_KEY_WHERE;
+            noWhereSql = Constants.SPACE + alias + "\n\t" + Constants.SQL_KEY_WHERE;
         }else {
             List<SQLStatement> stmtList = SQLUtils.parseStatements(sql, JdbcConstants.MYSQL);
             SQLStatement stmt = stmtList.get(0);
@@ -153,8 +156,7 @@ public class DataAuthInterceptor implements Interceptor {
         if (moreThan.indexOf(Constants.SQL_KEY_WHERE) >= Constants.NUMBER_ZERO) {
             moreThan = moreThan.substring(moreThan.indexOf(Constants.SQL_KEY_WHERE) + Constants.NUMBER_FIVE, moreThan.length()).trim();
         }
-        String noWhereSql = Constants.RIGHT_PARENTHESES + Constants.SPACE + alias + "\n\t" + Constants.SQL_KEY_WHERE;
-        if (sql.indexOf(noWhereSql) >= 0){
+        if (StringUtils.isNotEmpty(noWhereSql) && sql.indexOf(noWhereSql) >= 0){
             sql = sql.substring(0,sql.lastIndexOf(Constants.SQL_KEY_WHERE));
         }
         if (moreThan.indexOf(alias.trim() + Constants.SPOT) >= Constants.NUMBER_ZERO) {
