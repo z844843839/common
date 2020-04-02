@@ -808,6 +808,28 @@ public class DateUtils {
         return serial;
     }
 
+    /**
+     * 时间比较大小
+     * 开始时间大于结束时间 返回 true
+     * 开始时间小于结束时间 返回 false
+     * @param begin
+     * @param end
+     * @return Boolean
+     */
+    public static Boolean dateCompare(Date begin,Date end){
+        if (null != begin && null != end){
+            long beginMillisecond = begin.getTime();
+            long endMillisecond = end.getTime();
+            if (beginMillisecond > endMillisecond){
+                return true;
+            }else {
+                return false;
+            }
+        }else {
+            return null;
+        }
+    }
+
 //    /**
 //     * 获取指定日期之后的n个工作日(遇节假日、周末顺延)
 //     * @param bDay 指定的日期（yyyy-MM-dd）

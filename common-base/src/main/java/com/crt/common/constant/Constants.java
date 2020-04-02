@@ -420,6 +420,7 @@ public class Constants {
      * 数字集合
      */
     public final static Integer NUMBER_NEGATIVE_ONE = -1;
+    public final static Integer NUMBER_NEGATIVE_THREE = -3;
     public final static Integer NUMBER_ZERO = 0;
     public final static Integer NUMBER_ONE = 1;
     public final static Integer NUMBER_TWO = 2;
