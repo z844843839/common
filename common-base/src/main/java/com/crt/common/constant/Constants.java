@@ -451,6 +451,11 @@ public class Constants {
     /**
      * 单据状态 BILL_STATUS
      */
+
+    /**
+     * 关闭
+     */
+    public final static Integer BILL_STATUS_CLOSED = -2;
     /**
      * 驳回
      */
