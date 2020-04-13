@@ -93,9 +93,9 @@ public class Constants {
     public static final String WORK_FLOW_DOC_TYPE_SIGN_IN_RELATION = "箱源匹配";
 
     /**
-     * 工作流分类-退箱管理
+     * 工作流分类-退箱申请
      */
-    public static final String WORK_FLOW_DOC_TYPE_SIGN_OUT = "退箱管理";
+    public static final String WORK_FLOW_DOC_TYPE_SIGN_OUT = "退箱申请";
 
     /**
      * 工作流分类-应收结算单
