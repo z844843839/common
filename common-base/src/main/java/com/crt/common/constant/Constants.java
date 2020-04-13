@@ -186,6 +186,10 @@ public class Constants {
      * 合作伙伴  客户名称/箱修厂名称
      */
     public static final String WORK_FLOW_PARTNER_NAME = "work_flow_partner_name";
+	 /**
+     * 详情页面预览时候添加的模类型参数
+     */
+    public static final String WORK_FLOW_PREVIEWID = "work_flow_previewId";
 
     /**
      * 菜单
@@ -451,6 +455,11 @@ public class Constants {
     /**
      * 单据状态 BILL_STATUS
      */
+
+    /**
+     * 关闭
+     */
+    public final static Integer BILL_STATUS_CLOSED = -2;
     /**
      * 驳回
      */
