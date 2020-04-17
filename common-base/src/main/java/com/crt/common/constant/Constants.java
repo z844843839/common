@@ -133,6 +133,11 @@ public class Constants {
     public static final String WORK_FLOW_TITLE_SUFFIX = "申请";
 
     /**
+     * 工作流分类-增值服务费
+     */
+    public static final String WORK_FLOW_DOC_TYPE_ADDED_VALUE = "增值服务费";
+    
+    /**
      * 工作流标题的“-”
      */
     public static final String WORK_FLOW_TITLE_MIDDLE_LINE = "-";
@@ -347,8 +352,10 @@ public class Constants {
     //箱主数据
     public final static int BOX_MASTER_DATA = 110;
     //客商数据
-
     public static String CONTAINSTR = "?";
+    
+    //增值服务费用
+    public final static int ADDED_VALUE = 490;
 
     public final static int BUSINESS_DATA = 100;
     /**
