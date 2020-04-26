@@ -68,6 +68,11 @@ public class Constants {
     public static final String WORK_FLOW_DOC_TYPE_CONTRACT_SALE = "销售合同";
 
     /**
+ * 工作流分类-销售合同
+ */
+public static final String WORK_FLOW_DOC_TYPE_PROJECT_GROUP = "项目组";
+    
+    /**
      * 工作流分类-销售报价
      */
     public static final String WORK_FLOW_DOC_TYPE_SALES_QUOTATION = "销售报价";
@@ -325,6 +330,8 @@ public class Constants {
     public final static int PAYMENT_WAY = 297;
     //全程客户类型
     public final static int WHOLE_CUSTOMER_TYPE = 296;
+    //项目组
+    public final static int PROJECT_GROUP = 170;
     //应收结算单
     public final static int ACCOUNTS_RECEIVABLE_BILL = 270;
     //应收结算单业务收入
