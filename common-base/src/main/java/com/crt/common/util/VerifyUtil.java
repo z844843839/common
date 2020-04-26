@@ -190,8 +190,19 @@ public class VerifyUtil {
 	}
 
 	public static void main(String[] args) {
-		System.out.println(isPhone("12345678"));
+		System.out.println(matchPhone("023-12345678"));
 	}
+	
+	public static boolean matchPhone(String number){
+        Matcher m1 = null;
+        Matcher m2 = null;
+        Pattern p1 = Pattern.compile("^[0][1-9]{2,3}-[0-9]{5,10}$");  // 验证带区号的,中间有"-"
+        Pattern p2 = Pattern.compile("^[1-9]{1}[0-9]{5,8}$");         // 验证没有区号的
+        m1 = p1.matcher(number);
+        m2 = p2.matcher(number);
+        return m1.matches()||m2.matches();
+	}
+	
 	/**
 	 * @Title: isQq
 	 * @Description: 电话号码验证
