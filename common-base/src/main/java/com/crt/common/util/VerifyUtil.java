@@ -177,7 +177,7 @@ public class VerifyUtil {
 		Pattern p1 = null , p2 = null;
 		Matcher m = null;
 		boolean b = false;
-		  p1 = Pattern.compile("^[0][1-9]{2,3}-[0-9]{5,10}$");  // 验证带区号的,中间有"-"
+		  p1 = Pattern.compile("^[0][0-9]{2,3}-[0-9]{5,10}$");  // 验证带区号的,中间有"-"
          p2 = Pattern.compile("^[1-9]{1}[0-9]{5,8}$");  
 		if (str.length() > 9) {
 			m = p1.matcher(str);
@@ -190,7 +190,7 @@ public class VerifyUtil {
 	}
 
 	public static void main(String[] args) {
-		System.out.println(matchPhone("023-12345678"));
+		System.out.println(isPhone("010-87886152"));
 	}
 	
 	public static boolean matchPhone(String number){
