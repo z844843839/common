@@ -71,7 +71,7 @@ public class Constants {
  * 工作流分类-销售合同
  */
 public static final String WORK_FLOW_DOC_TYPE_PROJECT_GROUP = "项目组";
-    
+
     /**
      * 工作流分类-销售报价
      */
@@ -141,7 +141,7 @@ public static final String WORK_FLOW_DOC_TYPE_PROJECT_GROUP = "项目组";
      * 工作流分类-增值服务费
      */
     public static final String WORK_FLOW_DOC_TYPE_ADDED_VALUE = "增值服务费";
-    
+
     /**
      * 工作流标题的“-”
      */
@@ -364,7 +364,7 @@ public static final String WORK_FLOW_DOC_TYPE_PROJECT_GROUP = "项目组";
     public final static int BOX_MASTER_DATA = 110;
     //客商数据
     public static String CONTAINSTR = "?";
-    
+
     //增值服务费用
     public final static int ADDED_VALUE = 490;
 
@@ -566,6 +566,14 @@ public static final String WORK_FLOW_DOC_TYPE_PROJECT_GROUP = "项目组";
      * 行级权限内置变量6 当前用户所属部门名称
      */
     public static String BUILT_IN_VARIABLES6 = "当前用户所属部门名称";
+    /**
+     * 行级权限内置变量7 当前用户所属专业公司CODE
+     */
+    public static String BUILT_IN_VARIABLES7 = "当前用户所属专业公司CODE";
+    /**
+     * 行级权限内置变量8 当前用户所属区域公司CODE
+     */
+    public static String BUILT_IN_VARIABLES8 = "当前用户所属区域公司CODE";
 
 
 }
