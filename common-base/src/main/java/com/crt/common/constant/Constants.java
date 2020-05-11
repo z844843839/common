@@ -431,7 +431,7 @@ public static final String WORK_FLOW_DOC_TYPE_PROJECT_GROUP = "项目组";
     /**
      * 工作流终止地址
      */
-    public final static String PROCESS_STOP_URL_SUFFIX = "bpm/operation/process-operation-confirmStartProcess";
+    public final static String PROCESS_STOP_URL_SUFFIX = "/bpm/workspace-endProcessInstance";
 
 
     /**
