@@ -1,10 +1,19 @@
 package com.crt.common.util;
 
+import com.crt.common.constant.Constants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.math.BigDecimal;
+
 /**
  * 数字转大写
  * @author wangxin@e6yun.com
  */
 public class DigitUtils {
+
+    /***日志***/
+    private static final Logger logger = LoggerFactory.getLogger(DigitUtils.class);
 
     /**
      * 数字转大写
@@ -39,4 +48,138 @@ public class DigitUtils {
         }
         return head + s.replaceAll("(零.)*零元", "元").replaceFirst("(零.)+", "").replaceAll("(零.)+", "零").replaceAll("^整$", "零元整");
     }
+
+    /**
+     * 两个数相加
+     * @param str1
+     * @param str2
+     * @param keepType 结果保留方式（1 四舍五入 2 四舍六入五成双 3 直接舍去保留意外的数字）
+     * @param several 保留小数位
+     * @return
+     */
+    public static String add(String str1,String str2,int keepType,int several) {
+        try {
+            String result = new BigDecimal(str1).add(new BigDecimal(str2)).toPlainString();
+            if (Constants.NUMBER_TWO == keepType){
+                result = fourUpSixInto(result,several);
+            }else if (Constants.NUMBER_THREE == keepType){
+                result = into(result,several);
+            }else {
+                result = fourUpFiveInto(result,several);
+            }
+            return result;
+        }catch (Exception e){
+            logger.error(e.getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * 两个数相乘
+     * @param str1
+     * @param str2
+     * @param keepType 结果保留方式（1 四舍五入 2 四舍六入五成双 3 直接舍去保留意外的数字）
+     * @param several 保留小数位
+     * @return
+     */
+    public static String multiply(String str1,String str2,int keepType,int several) {
+        try {
+            String result = new BigDecimal(str1).multiply(new BigDecimal(str2)).toPlainString();
+            if (Constants.NUMBER_TWO == keepType){
+                result = fourUpSixInto(result,several);
+            }else if (Constants.NUMBER_THREE == keepType){
+                result = into(result,several);
+            }else {
+                result = fourUpFiveInto(result,several);
+            }
+            return result;
+        }catch (Exception e){
+            logger.error(e.getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * 两个数相减
+     * @param str1
+     * @param str2
+     * @param keepType 结果保留方式（1 四舍五入 2 四舍六入五成双 3 直接舍去保留意外的数字）
+     * @param several 保留小数位
+     * @return
+     */
+    public static String subtract(String str1,String str2,int keepType,int several) {
+        try {
+            String result = new BigDecimal(str1).subtract(new BigDecimal(str2)).toPlainString();
+            if (Constants.NUMBER_TWO == keepType){
+                result = fourUpSixInto(result,several);
+            }else if (Constants.NUMBER_THREE == keepType){
+                result = into(result,several);
+            }else {
+                result = fourUpFiveInto(result,several);
+            }
+            return result;
+        }catch (Exception e){
+            logger.error(e.getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * 两个数相除
+     * @param str1
+     * @param str2
+     * @param keepType 结果保留方式（1 四舍五入 2 四舍六入五成双 3 直接舍去保留意外的数字）
+     * @param several 保留小数位
+     * @return
+     */
+    public static String divide(String str1,String str2,int keepType,int several) {
+        try {
+            String result = new BigDecimal(str1).divide(new BigDecimal(str2)).toPlainString();
+            if (Constants.NUMBER_TWO == keepType){
+                result = fourUpSixInto(result,several);
+            }else if (Constants.NUMBER_THREE == keepType){
+                result = into(result,several);
+            }else {
+                result = fourUpFiveInto(result,several);
+            }
+            return result;
+        }catch (Exception e){
+            logger.error(e.getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * 四舍五入
+     * @param str
+     * @param several 保留小数位
+     */
+    public static String fourUpFiveInto(String str,int several){
+        BigDecimal b1 = new BigDecimal(str);
+        BigDecimal b2 = b1.setScale(several, BigDecimal.ROUND_HALF_UP);
+        return b2.toString();
+    }
+
+    /**
+     * 舍去保留小数位后面的数字
+     * @param str
+     * @param several 保留小数位
+     */
+    public static String into(String str,int several){
+        BigDecimal b1 = new BigDecimal(str);
+        BigDecimal b2 = b1.setScale(several, BigDecimal.ROUND_HALF_DOWN);
+        return b2.toString();
+    }
+
+    /**
+     * 四舍六入五成双
+     * @param str
+     * @param several 保留小数位
+     */
+    public static String fourUpSixInto(String str,int several){
+        BigDecimal b1 = new BigDecimal(str);
+        BigDecimal b2 = b1.setScale(several, BigDecimal.ROUND_HALF_EVEN);
+        return b2.toString();
+    }
+
 }
