@@ -58,7 +58,7 @@ public class Constants {
     public static final String WORK_FLOW_STATUS_NOREPAIRVALUE = "noRepairValue";
 
     /**
-     * 无维修价值
+     * 撤回
      */
     public static final String WORK_FLOW_STATUS_WITHDRAW = "withdraw";
 
