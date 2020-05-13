@@ -58,6 +58,11 @@ public class Constants {
     public static final String WORK_FLOW_STATUS_NOREPAIRVALUE = "noRepairValue";
 
     /**
+     * 无维修价值
+     */
+    public static final String WORK_FLOW_STATUS_WITHDRAW = "withdraw";
+
+    /**
      * 工作流分类-采购合同
      */
     public static final String WORK_FLOW_DOC_TYPE_CONTRACT_PURCH = "采购合同";
