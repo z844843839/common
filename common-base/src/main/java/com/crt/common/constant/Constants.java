@@ -474,7 +474,10 @@ public static final String WORK_FLOW_DOC_TYPE_PROJECT_GROUP = "项目组";
     /**
      * 单据状态 BILL_STATUS
      */
-
+    /**
+     * 撤回
+     */
+    public final static Integer BILL_STATUS_WITHDRAW = -3;
     /**
      * 关闭
      */
