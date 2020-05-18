@@ -106,6 +106,10 @@ public static final String WORK_FLOW_DOC_TYPE_PROJECT_GROUP = "项目组";
      * 工作流分类-退箱申请
      */
     public static final String WORK_FLOW_DOC_TYPE_SIGN_OUT = "退箱申请";
+    /**
+     * 工作流分类-退箱定损费用
+     */
+    public static final String WORK_FLOW_DOC_TYPE_SIGN_OUT_COST = "退箱定损费用";
 
     /**
      * 工作流分类-应收结算单
@@ -315,6 +319,8 @@ public static final String WORK_FLOW_DOC_TYPE_PROJECT_GROUP = "项目组";
     public final static int CALL_ORDER = 430;
     //退箱单
     public final static int RETURN_BILL = 420;
+    //退箱费用
+    public final static int RETURN_COST = 421;
     //排箱单
     public final static int ARRANGE_BILL = 410;
     //箱匹配
