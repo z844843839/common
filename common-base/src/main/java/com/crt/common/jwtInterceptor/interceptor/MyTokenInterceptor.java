@@ -118,7 +118,7 @@ public class MyTokenInterceptor implements HandlerInterceptor {
         String token = request.getHeader(jwtAuthorizedProperties.getTokenHeaderKey());
         if (StrUtil.isEmpty(token)) {
             // 构建错误响应结果报文
-            this.buildErrorResponse(response,"Token签名为空",JwtAuthorizedConstant.TOKEN_EXPIRED_RESPONSE_STATUS);
+            this.buildErrorResponse(response,"登录超时，请重新登录!",JwtAuthorizedConstant.TOKEN_EXPIRED_RESPONSE_STATUS);
             return false;
         }
         if (token.equals("0000"))
@@ -143,13 +143,15 @@ public class MyTokenInterceptor implements HandlerInterceptor {
             return true;
         } catch (TokenErrorException ten) {
             // 构建错误响应结果报文
-            this.buildErrorResponse(response,ten.getMessage(),JwtAuthorizedConstant.TOKEN_EXPIRED_RESPONSE_STATUS);
+            logger.error(ten.getMessage());
+            this.buildErrorResponse(response,"登录超时，请重新登录!",JwtAuthorizedConstant.TOKEN_EXPIRED_RESPONSE_STATUS);
             return false;
 
             // 签名过期
         } catch (TokenExpiredException tee) {
             // 构建错误响应结果报文
-            this.buildErrorResponse(response,tee.getMessage(), JwtAuthorizedConstant.TOKEN_EXPIRED_RESPONSE_STATUS);
+            logger.error(tee.getMessage());
+            this.buildErrorResponse(response,"登录超时，请重新登录!", JwtAuthorizedConstant.TOKEN_EXPIRED_RESPONSE_STATUS);
             return false;
         }
     }
@@ -167,7 +169,7 @@ public class MyTokenInterceptor implements HandlerInterceptor {
         String token = request.getHeader("Authorization");
         if (StringUtils.isEmpty(token))
         {
-            this.buildErrorResponse(response,"用户信息失效",JwtAuthorizedConstant.TOKEN_EXPIRED_RESPONSE_STATUS);
+            this.buildErrorResponse(response,"登录超时，请重新登录!",JwtAuthorizedConstant.TOKEN_EXPIRED_RESPONSE_STATUS);
             return false;
         }
 
@@ -213,19 +215,19 @@ public class MyTokenInterceptor implements HandlerInterceptor {
                     }
                     else
                     {
-                        this.buildErrorResponse(response,"当前用户无相关操作权限！",null);
+                        this.buildErrorResponse(response,"当前用户无相关操作权限!",null);
                         return false;
                     }
                 }
             }else {
-                this.buildErrorResponse(response,"当前用户已在别处登陆，请重新登录！",null);
+                this.buildErrorResponse(response,"当前用户已在别处登录，请重新登录!",null);
                 return false;
             }
         }
         catch (Exception e)
         {
             // 构建错误响应结果报文
-            this.buildErrorResponse(response,"当前信息失效，请重新登录",JwtAuthorizedConstant.TOKEN_EXPIRED_RESPONSE_STATUS);
+            this.buildErrorResponse(response,"登录超时，请重新登录!",JwtAuthorizedConstant.TOKEN_EXPIRED_RESPONSE_STATUS);
             return false;
         }
 

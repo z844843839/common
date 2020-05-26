@@ -58,22 +58,22 @@ public class JwtAuthorized {
 
         } catch (ExpiredJwtException eje) {
             logger.error("Token签名已过期");
-            throw new TokenExpiredException("用户信息已失效，请重新登陆!");
+            throw new TokenExpiredException("登录超时，请重新登录!");
         } catch (UnsupportedJwtException uje) {
             logger.error("Token格式错误");
-            throw new TokenErrorException("Token格式错误");
+            throw new TokenErrorException("用户信息有误，请重新登录或联系管理员!");
         } catch (MalformedJwtException mje) {
             logger.error("Token格式错误");
-            throw new TokenErrorException("Token格式错误");
+            throw new TokenErrorException("用户信息有误,请重新登录或联系管理员!");
         } catch (SignatureException se) {
             logger.error("Token签名内容错误");
-            throw new TokenErrorException("Token签名内容错误");
+            throw new TokenErrorException("用户信息有误，请重新登录或联系管理员!");
         } catch (IllegalArgumentException iae) {
             logger.error("Token签名内容错误");
-            throw new TokenErrorException("Token签名内容错误");
+            throw new TokenErrorException("用户信息有误，请重新登录或联系管理员!");
         } catch (Exception e) {
             logger.error("Token签名验证错误");
-            throw new TokenErrorException("Token签名验证错误");
+            throw new TokenErrorException("用户信息有误，请重新登录或联系管理员!");
         }
 
         return resultMap;
@@ -100,19 +100,19 @@ public class JwtAuthorized {
 
         } catch (ExpiredJwtException eje) {
             logger.error("Token签名已过期");
-            throw new TokenExpiredException("用户信息已失效，请重新登陆!");
+            throw new TokenExpiredException("登录超时，请重新登录!");
         } catch (UnsupportedJwtException uje) {
             logger.error("Token格式错误");
-            throw new TokenErrorException("Token格式错误");
+            throw new TokenErrorException("用户信息有误,请重新登录或联系管理员!");
         } catch (MalformedJwtException mje) {
             logger.error("Token格式错误");
-            throw new TokenErrorException("Token格式错误");
+            throw new TokenErrorException("用户信息有误,请重新登录或联系管理员!");
         } catch (SignatureException se) {
             logger.error("Token签名内容错误");
-            throw new TokenErrorException("Token签名内容错误");
+            throw new TokenErrorException("用户信息有误,请重新登录或联系管理员!");
         } catch (IllegalArgumentException iae) {
             logger.error("Token签名内容错误");
-            throw new TokenErrorException("Token签名内容错误");
+            throw new TokenErrorException("用户信息有误,请重新登录或联系管理员!");
         }
 
         return newJwtToken;
