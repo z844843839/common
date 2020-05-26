@@ -77,7 +77,7 @@ public class DataAuthInterceptor implements Interceptor {
                         sql = sql.substring(0, sql.indexOf(countEnd));
                         totalFlag = true;
                     }
-                    tableAlias = sql.substring(sql.indexOf("SELECT") + 7, sql.indexOf("."));
+                    tableAlias = sql.substring(sql.indexOf("SELECT") + 7, sql.indexOf(".")).trim();
     //                String rowSql = UserInfoUtil.getRowDataAuthSQL(null, tableAlias);
                     if (interceptorAnnotation.flag()) {
                         mSql = interceptSQL(sql, tableAlias, rowSql);
