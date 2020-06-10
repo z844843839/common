@@ -596,6 +596,10 @@ public static final String WORK_FLOW_DOC_TYPE_PROJECT_GROUP = "项目组";
      * 行级权限内置变量10 当前用户所属区域公司名称
      */
     public static String BUILT_IN_VARIABLES10 = "当前用户所属区域公司名称";
+    /**
+     * 行级权限内置变量11 当前用户所属上级部门名称
+     */
+    public static String BUILT_IN_VARIABLES11 = "当前用户所属上级部门名称";
 
 
 
