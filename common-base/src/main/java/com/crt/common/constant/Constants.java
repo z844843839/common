@@ -211,30 +211,40 @@ public static final String WORK_FLOW_DOC_TYPE_PROJECT_GROUP = "项目组";
     public static final String WORK_FLOW_PREVIEWID = "work_flow_previewId";
 
 
+    /******************************* 审批流参数添加 START *******************************/
+
     /**
      * 专业公司CODE
      */
-    public static final String WORK_FLOW_FIRM_CODE = "work_flow_firm_code";
+    public static final String WORK_FLOW_FIRM_CODE = "firmCode";
     /**
      * 业务类型
      */
-    public static final String WORK_FLOW_BUSINESS_TYPE = "work_flow_business_type";
+    public static final String WORK_FLOW_BUSINESS_TYPE = "businessType";
     /**
      * 是否符合定价标准
      */
-    public static final String WORK_FLOW_PRICING_STANDARDS = "work_flow_pricing_standards";
+    public static final String WORK_FLOW_PRICING_STANDARDS = "pricingStandards";
     /**
      * 付款方式
      */
-    public static final String WORK_FLOW_PAY_TYPE = "work_flow_pay_type";
+    public static final String WORK_FLOW_PAY_TYPE = "payType";
     /**
      * 品类
      */
-    public static final String WORK_FLOW_TRANSPORTATION_CATEGORY = "work_flow_transportation_category";
+    public static final String WORK_FLOW_CATEGORY = "category";
+    /**
+     * 是否标准合同
+     */
+    public static final String WORK_FLOW_STANDARD_CONTRACT = "standardContract";
     /**
      * 伙伴组
      */
-    public static final String WORK_FLOW_PARTNER_GROUP = "work_flow_partner_group";
+    public static final String WORK_FLOW_PARTNER_GROUP = "partnerGroup";
+
+
+    /******************************* 审批流参数添加 END *******************************/
+
 
     /**
      * 菜单
