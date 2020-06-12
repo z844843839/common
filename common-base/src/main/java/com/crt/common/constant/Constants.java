@@ -210,6 +210,40 @@ public static final String WORK_FLOW_DOC_TYPE_PROJECT_GROUP = "项目组";
      */
     public static final String WORK_FLOW_PREVIEWID = "work_flow_previewId";
 
+
+    /**
+     * 专业公司CODE
+     */
+    public static final String WORK_FLOW_FIRM_CODE = "work_flow_firm_code";
+    /**
+     * 业务类型
+     */
+    public static final String WORK_FLOW_BUSINESS_TYPE = "work_flow_business_type";
+    /**
+     * 是否符合定价标准
+     */
+    public static final String WORK_FLOW_PRICING_STANDARDS = "work_flow_pricing_standards";
+    /**
+     * 付款方式
+     */
+    public static final String WORK_FLOW_PAY_TYPE = "work_flow_pay_type";
+    /**
+     * 品类
+     */
+    public static final String WORK_FLOW_TRANSPORTATION_CATEGORY = "work_flow_transportation_category";
+    /**
+     * 伙伴组
+     */
+    public static final String WORK_FLOW_PARTNER_GROUP = "work_flow_partner_group";
+
+
+
+
+
+
+
+
+
     /**
      * 菜单
      */
