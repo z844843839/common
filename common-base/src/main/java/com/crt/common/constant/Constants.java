@@ -506,6 +506,8 @@ public static final String WORK_FLOW_DOC_TYPE_PROJECT_GROUP = "项目组";
     public final static Integer NUMBER_NINETEEN = 19;
     public final static Integer NUMBER_TWENTY = 20;
     public final static Integer NUMBER_THIRTY = 30;
+    /***平年天数***/
+    public final static Integer COMMON_YEAR_DAYS = 365;
     /***闰年天数***/
     public final static Integer LEAP_YEAR_DAYS = 366;
 
