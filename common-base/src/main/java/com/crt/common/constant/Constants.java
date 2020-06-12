@@ -236,14 +236,6 @@ public static final String WORK_FLOW_DOC_TYPE_PROJECT_GROUP = "项目组";
      */
     public static final String WORK_FLOW_PARTNER_GROUP = "work_flow_partner_group";
 
-
-
-
-
-
-
-
-
     /**
      * 菜单
      */
