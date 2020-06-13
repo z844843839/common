@@ -4,7 +4,11 @@ management:
     web:
       exposure:
         include: "*"
+  endpoint:
+    health:
+      show-details: "always"
   metrics:
     tags:
       application: ${spring.application.name}
 #management.metrics.tags.application=${spring.application.name}
+#management.endpoint.health.show-details=always
