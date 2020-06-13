@@ -234,6 +234,10 @@ public static final String WORK_FLOW_DOC_TYPE_PROJECT_GROUP = "项目组";
      */
     public static final String WORK_FLOW_CATEGORY = "category";
     /**
+     * 是否新货物品类
+     */
+    public static final String WORK_FLOW_NEWGOODS = "newGoods";
+    /**
      * 是否标准合同
      */
     public static final String WORK_FLOW_STANDARD_CONTRACT = "standardContract";
