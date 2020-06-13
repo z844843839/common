@@ -210,6 +210,46 @@ public static final String WORK_FLOW_DOC_TYPE_PROJECT_GROUP = "项目组";
      */
     public static final String WORK_FLOW_PREVIEWID = "work_flow_previewId";
 
+
+    /******************************* 审批流参数添加 START *******************************/
+
+    /**
+     * 专业公司CODE
+     */
+    public static final String WORK_FLOW_FIRM_CODE = "firmCode";
+    /**
+     * 业务类型
+     */
+    public static final String WORK_FLOW_BUSINESS_TYPE = "businessType";
+    /**
+     * 是否符合定价标准
+     */
+    public static final String WORK_FLOW_PRICING_STANDARDS = "pricingStandards";
+    /**
+     * 付款方式
+     */
+    public static final String WORK_FLOW_PAY_TYPE = "payType";
+    /**
+     * 品类
+     */
+    public static final String WORK_FLOW_CATEGORY = "category";
+    /**
+     * 是否新货物品类
+     */
+    public static final String WORK_FLOW_NEWGOODS = "newGoods";
+    /**
+     * 是否标准合同
+     */
+    public static final String WORK_FLOW_STANDARD_CONTRACT = "standardContract";
+    /**
+     * 伙伴组
+     */
+    public static final String WORK_FLOW_PARTNER_GROUP = "partnerGroup";
+
+
+    /******************************* 审批流参数添加 END *******************************/
+
+
     /**
      * 菜单
      */
@@ -450,6 +490,8 @@ public static final String WORK_FLOW_DOC_TYPE_PROJECT_GROUP = "项目组";
      */
     public final static Integer NUMBER_NEGATIVE_ONE = -1;
     public final static Integer NUMBER_NEGATIVE_THREE = -3;
+    public final static Integer NUMBER_NEGATIVE_SIX = -6;
+    public final static Integer NUMBER_NEGATIVE_TWELVE = -12;
     public final static Integer NUMBER_ZERO = 0;
     public final static Integer NUMBER_ONE = 1;
     public final static Integer NUMBER_TWO = 2;
@@ -472,6 +514,8 @@ public static final String WORK_FLOW_DOC_TYPE_PROJECT_GROUP = "项目组";
     public final static Integer NUMBER_NINETEEN = 19;
     public final static Integer NUMBER_TWENTY = 20;
     public final static Integer NUMBER_THIRTY = 30;
+    /***平年天数***/
+    public final static Integer COMMON_YEAR_DAYS = 365;
     /***闰年天数***/
     public final static Integer LEAP_YEAR_DAYS = 366;
 
