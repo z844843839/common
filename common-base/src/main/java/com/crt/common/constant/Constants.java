@@ -486,6 +486,8 @@ public static final String WORK_FLOW_DOC_TYPE_PROJECT_GROUP = "项目组";
      */
     public final static Integer NUMBER_NEGATIVE_ONE = -1;
     public final static Integer NUMBER_NEGATIVE_THREE = -3;
+    public final static Integer NUMBER_NEGATIVE_SIX = -6;
+    public final static Integer NUMBER_NEGATIVE_TWELVE = -12;
     public final static Integer NUMBER_ZERO = 0;
     public final static Integer NUMBER_ONE = 1;
     public final static Integer NUMBER_TWO = 2;

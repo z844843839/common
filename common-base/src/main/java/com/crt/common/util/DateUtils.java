@@ -729,6 +729,7 @@ public class DateUtils {
         return str;
     }
 
+
     /**
      * 根据传入时间获取时间间隔时间
      * @param date 日期
@@ -810,8 +811,8 @@ public class DateUtils {
 
     /**
      * 时间比较大小
-     * 开始时间大于结束时间 返回 true
-     * 开始时间小于结束时间 返回 false
+     * begin大于end 返回 true
+     * begin小于end 返回 false
      * @param begin
      * @param end
      * @return Boolean
