@@ -707,14 +707,30 @@ public class DateUtils {
     }
 
     /**
-     * 时间格式化
+     * 时间格式化 (Date -> String)
      * @param date
-     * @return
+     * @return str
      */
     public static String dateStr(Date date){
         SimpleDateFormat sdf =new SimpleDateFormat("yyyy-MM-dd HH:mm:ss" );
         String str = sdf.format(date);
         return str;
+    }
+
+    /**
+     * 时间格式化 (String -> Date)
+     * @param str
+     * @param fromat
+     * @return date
+     */
+    public static Date strDate(String str,String fromat){
+        try {
+            SimpleDateFormat sdf =new SimpleDateFormat(fromat);
+            Date date = sdf.parse(str);
+            return date;
+        }catch (ParseException e){
+            return null;
+        }
     }
 
     /**
@@ -728,6 +744,7 @@ public class DateUtils {
         String str = sdf.format(date);
         return str;
     }
+
 
     /**
      * 根据传入时间获取时间间隔时间
@@ -810,8 +827,8 @@ public class DateUtils {
 
     /**
      * 时间比较大小
-     * 开始时间大于结束时间 返回 true
-     * 开始时间小于结束时间 返回 false
+     * begin大于end 返回 true
+     * begin小于end 返回 false
      * @param begin
      * @param end
      * @return Boolean
