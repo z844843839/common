@@ -707,14 +707,30 @@ public class DateUtils {
     }
 
     /**
-     * 时间格式化
+     * 时间格式化 (Date -> String)
      * @param date
-     * @return
+     * @return str
      */
     public static String dateStr(Date date){
         SimpleDateFormat sdf =new SimpleDateFormat("yyyy-MM-dd HH:mm:ss" );
         String str = sdf.format(date);
         return str;
+    }
+
+    /**
+     * 时间格式化 (String -> Date)
+     * @param str
+     * @param fromat
+     * @return date
+     */
+    public static Date strDate(String str,String fromat){
+        try {
+            SimpleDateFormat sdf =new SimpleDateFormat(fromat);
+            Date date = sdf.parse(str);
+            return date;
+        }catch (ParseException e){
+            return null;
+        }
     }
 
     /**
