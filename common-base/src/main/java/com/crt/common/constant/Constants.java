@@ -415,7 +415,11 @@ public static final String WORK_FLOW_DOC_TYPE_PROJECT_GROUP = "项目组";
     public final static int BOX_MASTER_DATA = 110;
     //客商数据
     public static String CONTAINSTR = "?";
+    //客商数据的cvCode
+    public static String BASE_KEY_C = "base_key_c";
+    public static String BASE_KEY_V = "base_key_v";
 
+    
     //增值服务费用
     public final static int ADDED_VALUE = 490;
 
