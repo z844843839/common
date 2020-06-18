@@ -41,4 +41,5 @@ public class BaseBpmTraceRecord {
 	private Date approvalEtime;
 	private Integer deleted;
 	private String comments;
+	private String businessExtensionStr;
 }
