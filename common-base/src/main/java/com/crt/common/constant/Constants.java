@@ -419,7 +419,7 @@ public static final String WORK_FLOW_DOC_TYPE_PROJECT_GROUP = "项目组";
     public static String BASE_KEY_C = "base_key_c";
     public static String BASE_KEY_V = "base_key_v";
 
-    
+
     //增值服务费用
     public final static int ADDED_VALUE = 490;
 
@@ -518,6 +518,8 @@ public static final String WORK_FLOW_DOC_TYPE_PROJECT_GROUP = "项目组";
     public final static Integer NUMBER_NINETEEN = 19;
     public final static Integer NUMBER_TWENTY = 20;
     public final static Integer NUMBER_THIRTY = 30;
+    public final static Integer NUMBER_NINETY = 90;
+    public final static Integer NUMBER_HUNDRED_EIGHTY = 180;
     /***平年天数***/
     public final static Integer COMMON_YEAR_DAYS = 365;
     /***闰年天数***/
