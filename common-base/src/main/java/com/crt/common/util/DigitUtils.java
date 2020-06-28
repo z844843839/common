@@ -6,6 +6,8 @@ import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 
+import static java.math.BigDecimal.*;
+
 /**
  * 数字转大写
  * @author wangxin@e6yun.com
@@ -51,135 +53,76 @@ public class DigitUtils {
 
     /**
      * 两个数相加
-     * @param str1
-     * @param str2
-     * @param keepType 结果保留方式（1 四舍五入 2 四舍六入五成双 3 直接舍去保留意外的数字）
-     * @param several 保留小数位
+     * @param addend1
+     * @param addend1
      * @return
      */
-    public static String add(String str1,String str2,int keepType,int several) {
-        try {
-            String result = new BigDecimal(str1).add(new BigDecimal(str2)).toPlainString();
-            if (Constants.NUMBER_TWO == keepType){
-                result = fourUpSixInto(result,several);
-            }else if (Constants.NUMBER_THREE == keepType){
-                result = into(result,several);
-            }else {
-                result = fourUpFiveInto(result,several);
-            }
-            return result;
-        }catch (Exception e){
-            logger.error(e.getMessage());
-            return null;
+    public static BigDecimal add(BigDecimal addend1,BigDecimal addend2) {
+        BigDecimal result = new BigDecimal(0);
+        if (null != addend1 && null != addend2){
+            result = addend1.add(addend2);
         }
+        return result;
     }
 
     /**
      * 两个数相乘
-     * @param str1
-     * @param str2
-     * @param keepType 结果保留方式（1 四舍五入 2 四舍六入五成双 3 直接舍去保留意外的数字）
-     * @param several 保留小数位
+     * @param multiplier1
+     * @param multiplier2
      * @return
      */
-    public static String multiply(String str1,String str2,int keepType,int several) {
-        try {
-            String result = new BigDecimal(str1).multiply(new BigDecimal(str2)).toPlainString();
-            if (Constants.NUMBER_TWO == keepType){
-                result = fourUpSixInto(result,several);
-            }else if (Constants.NUMBER_THREE == keepType){
-                result = into(result,several);
-            }else {
-                result = fourUpFiveInto(result,several);
-            }
+    public static BigDecimal multiply(BigDecimal multiplier1,BigDecimal multiplier2) {
+        BigDecimal result = new BigDecimal(0);
+        if (null != multiplier1 && null != multiplier2){
+            result = multiplier1.multiply(multiplier2);
             return result;
-        }catch (Exception e){
-            logger.error(e.getMessage());
-            return null;
         }
+        return result;
     }
 
     /**
      * 两个数相减
-     * @param str1
-     * @param str2
-     * @param keepType 结果保留方式（1 四舍五入 2 四舍六入五成双 3 直接舍去保留意外的数字）
-     * @param several 保留小数位
+     * @param sub1 减数1
+     * @param sub2 减数2
      * @return
      */
-    public static String subtract(String str1,String str2,int keepType,int several) {
-        try {
-            String result = new BigDecimal(str1).subtract(new BigDecimal(str2)).toPlainString();
-            if (Constants.NUMBER_TWO == keepType){
-                result = fourUpSixInto(result,several);
-            }else if (Constants.NUMBER_THREE == keepType){
-                result = into(result,several);
-            }else {
-                result = fourUpFiveInto(result,several);
-            }
-            return result;
-        }catch (Exception e){
-            logger.error(e.getMessage());
-            return null;
+    public static BigDecimal subtract(BigDecimal sub1,BigDecimal sub2) {
+        BigDecimal result = new BigDecimal(0);
+        if (null != sub1 && null != sub2){
+            result = sub1.subtract(sub2);
         }
+        return result;
     }
 
     /**
      * 两个数相除
-     * @param str1
-     * @param str2
+     * @param divisor 除数
+     * @param dividend 被除数
      * @param keepType 结果保留方式（1 四舍五入 2 四舍六入五成双 3 直接舍去保留意外的数字）
      * @param several 保留小数位
      * @return
      */
-    public static String divide(String str1,String str2,int keepType,int several) {
-        try {
-            String result = new BigDecimal(str1).divide(new BigDecimal(str2)).toPlainString();
-            if (Constants.NUMBER_TWO == keepType){
-                result = fourUpSixInto(result,several);
-            }else if (Constants.NUMBER_THREE == keepType){
-                result = into(result,several);
+    public static BigDecimal divide(BigDecimal divisor,BigDecimal dividend,int keepType,int several) {
+        BigDecimal result = new BigDecimal(0);
+        if (null != divisor && null != dividend){
+            if (dividend.compareTo(new BigDecimal(0)) == 0){
+                return result;
             }else {
-                result = fourUpFiveInto(result,several);
+                switch (keepType){
+                    case 1:
+                        result = divisor.divide(dividend,several,ROUND_HALF_UP);
+                        break;
+                    case 2:
+                        result = divisor.divide(dividend,several,ROUND_HALF_EVEN);
+                        break;
+                    case 3:
+                        result = divisor.divide(dividend,several,ROUND_HALF_DOWN);
+                        break;
+                }
+                return result;
             }
-            return result;
-        }catch (Exception e){
-            logger.error(e.getMessage());
-            return null;
         }
-    }
-
-    /**
-     * 四舍五入
-     * @param str
-     * @param several 保留小数位
-     */
-    public static String fourUpFiveInto(String str,int several){
-        BigDecimal b1 = new BigDecimal(str);
-        BigDecimal b2 = b1.setScale(several, BigDecimal.ROUND_HALF_UP);
-        return b2.toString();
-    }
-
-    /**
-     * 舍去保留小数位后面的数字
-     * @param str
-     * @param several 保留小数位
-     */
-    public static String into(String str,int several){
-        BigDecimal b1 = new BigDecimal(str);
-        BigDecimal b2 = b1.setScale(several, BigDecimal.ROUND_HALF_DOWN);
-        return b2.toString();
-    }
-
-    /**
-     * 四舍六入五成双
-     * @param str
-     * @param several 保留小数位
-     */
-    public static String fourUpSixInto(String str,int several){
-        BigDecimal b1 = new BigDecimal(str);
-        BigDecimal b2 = b1.setScale(several, BigDecimal.ROUND_HALF_EVEN);
-        return b2.toString();
+        return result;
     }
 
 }
