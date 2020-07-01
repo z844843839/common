@@ -524,6 +524,12 @@ public static final String WORK_FLOW_DOC_TYPE_PROJECT_GROUP = "项目组";
     public final static Integer COMMON_YEAR_DAYS = 365;
     /***闰年天数***/
     public final static Integer LEAP_YEAR_DAYS = 366;
+    /***毫秒数***/
+    public final static Integer MILLISECOND = 1000;
+    /***一天小时数***/
+    public final static Integer HOURS_DAY = 24;
+    /***一小时秒数***/
+    public final static Integer HOURS_SECONDS = 3600;
 
 
 
